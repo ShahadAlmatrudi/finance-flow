@@ -47,10 +47,10 @@ export default function Sidebar() {
       </div>
 
       <div className="sidebar-user">
-        <div className="user-avatar">KI</div>
+        <div className="user-avatar">OE</div>
 
         <div className="user-details">
-          <p className="user-name">Khaled Ibraheem</p>
+          <p className="user-name">Ola Essa</p>
           <button className="logout-btn">Logout</button>
         </div>
       </div>
