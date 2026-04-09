@@ -177,6 +177,79 @@ a {
   background: #f8fafc;
 }
 
+.pie-chart-wrapper {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 14px;
+}
+
+.fake-pie-chart {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(
+    #d1d5db 0deg 150deg,
+    #f3f4f6 150deg 270deg,
+    #9ca3af 270deg 360deg
+  );
+  border: 3px solid #4b5563;
+}
+
+.bar-chart-wrapper {
+  height: 220px;
+  background: #f8fafc;
+  border-radius: 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 22px;
+  padding: 24px 20px 16px;
+}
+
+.bar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.bar-column {
+  width: 10px;
+  border-radius: 8px 8px 0 0;
+  background: #60a5fa;
+}
+
+.bar-column.short {
+  height: 55px;
+}
+
+.bar-column.medium-short {
+  height: 75px;
+}
+
+.bar-column.medium {
+  height: 95px;
+}
+
+.bar-column.tall {
+  height: 115px;
+}
+
+.bar-item span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.bar-item small {
+  font-size: 11px;
+  color: #6b7280;
+}
+
 .goals-card {
   margin-bottom: 20px;
 }

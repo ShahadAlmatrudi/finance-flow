@@ -87,15 +87,55 @@ export default function AnalyticsPage() {
 
       <section className="chart-grid">
         <div className="card chart-card">
-          <h3>Spending by Category</h3>
-          <div className="chart-placeholder">Pie Chart Placeholder</div>
+            <h3>Spending by Category</h3>
+
+            <div className="pie-chart-wrapper">
+            <div className="fake-pie-chart"></div>
+            </div>
         </div>
 
         <div className="card chart-card">
-          <h3>Monthly Spending Comparison</h3>
-          <div className="chart-placeholder">Bar Chart Placeholder</div>
+            <h3>Monthly Spending Comparison (Last 6 months)</h3>
+
+            <div className="bar-chart-wrapper">
+            <div className="bar-item">
+                <div className="bar-column short"></div>
+                <span>Jan</span>
+                <small>$300</small>
+            </div>
+
+            <div className="bar-item">
+                <div className="bar-column medium"></div>
+                <span>Feb</span>
+                <small>$450</small>
+            </div>
+
+            <div className="bar-item">
+                <div className="bar-column medium-short"></div>
+                <span>Mar</span>
+                <small>$380</small>
+            </div>
+
+            <div className="bar-item">
+                <div className="bar-column tall"></div>
+                <span>Apr</span>
+                <small>$520</small>
+            </div>
+
+            <div className="bar-item">
+                <div className="bar-column medium-short"></div>
+                <span>May</span>
+                <small>$390</small>
+            </div>
+
+            <div className="bar-item">
+                <div className="bar-column medium"></div>
+                <span>Jun</span>
+                <small>$460</small>
+            </div>
+            </div>
         </div>
-      </section>
+    </section>
 
       <section className="card goals-card">
         <h3>Budget Goals</h3>
