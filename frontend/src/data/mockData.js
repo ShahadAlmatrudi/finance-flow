@@ -71,3 +71,64 @@ export const budgetGoals = [
   { id: 2, title: "Invest $200 monthly", progress: 80, color: "blue-bar" },
   { id: 3, title: "Pay off credit card debt", progress: 40, color: "purple-bar" },
 ];
+
+export const dashboardCards = [
+  {
+    id: 1,
+    title: "Cash",
+    subtitle: "last updated",
+    balanceLabel: "Available Balance:",
+    amount: 12500.75,
+    iconType: "cash",
+  },
+  {
+    id: 2,
+    title: "Credit Card",
+    subtitle: "Account Number: **** 5678",
+    balanceLabel: "Available Balance:",
+    amount: 25320.1,
+    iconType: "card",
+  },
+  {
+    id: 3,
+    title: "Saving Account",
+    subtitle: "Card Number: **** 9012",
+    balanceLabel: "Current Balance:",
+    amount: 1200.5,
+    iconType: "saving",
+  },
+];
+
+export const recentTransactions = [
+  {
+    id: 1,
+    title: "Online Purchase",
+    subtitle: "Amazon.com - Oct 26, 2023",
+    amount: -45.99,
+  },
+  {
+    id: 2,
+    title: "Salary Deposit",
+    subtitle: "Employer - Oct 25, 2023",
+    amount: 2500.0,
+  },
+  {
+    id: 3,
+    title: "Restaurant Bill",
+    subtitle: "Local Diner - Oct 24, 2023",
+    amount: -32.75,
+  },
+  {
+    id: 4,
+    title: "Utility Bill",
+    subtitle: "Electricity Company - Oct 23, 2023",
+    amount: -85.0,
+  },
+];
+
+export const monthOverview = [
+  { id: 1, label: "Income Received", percent: 58, color: "blue-bar" },
+  { id: 2, label: "Saving Progress", percent: 78, color: "green-bar" },
+  { id: 3, label: "Expenses Used", percent: 44, color: "red-bar" },
+  { id: 4, label: "Remaining Budget", percent: 67, color: "yellow-bar" },
+];

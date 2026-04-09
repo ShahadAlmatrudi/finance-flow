@@ -1,8 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Sidebar from "./components/layout/Sidebar";
+import DashboardPage from "./pages/DashboardPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import BudgetPage from "./pages/BudgetPage";
 import SettingsPage from "./pages/SettingsPage";
-import Sidebar from "./components/layout/Sidebar";
 
 export default function App() {
   return (
@@ -10,7 +11,8 @@ export default function App() {
       <div style={{ display: "flex", minHeight: "100vh" }}>
         <Sidebar />
         <Routes>
-          <Route path="/" element={<Navigate to="/analytics" />} />
+          <Route path="/" element={<Navigate to="/dashboard" />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/budget" element={<BudgetPage />} />
           <Route path="/settings" element={<SettingsPage />} />
