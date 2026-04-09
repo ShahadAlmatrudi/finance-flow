@@ -515,29 +515,33 @@ a {
   cursor: pointer;
 }
 
+/* CATEGORY-WISE SPENDING */
 .budget-edit-item {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 160px 60px 150px 60px;
   align-items: center;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.budget-edit-left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.budget-dot {
-  width: 18px;
-  height: 18px;
-  border-radius: 6px;
-  display: inline-block;
+  column-gap: 18px;
+  margin-bottom: 18px;
 }
 
 .budget-edit-name {
   font-weight: 500;
+}
+
+.mini-track {
+  width: 52px;
+  height: 32px;
+  background: #e5e7eb;
+  border-radius: 9px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.mini-fill {
+  height: 100%;
+  border-radius: 6px;
 }
 
 .budget-edit-middle {
@@ -560,6 +564,7 @@ a {
   background: #d1d5db;
 }
 
+/* ACCOUNTS */
 .budget-bottom-row {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
@@ -587,9 +592,16 @@ a {
   border-bottom: none;
 }
 
+.account-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
 .account-name {
   font-weight: 700;
-  margin-bottom: 4px;
+  font-size: 18px;
 }
 
 .account-subtitle {
@@ -618,12 +630,103 @@ a {
   min-width: 150px;
 }
 
+/* ACCOUNT ICONS - wireframe-like */
+.account-icon {
+  display: inline-block;
+  width: 24px;
+  height: 18px;
+  border-radius: 4px;
+  position: relative;
+}
+
+.visa-icon {
+  background: #22c55e;
+}
+
+.visa-icon::after {
+  content: "VISA";
+  position: absolute;
+  inset: 0;
+  font-size: 8px;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mc-icon {
+  background: #60a5fa;
+}
+
+.mc-icon::before,
+.mc-icon::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.mc-icon::before {
+  left: 4px;
+  background: white;
+  opacity: 0.9;
+}
+
+.mc-icon::after {
+  right: 4px;
+  background: #dbeafe;
+  opacity: 0.9;
+}
+
+.cash-icon {
+  background: #a855f7;
+}
+
+.cash-icon::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  top: 7px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: white;
+}
+
+/* COLORS */
 .pink-bar {
   background: #ff00ff;
 }
 
 .navy-bar {
   background: #0f3d75;
+}
+
+.red-bar {
+  background: #ef4444;
+}
+
+.orange-bar {
+  background: #f97316;
+}
+
+.yellow-bar {
+  background: #eab308;
+}
+
+.green-bar {
+  background: #22c55e;
+}
+
+.blue-bar {
+  background: #3b82f6;
+}
+
+.purple-bar {
+  background: #a855f7;
 }
 
 @media (max-width: 1100px) {
@@ -633,7 +736,7 @@ a {
   }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 760px) {
   .budget-edit-item {
     grid-template-columns: 1fr;
     align-items: start;
@@ -651,4 +754,52 @@ a {
   .balance-input {
     min-width: 100%;
   }
+}
+
+.account-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.account-icon {
+  font-size: 26px;
+  margin-left: 4px;
+}
+
+.account-icon.visa {
+  color: #22c55e;
+}
+
+.account-icon.mastercard {
+  color: #3b82f6;
+}
+
+.account-icon.cash {
+  color: #a855f7;
+}
+
+.budget-edit-item {
+  display: grid;
+  grid-template-columns: 180px 70px 150px 60px;
+  align-items: center;
+  column-gap: 18px;
+  margin-bottom: 18px;
+}
+
+.mini-track {
+  width: 56px;
+  height: 34px;
+  background: #e5e7eb;
+  border-radius: 9px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.mini-fill {
+  height: 100%;
+  border-radius: 6px;
 }

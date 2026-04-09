@@ -1,4 +1,5 @@
 import { budgetCategories, balances } from "../data/mockData";
+import { FaCcVisa, FaCcMastercard, FaWallet } from "react-icons/fa";
 
 export default function BudgetPage() {
   const statusItems = [
@@ -8,13 +9,13 @@ export default function BudgetPage() {
     { label: "Debt Progress", value: "$500,000", percent: 62, color: "navy-bar" },
   ];
 
-  const categoryColors = [
-    "green-bar",
-    "yellow-bar",
-    "purple-bar",
-    "red-bar",
-    "orange-bar",
-    "blue-bar",
+  const categoryStyles = [
+    { color: "green-bar", width: "48%" },
+    { color: "yellow-bar", width: "34%" },
+    { color: "purple-bar", width: "20%" },
+    { color: "red-bar", width: "56%" },
+    { color: "orange-bar", width: "52%" },
+    { color: "blue-bar", width: "24%" },
   ];
 
   return (
@@ -53,14 +54,13 @@ export default function BudgetPage() {
           <div className="budget-category-list">
             {budgetCategories.map((item, index) => (
               <div key={item.id} className="budget-edit-item">
-                <div className="budget-edit-left">
-                  <span
-                    className={`budget-dot ${
-                      categoryColors[index % categoryColors.length]
-                    }`}
-                  ></span>
+                <div className="budget-edit-name">{item.name}</div>
 
-                  <span className="budget-edit-name">{item.name}</span>
+                <div className="mini-track">
+                  <div
+                    className={`mini-fill ${categoryStyles[index % categoryStyles.length].color}`}
+                    style={{ width: categoryStyles[index % categoryStyles.length].width }}
+                  ></div>
                 </div>
 
                 <div className="budget-edit-middle">
@@ -82,7 +82,22 @@ export default function BudgetPage() {
             {balances.map((item) => (
               <div key={item.id} className="account-item">
                 <div className="account-left">
-                  <p className="account-name">{item.name}</p>
+                  <div className="account-title-row">
+                    <p className="account-name">{item.name}</p>
+
+                    {item.name === "Alinma Credit Card" && (
+                      <FaCcVisa className="account-icon visa" />
+                    )}
+
+                    {item.name === "SNB Debit Card" && (
+                      <FaCcMastercard className="account-icon mastercard" />
+                    )}
+
+                    {item.name === "Cash" && (
+                      <FaWallet className="account-icon cash" />
+                    )}
+                  </div>
+
                   <p className="account-subtitle">
                     {item.name === "Cash" ? "Last Update - Oct 24, 2023" : "Account"}
                   </p>
