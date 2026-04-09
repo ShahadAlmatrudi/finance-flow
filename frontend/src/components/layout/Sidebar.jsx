@@ -9,9 +9,11 @@ export default function Sidebar() {
         <NavLink to="/analytics" className="nav-link">
           Analytics
         </NavLink>
+
         <NavLink to="/budget" className="nav-link">
           Budget
         </NavLink>
+
         <NavLink to="/settings" className="nav-link">
           Account Settings
         </NavLink>

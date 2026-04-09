@@ -19,6 +19,44 @@ a {
   text-decoration: none;
 }
 
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  padding: 24px 18px;
+  flex-shrink: 0;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 28px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-link {
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: #374151;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.nav-link:hover {
+  background: #eef2ff;
+}
+
+.nav-link.active {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
 .page-content {
   flex: 1;
   padding: 24px;
