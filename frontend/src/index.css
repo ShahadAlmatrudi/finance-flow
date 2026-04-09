@@ -447,3 +447,208 @@ a {
   background: #fef9c3;
   color: #ca8a04;
 }
+
+.budget-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.budget-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.budget-section-title {
+  margin-bottom: 22px;
+}
+
+.status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.primary-small-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.primary-small-btn:hover,
+.primary-full-btn:hover {
+  background: #2563eb;
+}
+
+.primary-full-btn {
+  width: 100%;
+  margin-top: 22px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.budget-edit-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.budget-edit-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.budget-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.budget-edit-name {
+  font-weight: 500;
+}
+
+.budget-edit-middle {
+  font-size: 14px;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.edit-btn {
+  border: none;
+  background: #e5e7eb;
+  color: #374151;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-btn:hover {
+  background: #d1d5db;
+}
+
+.budget-bottom-row {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 20px;
+}
+
+.accounts-card {
+  min-height: 220px;
+}
+
+.account-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.account-item:last-child {
+  border-bottom: none;
+}
+
+.account-name {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.account-subtitle {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.account-right {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.account-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.balance-input {
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 14px;
+  min-width: 150px;
+}
+
+.pink-bar {
+  background: #ff00ff;
+}
+
+.navy-bar {
+  background: #0f3d75;
+}
+
+@media (max-width: 1100px) {
+  .budget-grid,
+  .budget-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .budget-edit-item {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .budget-edit-middle {
+    white-space: normal;
+  }
+
+  .account-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .balance-input {
+    min-width: 100%;
+  }
+}
