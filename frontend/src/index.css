@@ -21,83 +21,95 @@ a {
 
 .sidebar {
   width: 240px;
-  min-height: 100vh;
-  background: #ffffff;
-  border-right: 1px solid #e5e7eb;
-  padding: 24px 18px;
-  flex-shrink: 0;
+  height: 100vh;
+  background: #f9fafb;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  padding: 20px;
+}
+
+/* TOP */
+.sidebar-top {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .logo {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 28px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
-.sidebar nav {
+/* NAV */
+.nav-menu {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
 .nav-link {
-  padding: 12px 14px;
-  border-radius: 10px;
+  text-decoration: none;
   color: #374151;
-  font-weight: 500;
-  transition: 0.2s ease;
+  padding: 10px 12px;
+  border-radius: 8px;
 }
 
 .nav-link:hover {
-  background: #eef2ff;
+  background: #e5e7eb;
 }
 
 .nav-link.active {
   background: #dbeafe;
   color: #2563eb;
+  font-weight: 600;
 }
 
+/* USER SECTION */
 .sidebar-user {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding-top: 20px;
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: #d1d5db;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: bold;
   color: #374151;
 }
 
 .user-details {
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .user-name {
-  font-size: 14px;
   font-weight: 600;
+  color: #111827;
 }
 
+/* LOGOUT (button styled as text) */
 .logout-btn {
+  background: none;
   border: none;
-  background: transparent;
-  color: #ef4444;
-  font-size: 13px;
+  padding: 0;
+  margin: 0;
+
+  color: red;
+  font-size: 14px;
   cursor: pointer;
   text-align: left;
-  padding: 0;
+}
+
+.logout-btn:hover {
+  color: darkred;
+  text-decoration: underline;
 }
 
 .page-content {
