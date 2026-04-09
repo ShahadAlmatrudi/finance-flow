@@ -65,3 +65,9 @@ export const profileData = {
   smsAlerts: false,
   twoFactorEnabled: false,
 };
+
+export const budgetGoals = [
+  { id: 1, title: "Save $500 for vacation", progress: 60, color: "green-bar" },
+  { id: 2, title: "Invest $200 monthly", progress: 80, color: "blue-bar" },
+  { id: 3, title: "Pay off credit card debt", progress: 40, color: "purple-bar" },
+];

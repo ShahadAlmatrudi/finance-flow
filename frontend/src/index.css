@@ -6,7 +6,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: #f5f7fb;
+  background: #f3f4f6;
   color: #1f2937;
 }
 
@@ -26,6 +26,9 @@ a {
   border-right: 1px solid #e5e7eb;
   padding: 24px 18px;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .logo {
@@ -54,7 +57,47 @@ a {
 
 .nav-link.active {
   background: #dbeafe;
-  color: #1d4ed8;
+  color: #2563eb;
+}
+
+.sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 20px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #d1d5db;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #374151;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.logout-btn {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
 }
 
 .page-content {
@@ -97,15 +140,15 @@ a {
   color: #6b7280;
 }
 
-.negative {
-  color: #dc2626;
+.blue-text {
+  color: #2563eb;
 }
 
-.positive {
+.green-text {
   color: #16a34a;
 }
 
-.savings {
+.purple-text {
   color: #7c3aed;
 }
 
@@ -168,8 +211,27 @@ a {
 
 .progress-fill {
   height: 100%;
-  background: #3b82f6;
   border-radius: 999px;
+}
+
+.red-bar {
+  background: #ef4444;
+}
+
+.orange-bar {
+  background: #f97316;
+}
+
+.yellow-bar {
+  background: #eab308;
+}
+
+.green-bar {
+  background: #22c55e;
+}
+
+.blue-bar {
+  background: #3b82f6;
 }
 
 .table-card {
@@ -243,4 +305,60 @@ a {
   .chart-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.goal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.goal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goal-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.small-progress {
+  height: 8px;
+}
+
+.purple-bar {
+  background: #a855f7;
+}
+
+.category-pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.food-pill {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.income-pill {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.entertainment-pill {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+
+.cash-pill {
+  background: #fef9c3;
+  color: #ca8a04;
 }

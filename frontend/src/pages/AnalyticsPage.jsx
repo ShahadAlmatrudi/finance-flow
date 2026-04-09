@@ -1,5 +1,10 @@
 import { useMemo, useState } from "react";
-import { summaryData, transactions, budgetCategories } from "../data/mockData";
+import {
+  summaryData,
+  transactions,
+  budgetCategories,
+  budgetGoals,
+} from "../data/mockData";
 
 export default function AnalyticsPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -7,6 +12,8 @@ export default function AnalyticsPage() {
   const [sortOrder, setSortOrder] = useState("newest");
 
   const categories = ["All", ...new Set(transactions.map((t) => t.category))];
+
+  const barColors = ["red-bar", "orange-bar", "yellow-bar", "green-bar", "blue-bar"];
 
   const filteredTransactions = useMemo(() => {
     let result = [...transactions];
@@ -33,6 +40,21 @@ export default function AnalyticsPage() {
     return result;
   }, [searchTerm, categoryFilter, sortOrder]);
 
+  const getCategoryClass = (category) => {
+    switch (category) {
+      case "Food":
+        return "category-pill food-pill";
+      case "Income":
+        return "category-pill income-pill";
+      case "Entertainment":
+        return "category-pill entertainment-pill";
+      case "Cash":
+        return "category-pill cash-pill";
+      default:
+        return "category-pill";
+    }
+  };
+
   return (
     <main className="page-content">
       <h1 className="page-title">Analytics Overview</h1>
@@ -40,7 +62,7 @@ export default function AnalyticsPage() {
       <section className="summary-grid">
         <div className="card summary-card">
           <h3>Total Spending</h3>
-          <p className="summary-value negative">
+          <p className="summary-value blue-text">
             ${summaryData.totalSpending.toFixed(2)}
           </p>
           <span className="summary-label">Last 30 days</span>
@@ -48,7 +70,7 @@ export default function AnalyticsPage() {
 
         <div className="card summary-card">
           <h3>Total Income</h3>
-          <p className="summary-value positive">
+          <p className="summary-value green-text">
             ${summaryData.totalIncome.toFixed(2)}
           </p>
           <span className="summary-label">Last 30 days</span>
@@ -56,7 +78,7 @@ export default function AnalyticsPage() {
 
         <div className="card summary-card">
           <h3>Net Savings</h3>
-          <p className="summary-value savings">
+          <p className="summary-value purple-text">
             ${summaryData.netSavings.toFixed(2)}
           </p>
           <span className="summary-label">Last 30 days</span>
@@ -76,10 +98,32 @@ export default function AnalyticsPage() {
       </section>
 
       <section className="card goals-card">
+        <h3>Budget Goals</h3>
+
+        <div className="goal-list">
+          {budgetGoals.map((goal) => (
+            <div key={goal.id} className="goal-item">
+              <div className="goal-row">
+                <span>{goal.title}</span>
+                <span>{goal.progress}% complete</span>
+              </div>
+
+              <div className="progress-bar small-progress">
+                <div
+                  className={`progress-fill ${goal.color}`}
+                  style={{ width: `${goal.progress}%` }}
+                ></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="card goals-card">
         <h3>Budget Categories</h3>
 
         <div className="budget-category-list">
-          {budgetCategories.map((item) => {
+          {budgetCategories.map((item, index) => {
             const percentage = Math.min((item.spent / item.limit) * 100, 100);
 
             return (
@@ -93,7 +137,7 @@ export default function AnalyticsPage() {
 
                 <div className="progress-bar">
                   <div
-                    className="progress-fill"
+                    className={`progress-fill ${barColors[index % barColors.length]}`}
                     style={{ width: `${percentage}%` }}
                   ></div>
                 </div>
@@ -154,7 +198,11 @@ export default function AnalyticsPage() {
                   <tr key={transaction.id}>
                     <td>{transaction.date}</td>
                     <td>{transaction.description}</td>
-                    <td>{transaction.category}</td>
+                    <td>
+                      <span className={getCategoryClass(transaction.category)}>
+                        {transaction.category}
+                      </span>
+                    </td>
                     <td
                       className={
                         transaction.amount < 0 ? "amount-negative" : "amount-positive"
