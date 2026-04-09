@@ -1,37 +1,57 @@
 import { NavLink } from "react-router-dom";
+import {
+  HiOutlineHome,
+  HiOutlineUserCircle,
+  HiOutlineCreditCard,
+} from "react-icons/hi2";
+import { LuChartNoAxesColumnIncreasing, LuSlidersHorizontal } from "react-icons/lu";
 
 export default function Sidebar() {
   return (
     <aside className="sidebar">
-      {/* TOP SECTION */}
       <div className="sidebar-top">
-        <h2 className="logo">FinanceFlow</h2>
+        <div className="logo-row">
+          <LuSlidersHorizontal className="logo-icon" />
+          <h2 className="logo">FinanceFlow</h2>
+        </div>
 
         <nav className="nav-menu">
-          <NavLink to="/analytics" className="nav-link">
-            Analytics
-          </NavLink>
-
-          <NavLink to="/budget" className="nav-link">
-            Budget
+          <NavLink to="/dashboard" className="nav-link">
+            <span className="nav-link-left">
+              <HiOutlineHome className="nav-icon" />
+              <span>Dashboard</span>
+            </span>
           </NavLink>
 
           <NavLink to="/settings" className="nav-link">
-            Account Settings
+            <span className="nav-link-left">
+              <HiOutlineUserCircle className="nav-icon" />
+              <span>Account Settings</span>
+            </span>
+          </NavLink>
+
+          <NavLink to="/budget" className="nav-link">
+            <span className="nav-link-left">
+              <HiOutlineCreditCard className="nav-icon" />
+              <span>Budget</span>
+            </span>
+          </NavLink>
+
+          <NavLink to="/analytics" className="nav-link">
+            <span className="nav-link-left">
+              <LuChartNoAxesColumnIncreasing className="nav-icon" />
+              <span>Analytics</span>
+            </span>
           </NavLink>
         </nav>
       </div>
 
-      {/* BOTTOM USER SECTION */}
       <div className="sidebar-user">
         <div className="user-avatar">KI</div>
 
         <div className="user-details">
           <p className="user-name">Khaled Ibraheem</p>
-
-          <button className="logout-btn">
-            Logout
-          </button>
+          <button className="logout-btn">Logout</button>
         </div>
       </div>
     </aside>
