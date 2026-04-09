@@ -4,9 +4,31 @@
   padding: 0;
 }
 
+html, body, #root, button, input, select, textarea {
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
   background: #f3f4f6;
+  color: #1f2937;
+  margin: 0;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.dashboard-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.month-label {
+  font-size: 15px;
+  font-weight: 600;
   color: #1f2937;
 }
 
@@ -1046,4 +1068,44 @@ a {
   .dashboard-cards-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.month-overview-card {
+  margin-top: 10px;
+  padding: 0; 
+  background: transparent;
+  box-shadow: none; 
+}
+
+.month-overview-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 420px;
+}
+
+.month-overview-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  gap: 16px;
+}
+
+.month-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.month-track {
+  width: 100%;
+  max-width: 420px;   
+  height: 16px;
+  background: #c7c9cf;
+  border-radius: 999px;
+}
+
+.month-fill {
+  height: 100%;
+  border-radius: 999px;
 }

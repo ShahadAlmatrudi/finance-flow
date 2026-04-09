@@ -70,26 +70,24 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="card month-overview-card">
+      <section className="month-overview-card">
         <h3 className="dashboard-section-title">This Month Overview</h3>
 
-        <div className="status-list">
-          {monthOverview.map((item) => (
-            <div key={item.id} className="status-item">
-              <div className="status-row">
-                <span>{item.label}</span>
-              </div>
+            <div className="month-overview-list">
+                {monthOverview.map((item) => (
+                <div key={item.id} className="month-overview-row">
+                    <span className="month-label">{item.label}</span>
 
-              <div className="progress-bar">
-                <div
-                  className={`progress-fill ${item.color}`}
-                  style={{ width: `${item.percent}%` }}
-                ></div>
-              </div>
+                    <div className="month-track">
+                    <div
+                        className={`month-fill ${item.color}`}
+                        style={{ width: `${item.percent}%` }}
+                    ></div>
+                    </div>
+                </div>
+                ))}
             </div>
-          ))}
-        </div>
-      </section>
+        </section>
     </main>
   );
 }
