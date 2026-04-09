@@ -1,3 +1,8 @@
 export default function BudgetPage() {
-  return <h1>Budget Page</h1>;
+  return (
+    <div>
+      <h1>Budget Page</h1>
+      <p>Budget features will be here</p>
+    </div>
+  );
 }
