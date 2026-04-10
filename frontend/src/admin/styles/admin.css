@@ -207,7 +207,12 @@ body {
   transition: 0.22s ease;
   border: 1px solid transparent;
 }
-
+.admin-sidebar-nav {
+  margin-top: 20px;
+}
+.admin-sidebar {
+  width: 260px;
+}
 .admin-sidebar-link:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
