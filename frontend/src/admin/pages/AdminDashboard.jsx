@@ -1,8 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 import AdminSidebar from "../components/AdminSidebar";
 import AdminStatCard from "../components/AdminStatCard";
 import { defaultUsers, defaultActions } from "../data/adminData";
 import "../styles/admin.css";
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 function formatTimeAgo(dateString) {
   const now = new Date();
@@ -37,7 +48,7 @@ function AdminDashboard() {
   const pendingTransactions = 42;
   const averageSavingRate = "68%";
 
-  useEffect(() => {
+  useMemo(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchInput);
     }, 250);
@@ -63,6 +74,78 @@ function AdminDashboard() {
 
   const growthData = [20, 35, 28, 45, 38, 52];
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+
+  const chartData = {
+    labels: months,
+    datasets: [
+      {
+        label: "User Growth",
+        data: growthData,
+        backgroundColor: "rgba(37, 99, 235, 0.85)",
+        borderRadius: 10,
+        borderSkipped: false,
+        maxBarThickness: 48,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 800,
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: "#0f172a",
+        titleColor: "#ffffff",
+        bodyColor: "#ffffff",
+        padding: 12,
+        cornerRadius: 10,
+        displayColors: false,
+        callbacks: {
+          label: function (context) {
+            return ` Growth: ${context.raw}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+          drawBorder: false,
+        },
+        ticks: {
+          color: "#6b7280",
+          font: {
+            size: 12,
+            weight: "600",
+          },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        suggestedMax: 60,
+        ticks: {
+          stepSize: 20,
+          color: "#6b7280",
+          font: {
+            size: 12,
+            weight: "600",
+          },
+        },
+        grid: {
+          color: "#dbe3ef",
+          borderDash: [4, 4],
+          drawBorder: false,
+        },
+      },
+    },
+  };
 
   return (
     <div className="admin-layout">
@@ -113,25 +196,8 @@ function AdminDashboard() {
               <h2>User Growth Over Time</h2>
             </div>
 
-            <div className="admin-chart-box">
-              <div className="admin-chart-grid-lines">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-
-              <div className="admin-chart-placeholder compact-chart">
-                {growthData.map((value, index) => (
-                  <div key={months[index]} className="admin-bar-item">
-                    <div
-                      className="admin-bar"
-                      style={{ height: `${value * 2.4}px` }}
-                    ></div>
-                    <span className="admin-bar-label">{months[index]}</span>
-                  </div>
-                ))}
-              </div>
+            <div className="admin-real-chart-wrap">
+              <Bar data={chartData} options={chartOptions} />
             </div>
           </div>
 
