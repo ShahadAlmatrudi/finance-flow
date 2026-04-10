@@ -15,6 +15,15 @@ export default function AnalyticsPage() {
 
   const barColors = ["red-bar", "orange-bar", "yellow-bar", "green-bar", "blue-bar"];
 
+  const monthlySpending = [
+    { id: 1, month: "Jan", amount: "$300", heightClass: "short" },
+    { id: 2, month: "Feb", amount: "$450", heightClass: "medium" },
+    { id: 3, month: "Mar", amount: "$380", heightClass: "medium-short" },
+    { id: 4, month: "Apr", amount: "$520", heightClass: "tall" },
+    { id: 5, month: "May", amount: "$390", heightClass: "medium-short" },
+    { id: 6, month: "Jun", amount: "$460", heightClass: "medium" },
+  ];
+
   const filteredTransactions = useMemo(() => {
     let result = [...transactions];
 
@@ -87,72 +96,44 @@ export default function AnalyticsPage() {
 
       <section className="chart-grid">
         <div className="card chart-card">
-            <h3>Spending by Category</h3>
+          <h3>Spending by Category</h3>
 
-            <div className="pie-chart-wrapper">
+          <div className="pie-chart-wrapper">
             <div className="fake-pie-chart"></div>
-            </div>
+          </div>
         </div>
 
         <div className="card chart-card">
-            <h3>Monthly Spending Comparison (Last 6 months)</h3>
+          <h3>Monthly Spending Comparison (Last 6 months)</h3>
 
-            <div className="bar-chart-wrapper">
-            <div className="bar-item">
-                <div className="bar-column short"></div>
-                <span>Jan</span>
-                <small>$300</small>
-            </div>
-
-            <div className="bar-item">
-                <div className="bar-column medium"></div>
-                <span>Feb</span>
-                <small>$450</small>
-            </div>
-
-            <div className="bar-item">
-                <div className="bar-column medium-short"></div>
-                <span>Mar</span>
-                <small>$380</small>
-            </div>
-
-            <div className="bar-item">
-                <div className="bar-column tall"></div>
-                <span>Apr</span>
-                <small>$520</small>
-            </div>
-
-            <div className="bar-item">
-                <div className="bar-column medium-short"></div>
-                <span>May</span>
-                <small>$390</small>
-            </div>
-
-            <div className="bar-item">
-                <div className="bar-column medium"></div>
-                <span>Jun</span>
-                <small>$460</small>
-            </div>
-            </div>
+          <div className="bar-chart-wrapper">
+            {monthlySpending.map((item) => (
+              <div key={item.id} className="bar-item">
+                <div className={`bar-column ${item.heightClass}`}></div>
+                <span>{item.month}</span>
+                <small>{item.amount}</small>
+              </div>
+            ))}
+          </div>
         </div>
-    </section>
+      </section>
 
       <section className="card goals-card">
         <h3>Budget Goals</h3>
 
-        <div className="goal-list">
+        <div className="goal-list-compact">
           {budgetGoals.map((goal) => (
-            <div key={goal.id} className="goal-item">
-              <div className="goal-row">
-                <span>{goal.title}</span>
-                <span>{goal.progress}% complete</span>
-              </div>
+            <div key={goal.id} className="goal-item-compact">
+              <div className="goal-title">{goal.title}</div>
 
-              <div className="progress-bar small-progress">
-                <div
-                  className={`progress-fill ${goal.color}`}
-                  style={{ width: `${goal.progress}%` }}
-                ></div>
+              <div className="goal-progress-wrap">
+                <div className="goal-track">
+                  <div
+                    className={`goal-fill ${goal.color}`}
+                    style={{ width: `${goal.progress}%` }}
+                  ></div>
+                </div>
+                <span className="goal-percent">{goal.progress}% complete</span>
               </div>
             </div>
           ))}
@@ -175,9 +156,9 @@ export default function AnalyticsPage() {
                   </span>
                 </div>
 
-                <div className="progress-bar">
+                <div className="budget-category-track">
                   <div
-                    className={`progress-fill ${barColors[index % barColors.length]}`}
+                    className={`budget-category-fill ${barColors[index % barColors.length]}`}
                     style={{ width: `${percentage}%` }}
                   ></div>
                 </div>
