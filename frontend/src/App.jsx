@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 
+// Navigation items for sidebar
 const NAV = [
   { id: 'dashboard', label: 'Dashboard', icon: '▦', section: 'Main' },
   { id: 'users', label: 'Users', icon: '👤', section: 'Management' },
@@ -8,7 +9,7 @@ const NAV = [
   { id: 'reports', label: 'Reports', icon: '▤', section: 'Reports' },
   { id: 'settings', label: 'Settings', icon: '⚙', section: 'System' },
 ]
-
+// Button styles
 const BTN = {
   primary: {
     background: '#1a1a2e',
@@ -42,6 +43,7 @@ const BTN = {
   }
 }
 
+// Shared input style
 const inputStyle = {
   border:'1px solid #e2e8f0',
   borderRadius:6,
@@ -50,6 +52,7 @@ const inputStyle = {
   outline:'none'
 }
 
+// Table styles
 const thStyle = {
   textAlign:'left',
   padding:'12px 16px',
@@ -64,21 +67,14 @@ const tdStyle = {
   borderBottom:'1px solid #f1f5f9'
 }
 
-
+// Page titles mapping
 const PAGE_TITLES = {
   dashboard: 'Dashboard', users: 'User Management',
   transactions: 'Transaction Management', categories: 'Category Management',
   reports: 'Financial Reports & Analytics', settings: 'System Settings',
 }
 
-function Toggle({ on, onToggle }) {
-  return (
-    <div onClick={onToggle} style={{ width:40, height:22, borderRadius:20, background: on?'#63b3ed':'#cbd5e0', cursor:'pointer', position:'relative', transition:'background 0.2s' }}>
-      <div style={{ width:18, height:18, borderRadius:'50%', background:'#fff', position:'absolute', top:2, left: on?20:2, transition:'left 0.2s' }} />
-    </div>
-  )
-}
-
+// Badge component for status labels
 function Badge({ type }) {
   const map = {
     Active:{bg:'#f0fff4',color:'#276749'}, Pending:{bg:'#fffbeb',color:'#92400e'},
@@ -90,7 +86,7 @@ function Badge({ type }) {
   const s = map[type] || {bg:'#f7fafc',color:'#4a5568'}
   return <span style={{display:'inline-block',padding:'3px 10px',borderRadius:20,fontSize:11,fontWeight:500,background:s.bg,color:s.color}}>{type}</span>
 }
-
+// Dashboard statistic card
 function StatCard({ label, value, change, down }) {
   return (
     <div style={{background:'#fff',borderRadius:12,padding:20,border:'1px solid #e8ecf0'}}>
@@ -100,7 +96,7 @@ function StatCard({ label, value, change, down }) {
     </div>
   )
 }
-
+// Dashboard page
 function Dashboard() {
   return (
     <div>
@@ -143,12 +139,7 @@ function Dashboard() {
     </div>
   )
 }
-
-const DEFAULT_USERS = [
-  {id:1,name:'John Doe',email:'john.doe@example.com',status:'Active',role:'User'},
-  {id:2,name:'Jane Smith',email:'jane.smith@example.com',status:'Pending',role:'User'},
-]
-
+// Users page
 function Users() {
   const [editEmailError, setEditEmailError] = useState('')
   const [emailError, setEmailError] = useState('')
@@ -224,7 +215,6 @@ return (
     paddingBottom:10
   }}>
 
-    {/* ADD USER */}
     <div style={{
       padding:16,
       display:'flex',
@@ -260,15 +250,14 @@ return (
       {emailError}
     </span>
   )}
-</div>    <button style={BTN.primary} onClick={addUser}>+ Add</button>
+</div>    
+      <button style={BTN.primary} onClick={addUser}>+ Add</button>
     </div>
 
-    {/* SEARCH */}
     <div style={{padding:'0 16px 16px'}}>
       <input style={inputStyle} placeholder="Search..." value={search} onChange={e=>setSearch(e.target.value)} />
     </div>
 
-    {/* TABLE */}
     <table style={{
       width:'100%',
       borderCollapse:'collapse'
@@ -299,7 +288,6 @@ return (
       </tbody>
     </table>
 
-    {/* EDIT MODAL */}
     {editingUser && (
       <div style={{
         position:'fixed',
@@ -323,36 +311,34 @@ return (
             onChange={e=>setEditingUser({...editingUser,name:e.target.value})}
           />
 
-<div style={{position:'relative', marginBottom:14}}>
-  <input
-    style={{
-      ...inputStyle,
-      width:'100%',
-      border: editEmailError ? '1px solid #e53e3e' : inputStyle.border
-    }}
-    value={editingUser.email}
-    onChange={e=>{
-      setEditingUser({...editingUser,email:e.target.value})
-      setEditEmailError('')
-    }}
+      <div style={{position:'relative', marginBottom:14}}>
+        <input
+           style={{
+             ...inputStyle,
+             width:'100%',
+             border: editEmailError ? '1px solid #e53e3e' : inputStyle.border
+                    }}
+           value={editingUser.email}
+               onChange={e=>{
+                       setEditingUser({...editingUser,email:e.target.value})
+                       setEditEmailError('')
+               }}
   />
 
   {editEmailError && (
     <span style={{
-      position:'absolute',
       top:'100%',
       left:0,
       color:'#e53e3e',
       fontSize:11,
-      marginTop:4,
-      whiteSpace:'nowrap'
-    }}>
+      marginTop:8,
+      marginBottom:6,    }}>
       {editEmailError}
     </span>
   )}
-</div>
+          </div>
 
-          <div style={{display:'flex', gap:8}}>
+          <div style={{display:'flex', gap:8, marginTop:18}}>
             <button style={BTN.primary} onClick={saveEdit}>Save</button>
             <button style={BTN.danger} onClick={()=>setEditingUser(null)}>Cancel</button>
           </div>
@@ -364,27 +350,9 @@ return (
 )
 }
 
-
-const TRANSACTIONS = [
-  {id:'TXN-001',user:'Alice Johnson',amount:'+$150.00',type:'Income',status:'Completed',date:'2023-10-26'},
-  {id:'TXN-002',user:'Bob Williams',amount:'-$25.50',type:'Expense',status:'Pending',date:'2023-10-26'},
-  {id:'TXN-003',user:'Charlie Davis',amount:'+$75.00',type:'Income',status:'Completed',date:'2023-10-25'},
-  {id:'TXN-004',user:'Diana Prince',amount:'-$120.00',type:'Expense',status:'Failed',date:'2023-10-25'},
-  {id:'TXN-005',user:'Eve Adams',amount:'+$200.00',type:'Transfer',status:'Completed',date:'2023-10-24'},
-]
-
 function Transactions() {
   return null
 }
-
-const CATEGORIES = [
-  {id:'CAT-001',name:'Groceries',type:'Expense',count:125},
-  {id:'CAT-002',name:'Salary',type:'Income',count:12},
-  {id:'CAT-003',name:'Utilities',type:'Expense',count:48},
-  {id:'CAT-004',name:'Rent',type:'Expense',count:12},
-  {id:'CAT-005',name:'Freelance',type:'Income',count:8},
-  {id:'CAT-006',name:'Transportation',type:'Expense',count:70},
-]
 
 function Categories() {
   return null
@@ -398,187 +366,350 @@ function Settings() {
   return null
 }
 
+// Page mapping
 const PAGES = { dashboard:<Dashboard/>, users:<Users/>, transactions:<Transactions/>, categories:<Categories/>, reports:<Reports/>, settings:<Settings/> }
 
+// Login component
+function Login({ onLogin }) {
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [name, setName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [error, setError] = useState('')
+  const [mode, setMode] = useState('login') // login | signup | reset
 
-export default function App() {
-  const [page, setPage] = useState('dashboard');
+  const inputStyle = {
+    width:'100%',
+    padding:'8px 12px',
+    border:'1px solid #e2e8f0',
+    borderRadius:8,
+    fontSize:13,
+    outline:'none',
+    marginBottom:12
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const phoneRegex = /^[0-9]+$/
+
+  const handleLogin = () => {
+    if (!email || !password) {
+      setError('Please fill all fields')
+      return
+    }
+
+    if (password !== '1234') {
+      setError('Wrong password')
+      return
+    }
+
+    localStorage.setItem('adminAuth','true')
+    onLogin()
+  }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        height: '100vh',
-        width: '100vw',
-        overflow: 'hidden',
-        fontFamily: 'system-ui, sans-serif',
-        background: '#f4f6f9',
-        color: '#1a1a2e',
-      }}
-    >
-      {/* Sidebar */}
-      <aside
-        style={{
-          width: 220,
-          minWidth: 220,
-          background: '#1a1a2e',
-          color: '#fff',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        {/* Logo */}
-        <div
-          style={{
-            padding: '20px 20px 16px',
-            borderBottom: '1px solid rgba(255,255,255,0.08)',
-          }}
-        >
-          <div style={{ fontSize: 16, fontWeight: 600 }}>FinanceFlow</div>
-          <div
-            style={{
-              fontSize: 11,
-              color: 'rgba(255,255,255,0.4)',
-              marginTop: 2,
-            }}
-          >
-            Admin Panel
-          </div>
+    <div style={{
+      height:'100vh',
+      display:'flex',
+      justifyContent:'center',
+      alignItems:'center',
+      background:'#f4f6f9'
+    }}>
+      <div style={{
+        background:'#fff',
+        padding:30,
+        borderRadius:12,
+        width:320,
+        border:'1px solid #e8ecf0'
+      }}>
+        
+        {/* TITLE */}
+        <div style={{fontSize:18,fontWeight:600,marginBottom:6}}>
+          {mode === 'login' && 'Admin Login'}
+          {mode === 'signup' && 'Create Account'}
+          {mode === 'reset' && 'Reset Password'}
         </div>
 
-        {/* Navigation */}
-        {NAV.map((item) => (
+        <div style={{fontSize:12,color:'#718096',marginBottom:16}}>
+          {mode === 'login' && 'Enter your credentials'}
+          {mode === 'signup' && 'Create a new admin account'}
+          {mode === 'reset' && 'Enter your email to reset password'}
+        </div>
+
+        {/* SIGNUP EXTRA */}
+        {mode === 'signup' && (
+          <>
+            <input
+              style={inputStyle}
+              placeholder="Full Name"
+              value={name}
+              onChange={e=>setName(e.target.value)}
+            />
+
+            <input
+              style={inputStyle}
+              placeholder="Username"
+              value={username}
+              onChange={e=>setUsername(e.target.value)}
+            />
+
+            <input
+              style={{
+                ...inputStyle,
+                border: error === 'Phone must be numbers only'
+                  ? '1px solid #e53e3e'
+                  : inputStyle.border
+              }}
+              placeholder="Phone Number"
+              value={phone}
+              onChange={e=>{
+                setPhone(e.target.value)
+                setError('')
+              }}
+            />
+          </>
+        )}
+
+        <input
+          style={{
+            ...inputStyle,
+            border: error === 'Invalid email format'
+              ? '1px solid #e53e3e'
+              : inputStyle.border
+          }}
+          placeholder="Email"
+          value={email}
+          onChange={e=>{
+            setEmail(e.target.value)
+            setError('')
+          }}
+        />
+
+        {mode !== 'reset' && (
+          <>
+            <input
+              type="password"
+              style={inputStyle}
+              placeholder="Password"
+              value={password}
+              onChange={e=>{
+                setPassword(e.target.value)
+                setError('')
+              }}
+            />
+
+            {mode === 'signup' && (
+              <input
+                type="password"
+                style={inputStyle}
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={e=>setConfirmPassword(e.target.value)}
+              />
+            )}
+          </>
+        )}
+
+        {error && (
+          <div style={{color:'#e53e3e',fontSize:12,marginBottom:10}}>
+            {error}
+          </div>
+        )}
+
+        <button
+          style={{...BTN.primary, width:'100%', marginBottom:10}}
+          onClick={()=>{
+            if (mode === 'login') {
+              handleLogin()
+              return
+            }
+
+            if (mode === 'signup') {
+              if (!name || !username || !phone || !email || !password || !confirmPassword) {
+                setError('Please fill all fields')
+                return
+              }
+
+              if (!phoneRegex.test(phone)) {
+                setError('Phone must be numbers only')
+                return
+              }
+
+              if (!emailRegex.test(email)) {
+                setError('Invalid email format')
+                return
+              }
+
+              if (password !== confirmPassword) {
+                setError('Passwords do not match')
+                return
+              }
+
+              alert('Account created (demo only)')
+              setMode('login')
+              return
+            }
+
+            if (mode === 'reset') {
+              if (!email) {
+                setError('Enter your email')
+                return
+              }
+
+              alert('Password reset link sent (demo)')
+              setMode('login')
+            }
+          }}
+        >
+          {mode === 'login' && 'Login'}
+          {mode === 'signup' && 'Sign Up'}
+          {mode === 'reset' && 'Send Reset Link'}
+        </button>
+
+        <div style={{display:'flex',gap:8,justifyContent:'space-between',alignItems:'center'}}>
+
+          {mode === 'login' && (
+            <>
+              <button
+                style={{...BTN.edit, width:'50%'}}
+                onClick={()=>setMode('signup')}
+              >
+                Sign Up
+              </button>
+
+              <span
+                style={{fontSize:12,color:'#2b6cb0',cursor:'pointer'}}
+                onClick={()=>setMode('reset')}
+              >
+                Forgot password?
+              </span>
+            </>
+          )}
+
+          {mode !== 'login' && (
+ <button
+  style={{
+    ...BTN.edit,
+    width:'100%',
+    marginTop:6
+  }}
+  onClick={()=>setMode('login')}
+>
+  Back to login
+</button>
+          )}
+
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+
+// Main App
+export default function App() {
+  const [page,setPage]=useState('dashboard')
+
+    // Check auth from localStorage
+  const [isAuth,setIsAuth]=useState(
+    localStorage.getItem('adminAuth') === 'true'
+  )
+
+  const handleLogin = () => setIsAuth(true)
+
+  const logout = () => {
+    localStorage.removeItem('adminAuth')
+    setIsAuth(false)
+  }
+
+  if (!isAuth) {
+    return <Login onLogin={handleLogin} />
+  }
+
+  return (
+    <div style={{
+      display:'flex',
+      height:'100vh',
+      width:'100vw',
+      overflow:'hidden',
+      fontFamily:'system-ui, sans-serif',
+      background:'#f4f6f9',
+      color:'#1a1a2e'
+    }}>
+
+      <aside style={{
+        width:220,
+        background:'#1a1a2e',
+        color:'#fff',
+        display:'flex',
+        flexDirection:'column'
+      }}>
+        
+        <div style={{padding:'20px',borderBottom:'1px solid rgba(255,255,255,0.08)'}}>
+          <div style={{fontSize:16,fontWeight:600}}>FinanceFlow</div>
+          <div style={{fontSize:11,opacity:0.6}}>Admin Panel</div>
+        </div>
+
+        {NAV.map(item=>(
           <div key={item.id}>
             {item.section && (
-              <div
-                style={{
-                  fontSize: 10,
-                  color: 'rgba(255,255,255,0.25)',
-                  padding: '16px 20px 6px',
-                  letterSpacing: '0.8px',
-                  textTransform: 'uppercase',
-                }}
-              >
+              <div style={{
+                fontSize:10,
+                opacity:0.4,
+                padding:'16px 20px 6px',
+                textTransform:'uppercase'
+              }}>
                 {item.section}
               </div>
             )}
 
             <div
-              onClick={() => setPage(item.id)}
+              onClick={()=>setPage(item.id)}
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                padding: '11px 20px',
-                fontSize: 13,
-                color:
-                  page === item.id
-                    ? '#63b3ed'
-                    : 'rgba(255,255,255,0.65)',
-                cursor: 'pointer',
-                borderLeft:
-                  page === item.id
-                    ? '3px solid #63b3ed'
-                    : '3px solid transparent',
-                background:
-                  page === item.id
-                    ? 'rgba(99,179,237,0.15)'
-                    : 'transparent',
+                padding:'11px 20px',
+                cursor:'pointer',
+                color:page===item.id?'#63b3ed':'rgba(255,255,255,0.65)',
+                background:page===item.id?'rgba(99,179,237,0.15)':'transparent'
               }}
             >
-              <span
-                style={{
-                  fontSize: 15,
-                  width: 18,
-                  textAlign: 'center',
-                }}
-              >
-                {item.icon}
-              </span>
               {item.label}
             </div>
           </div>
         ))}
+
+        {/* LOGOUT */}
+        <div style={{marginTop:'auto', padding:20}}>
+          <button style={{...BTN.danger, width:'100%'}} onClick={logout}>
+            Logout
+          </button>
+        </div>
+
       </aside>
 
-      {/* Main Content */}
-      <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'hidden',
-        }}
-      >
-        {/* Top Bar */}
-        <div
-          style={{
-            background: '#fff',
-            borderBottom: '1px solid #e8ecf0',
-            padding: '0 24px',
-            height: 56,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <span style={{ fontSize: 16, fontWeight: 600 }}>
+      <div style={{flex:1,display:'flex',flexDirection:'column'}}>
+        
+        <div style={{
+          background:'#fff',
+          borderBottom:'1px solid #e8ecf0',
+          padding:'0 24px',
+          height:56,
+          display:'flex',
+          alignItems:'center',
+          justifyContent:'space-between'
+        }}>
+          <span style={{fontWeight:600}}>
             {PAGE_TITLES[page]}
           </span>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            {/* Search */}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                background: '#f4f6f9',
-                border: '1px solid #e2e8f0',
-                borderRadius: 8,
-                padding: '6px 12px',
-              }}
-            >
-              <span style={{ color: '#a0aec0', fontSize: 13 }}>⌕</span>
-              <input
-                placeholder="Search…"
-                style={{
-                  border: 'none',
-                  background: 'transparent',
-                  fontSize: 13,
-                  outline: 'none',
-                  width: 180,
-                }}
-              />
-            </div>
-
-            {/* Avatar */}
-            <span
-              style={{
-                background: '#1a1a2e',
-                color: '#fff',
-                fontSize: 11,
-                fontWeight: 600,
-                padding: '4px 10px',
-                borderRadius: 20,
-              }}
-            >
-              AD
-            </span>
-          </div>
         </div>
 
-        {/* Page Content */}
-        <div
-          style={{
-            padding: 24,
-            flex: 1,
-            overflowY: 'auto',
-          }}
-        >
+        <div style={{padding:24,flex:1,overflowY:'auto'}}>
           {PAGES[page]}
         </div>
+
       </div>
+
     </div>
-  );
+  )
 }
