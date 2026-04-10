@@ -1,121 +1,135 @@
-import { budgetCategories, balances } from "../data/mockData";
-import { FaCcVisa, FaCcMastercard, FaWallet } from "react-icons/fa";
-
 export default function BudgetPage() {
   const statusItems = [
-    { label: "Spending Limit", value: "$5000", percent: 55, color: "blue-bar" },
-    { label: "Saving Target", value: "$100,000", percent: 75, color: "pink-bar" },
-    { label: "Personal Expenses", value: "$2000", percent: 40, color: "purple-bar" },
-    { label: "Debt Progress", value: "$500,000", percent: 62, color: "navy-bar" },
+    { label: "Spending Limit", value: "$5000", percent: 48, color: "blue-bar" },
+    { label: "Saving Target", value: "$100,000", percent: 82, color: "pink-bar" },
+    { label: "personal Expenses", value: "$2000", percent: 46, color: "purple-bar" },
+    { label: "Debt Progress", value: "$500,000", percent: 68, color: "navy-bar" },
   ];
 
-  const categoryStyles = [
-    { color: "green-bar", width: "48%" },
-    { color: "yellow-bar", width: "34%" },
-    { color: "purple-bar", width: "20%" },
-    { color: "red-bar", width: "56%" },
-    { color: "orange-bar", width: "52%" },
-    { color: "blue-bar", width: "24%" },
+  const categoryItems = [
+    { id: 1, name: "Groceries", spent: 375, limit: 500, color: "green-bar" },
+    { id: 2, name: "Utilities", spent: 180, limit: 300, color: "yellow-bar" },
+    { id: 3, name: "Entertainment", spent: 100, limit: 250, color: "purple-bar" },
+    { id: 4, name: "Transportation", spent: 255, limit: 300, color: "red-bar" },
+    { id: 5, name: "Dining Out", spent: 270, limit: 300, color: "orange-bar" },
+    { id: 6, name: "Shopping", spent: 125, limit: 250, color: "light-blue-bar" },
+  ];
+
+  const accountRows = [
+    {
+      id: 1,
+      name: "Alinma",
+      subtitle: "Credit Card",
+      amount: "$25,000",
+      icon: "visa",
+    },
+    {
+      id: 2,
+      name: "SNB",
+      subtitle: "Debt Card",
+      amount: "$2,000",
+      icon: "mastercard",
+    },
+    {
+      id: 3,
+      name: "Cash",
+      subtitle: "Last Update - Oct 24, 2023",
+      amount: "$5,000",
+      icon: "cash",
+    },
   ];
 
   return (
-    <main className="page-content">
+    <main className="page-content budget-page">
       <h1 className="page-title">Budget Overview</h1>
 
-      <section className="budget-grid">
-        <div className="card">
-          <div className="budget-card-header">
-            <h3>Budget Status Overview</h3>
-            <button className="primary-small-btn">Reset Limits</button>
+      <section className="budget-wireframe-layout">
+        <div className="budget-left-column">
+          <div className="card budget-status-card">
+            <div className="budget-card-header">
+              <h3>Budget Status Overview</h3>
+              <button className="primary-small-btn reset-btn">Rest Limits</button>
+            </div>
+
+            <div className="status-list">
+              {statusItems.map((item) => (
+                <div key={item.label} className="status-item">
+                  <div className="status-row">
+                    <span>{item.label}</span>
+                    <span>{item.value}</span>
+                  </div>
+
+                  <div className="progress-bar">
+                    <div
+                      className={`progress-fill ${item.color}`}
+                      style={{ width: `${item.percent}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="status-list">
-            {statusItems.map((item) => (
-              <div key={item.label} className="status-item">
-                <div className="status-row">
-                  <span>{item.label}</span>
-                  <span>{item.value}</span>
-                </div>
+          <div className="card accounts-card">
+            <div className="account-list">
+              {accountRows.map((item) => (
+                <div key={item.id} className="account-item">
+                  <div className="account-main">
+                    <div className="account-name-wrap">
+                      <div className="account-top-line">
+                        <span className="account-name">{item.name}</span>
 
-                <div className="progress-bar">
-                  <div
-                    className={`progress-fill ${item.color}`}
-                    style={{ width: `${item.percent}%` }}
-                  ></div>
+                        {item.icon === "visa" && (
+                          <span className="account-badge visa-badge">VISA</span>
+                        )}
+
+                        {item.icon === "mastercard" && (
+                          <span className="account-badge mc-badge">
+                            <span className="mc-circle left"></span>
+                            <span className="mc-circle right"></span>
+                          </span>
+                        )}
+
+                        {item.icon === "cash" && (
+                          <span className="account-badge cash-badge">
+                            <span className="cash-dot"></span>
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="account-subtitle">{item.subtitle}</div>
+                    </div>
+
+                    <div className="account-amount">{item.amount}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <div className="account-actions">
+              <input type="text" className="balance-input" placeholder="Button" />
+              <button className="primary-small-btn update-btn">Update</button>
+            </div>
           </div>
         </div>
 
-        <div className="card">
+        <div className="card budget-category-card">
           <h3 className="budget-section-title">Category-wise Spending</h3>
 
-          <div className="budget-category-list">
-            {budgetCategories.map((item, index) => (
-              <div key={item.id} className="budget-edit-item">
-                <div className="budget-edit-name">{item.name}</div>
-
-                <div className="mini-track">
-                  <div
-                    className={`mini-fill ${categoryStyles[index % categoryStyles.length].color}`}
-                    style={{ width: categoryStyles[index % categoryStyles.length].width }}
-                  ></div>
-                </div>
-
-                <div className="budget-edit-middle">
+          <div className="category-list">
+            {categoryItems.map((item) => (
+              <div key={item.id} className="category-row">
+                <span className="category-name">{item.name}</span>
+                <span className={`category-dot ${item.color}`}></span>
+                <span className="category-amount">
                   ${item.spent} spent of ${item.limit}
-                </div>
-
+                </span>
                 <button className="edit-btn">Edit</button>
               </div>
             ))}
           </div>
 
           <button className="primary-full-btn">Add New Category</button>
-        </div>
-      </section>
-
-      <section className="budget-bottom-row">
-        <div className="card accounts-card">
-          <div className="account-list">
-            {balances.map((item) => (
-              <div key={item.id} className="account-item">
-                <div className="account-left">
-                  <div className="account-title-row">
-                    <p className="account-name">{item.name}</p>
-
-                    {item.name === "Alinma Credit Card" && (
-                      <FaCcVisa className="account-icon visa" />
-                    )}
-
-                    {item.name === "SNB Debit Card" && (
-                      <FaCcMastercard className="account-icon mastercard" />
-                    )}
-
-                    {item.name === "Cash" && (
-                      <FaWallet className="account-icon cash" />
-                    )}
-                  </div>
-
-                  <p className="account-subtitle">
-                    {item.name === "Cash" ? "Last Update - Oct 24, 2023" : "Account"}
-                  </p>
-                </div>
-
-                <div className="account-right">${item.amount.toLocaleString()}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="account-actions">
-            <input
-              type="text"
-              className="balance-input"
-              placeholder="Enter amount"
-            />
-            <button className="primary-small-btn">Update</button>
-          </div>
         </div>
       </section>
     </main>
