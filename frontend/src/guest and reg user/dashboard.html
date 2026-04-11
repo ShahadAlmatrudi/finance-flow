@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard - FinanceFlow</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="appPageBody">
+
+    <div class="appLayout">
+        <aside class="sidebar">
+            <div class="sidebarBrand">
+                <a href="dashboard.html" class="sidebarLogo">💸 FinanceFlow</a>
+            </div>
+
+            <nav class="sidebarNav">
+                <a href="dashboard.html" class="navItem active">Dashboard</a>
+                <a href="transactions.html" class="navItem">Transactions</a>
+                <a href="budget.html" class="navItem">Budget</a>
+                <a href="analytics.html" class="navItem">Analytics</a>
+                <a href="cards.html" class="navItem">Cards</a>
+                <a href="notifications.html" class="navItem">Notifications</a>
+                <a href="profile-view.html" class="navItem">Account Settings</a>
+            </nav>
+
+            <div class="sidebarUser">
+                <div class="sidebarAvatar" id="sidebarAvatar">U</div>
+                <div class="sidebarUserText">
+                    <p class="sidebarUserName" id="sidebarUserName">User</p>
+                    <button class="sidebarLogoutBtn" id="logoutBtn" type="button">Logout</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="mainContent">
+            <header class="topBar">
+                <div>
+                    <h1 class="pageHeading">
+                        Welcome back, <span id="dashboardUserName">User</span> 👋
+                    </h1>
+                    <p class="pageSubheading">Here is a quick overview of your finances.</p>
+                </div>
+
+                <div class="topBarRight">
+                    <input type="text" class="searchInput" placeholder="Search accounts..." />
+                    <a href="notifications.html" class="notificationBtn">🔔</a>
+                </div>
+            </header>
+
+            <section class="financeCards">
+                <article class="financeCard cashCard">
+                    <div class="financeCardTop">
+                        <h3>Cash</h3>
+                        <span class="financeIcon">💵</span>
+                    </div>
+                    <p class="financeLabel">Available Balance</p>
+                    <h2 class="financeAmount" id="cashAmountCard">$0</h2>
+                    <a href="budget.html" class="cardActionBtn">View Details</a>
+                </article>
+
+                <article class="financeCard cardBalanceCard">
+                    <div class="financeCardTop">
+                        <h3>Cards</h3>
+                        <span class="financeIcon">💳</span>
+                    </div>
+                    <p class="financeLabel">Total Saved Cards</p>
+                    <h2 class="financeAmount" id="cardsCountCard">0</h2>
+                    <p class="financeSmallText" id="primaryCardText">No primary card set</p>
+                    <a href="cards.html" class="cardActionBtn">Manage Cards</a>
+                </article>
+
+                <article class="financeCard savingCard">
+                    <div class="financeCardTop">
+                        <h3>Saving Goal</h3>
+                        <span class="financeIcon">🎯</span>
+                    </div>
+                    <p class="financeLabel">Monthly Saving Plan</p>
+                    <h2 class="financeAmount" id="monthlySavingCard">$0</h2>
+                    <p class="financeSmallText" id="goalNameCard">No goal yet</p>
+                    <a href="plan-setup.html" class="cardActionBtn">View Plan</a>
+                </article>
+            </section>
+
+            <section class="dashboardGrid">
+                <div class="dashboardPanel recentTransactionsPanel">
+                    <div class="panelHeader">
+                        <h2>Recent Transactions</h2>
+                    </div>
+                    <div class="transactionList" id="transactionList"></div>
+                </div>
+
+                <div class="dashboardPanel monthOverviewPanel">
+                    <div class="panelHeader">
+                        <h2>This Month Overview</h2>
+                    </div>
+
+                    <div class="progressList">
+                        <div class="progressItem">
+                            <div class="progressLabelRow">
+                                <span>Income Status</span>
+                                <span id="incomeStatusText">Profile Saved</span>
+                            </div>
+                            <div class="progressTrack">
+                                <div class="progressFill progressBlue" id="incomeProgress"></div>
+                            </div>
+                        </div>
+
+                        <div class="progressItem">
+                            <div class="progressLabelRow">
+                                <span>Saving Progress</span>
+                                <span id="savingProgressText">0%</span>
+                            </div>
+                            <div class="progressTrack">
+                                <div class="progressFill progressGreen" id="savingProgress"></div>
+                            </div>
+                        </div>
+
+                        <div class="progressItem">
+                            <div class="progressLabelRow">
+                                <span>Cards Setup</span>
+                                <span id="cardsProgressText">0 cards</span>
+                            </div>
+                            <div class="progressTrack">
+                                <div class="progressFill progressPurple" id="cardsProgress"></div>
+                            </div>
+                        </div>
+
+                        <div class="progressItem">
+                            <div class="progressLabelRow">
+                                <span>Budget Categories</span>
+                                <span id="budgetProgressText">0 categories</span>
+                            </div>
+                            <div class="progressTrack">
+                                <div class="progressFill progressOrange" id="budgetProgress"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboardPanel budgetPanel">
+                    <div class="panelHeader">
+                        <h2>Budget Categories</h2>
+                        <a href="budget.html" class="panelLink">Manage</a>
+                    </div>
+                    <div class="categoryList" id="categoryList"></div>
+                </div>
+
+                <div class="dashboardPanel goalPanel">
+                    <div class="panelHeader">
+                        <h2>Main Goal</h2>
+                    </div>
+
+                    <div class="goalBox">
+                        <p class="goalType" id="goalTypeText">No goal type</p>
+                        <h3 class="goalName" id="goalNameText">No goal created yet</h3>
+                        <p class="goalMeta" id="goalTargetText">Target amount: $0</p>
+                        <p class="goalMeta" id="goalDateText">Target date: --</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
