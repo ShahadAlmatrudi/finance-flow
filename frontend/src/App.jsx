@@ -10,10 +10,10 @@ const NAV = [
 ]
 
 const BTN = {
-  primary: { background:'#1a1a2e', color:'#fff', border:'none', padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer', fontWeight:500 },
+  primary: { background:'#3d3de4', color:'#fff', border:'none', padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer', fontWeight:500 },
   danger: { background:'#fff5f5', color:'#c53030', border:'none', padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer', fontWeight:500 },
   edit: { background:'#ebf8ff', color:'#2b6cb0', border:'none', padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer', fontWeight:500 },
-  green: { background:'#f0fff4', color:'#276749', border:'none', padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer', fontWeight:500 },
+  green: { background:'#1da541', color:'#ffffff', border:'none', padding:'6px 12px', borderRadius:6, fontSize:12, cursor:'pointer', fontWeight:500 },
 }
 
 const PAGE_TITLES = {
@@ -63,7 +63,7 @@ function Modal({ title, onClose, children }) {
 function Dashboard() { return null }
 function Users() { return null }
 
-// ── TRANSACTIONS ──────────────────────────────────────
+// transactions board
 const INIT_TRANSACTIONS = [
   {id:'TXN-001',user:'Alice Johnson',amount:150,type:'Income',status:'Completed',date:'2023-10-26'},
   {id:'TXN-002',user:'Bob Williams',amount:-25.5,type:'Expense',status:'Pending',date:'2023-10-26'},
@@ -113,7 +113,6 @@ function Transactions() {
 
   return (
     <div style={{background:'#fff',borderRadius:12,border:'1px solid #e8ecf0',overflow:'hidden'}}>
-      {/* filters row */}
       <div style={{padding:'14px 16px',display:'flex',gap:8,borderBottom:'1px solid #e8ecf0',flexWrap:'wrap',alignItems:'center'}}>
         <input placeholder="Search user or ID…" value={search} onChange={e=>setSearch(e.target.value)} style={{...inputStyle,width:160}} />
         <select value={statusF} onChange={e=>setStatusF(e.target.value)} style={inputStyle}>
@@ -132,7 +131,6 @@ function Transactions() {
         </div>
       </div>
 
-      {/* table */}
       <table style={{width:'100%',borderCollapse:'collapse'}}>
         <thead>
           <tr>
@@ -164,7 +162,7 @@ function Transactions() {
   )
 }
 
-
+// categories board
 const INIT_CATS = [
   {id:'CAT-001',name:'Groceries',type:'Expense',count:125},
   {id:'CAT-002',name:'Salary',type:'Income',count:12},
@@ -208,7 +206,7 @@ function Categories() {
     <div style={{background:'#fff',borderRadius:12,border:'1px solid #e8ecf0',overflow:'hidden'}}>
       <div style={{padding:'14px 16px',display:'flex',alignItems:'center',justifyContent:'space-between',borderBottom:'1px solid #e8ecf0',flexWrap:'wrap',gap:8}}>
         <input placeholder="Search categories…" value={search} onChange={e=>setSearch(e.target.value)} style={{...inputStyle,width:200}} />
-        <button style={BTN.primary} onClick={()=>{setShowAdd(true);setFormError('')}}>+ Add Category</button>
+        <button style={BTN.primary} onClick={()=>{setShowAdd(true);setFormError('')}}>+ Add New Category</button>
       </div>
       <table style={{width:'100%',borderCollapse:'collapse'}}>
         <thead><tr>{['Category ID','Category Name','Type','Associated Transactions','Actions'].map(h=><th key={h} style={thStyle}>{h}</th>)}</tr></thead>
@@ -266,9 +264,355 @@ function Categories() {
   )
 }
 
-function Reports() {return null}
-function Settings() {return null}
+// reports board
+function Reports() {
+  const [txns]=useState(()=>{const s=localStorage.getItem('txns');return s?JSON.parse(s):INIT_TRANSACTIONS})
+  const [fromDate,setFromDate]=useState('')
+  const [toDate,setToDate]=useState('')
 
+  const filtered=txns.filter(t=>{
+    if(fromDate&&t.date<fromDate)return false
+    if(toDate&&t.date>toDate)return false
+    return true
+  })
+
+  const exportCSV=()=>{
+    const headers=['ID','User','Amount','Type','Status','Date']
+    const rows=filtered.map(t=>[t.id,t.user,t.amount,t.type,t.status,t.date])
+    const csv=[headers,...rows].map(r=>r.join(',')).join('\n')
+    const blob=new Blob([csv],{type:'text/csv'})
+    const url=URL.createObjectURL(blob)
+    const a=document.createElement('a')
+    a.href=url;a.download='transactions_report.csv';a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  const monthlyIncome=Array(12).fill(0)
+  const monthlyExpense=Array(12).fill(0)
+  txns.forEach(t=>{
+    const m=new Date(t.date).getMonth()
+    if(isNaN(m))return
+    if(t.amount>0)monthlyIncome[m]+=t.amount
+    else monthlyExpense[m]+=Math.abs(t.amount)
+  })
+  const maxVal=Math.max(...monthlyIncome,...monthlyExpense,1)
+
+  // top 5 spending categories from expense transactions
+  const catSpend={}
+  filtered.filter(t=>t.amount<0).forEach(t=>{
+    catSpend[t.type]=(catSpend[t.type]||0)+Math.abs(t.amount)
+  })
+const top5=[
+  {name:'Groceries',pct:'25%',color:'#3b82f6'},     
+  {name:'Rent',pct:'20%',color:'#ef4444'},         
+  {name:'Utilities',pct:'15%',color:'#f59e0b'},     
+  {name:'Transportation',pct:'10%',color:'#10b981'},
+  {name:'Dining Out',pct:'8%',color:'#6366f1'},   
+  {name:'Other',pct:'22%',color:'#9ca3af'},      
+]
+  const card={background:'#fff',borderRadius:12,padding:20,border:'1px solid #e8ecf0',marginBottom:16}
+
+  return (
+    <div>
+      <div style={{...card,display:'flex',gap:10,flexWrap:'wrap',alignItems:'center',marginBottom:16}}>
+        <div style={{display:'flex',alignItems:'center',gap:6}}>
+          <label style={{fontSize:12,color:'#718096'}}>From:</label>
+          <input type="date" value={fromDate} onChange={e=>setFromDate(e.target.value)} style={inputStyle} />
+        </div>
+        <div style={{display:'flex',alignItems:'center',gap:6}}>
+          <label style={{fontSize:12,color:'#718096'}}>To:</label>
+          <input type="date" value={toDate} onChange={e=>setToDate(e.target.value)} style={inputStyle} />
+        </div>
+        <select style={inputStyle}><option>All Reports</option></select>
+        <button style={{...BTN.green,padding:'7px 14px',fontSize:13}} onClick={exportCSV}> Export to CSV</button>
+        <button style={{...BTN.primary,padding:'7px 14px',fontSize:13}} onClick={()=>{setFromDate('');setToDate('')}}>↺ Refresh</button>
+      </div>
+
+
+      <div style={{display:'grid',gridTemplateColumns:'1.6fr 1fr',gap:16,marginBottom:16}}>
+        <div style={card}>
+          <div style={{fontSize:14,fontWeight:600,marginBottom:16}}>Monthly Income vs. Expense</div>
+          <div style={{display:'flex',alignItems:'flex-end',gap:4,height:130,marginBottom:8}}>
+            {months.map((m,i)=>(
+              <div key={m} style={{flex:1,display:'flex',gap:2,alignItems:'flex-end'}}>
+                <div style={{
+  flex:1,
+  height:`${(monthlyIncome[i]/maxVal)*100}%`,
+  background:'#22c55e', 
+  borderRadius:'3px 3px 0 0',
+  minHeight:monthlyIncome[i]>0?4:0
+}} />
+
+<div style={{
+  flex:1,
+  height:`${(monthlyExpense[i]/maxVal)*100}%`,
+  background:'#ef4444', 
+  borderRadius:'3px 3px 0 0',
+  minHeight:monthlyExpense[i]>0?4:0
+}} />             </div>
+            ))}
+          </div>
+          <div style={{display:'flex',gap:8,marginBottom:6}}>
+            {months.map(m=><div key={m} style={{flex:1,fontSize:9,color:'#a0aec0',textAlign:'center'}}>{m}</div>)}
+          </div>
+<div style={{
+  display:'flex',
+  justifyContent:'center',
+  alignItems:'center',
+  gap:30,
+  marginTop:12
+}}>
+  <div style={{display:'flex',alignItems:'center',gap:6}}>
+    <span style={{width:12,height:12,background:'#22c55e',borderRadius:3}} />
+    <span style={{fontSize:13,fontWeight:500,color:'#4a5568'}}>Income</span>
+  </div>
+
+  <div style={{display:'flex',alignItems:'center',gap:6}}>
+    <span style={{width:12,height:12,background:'#ef4444',borderRadius:3}} />
+    <span style={{fontSize:13,fontWeight:500,color:'#4a5568'}}>Expense</span>
+  </div>
+</div>
+           </div>
+
+        <div style={card}>
+          <div style={{fontSize:14,fontWeight:600,marginBottom:16}}>Top 5 Spending Categories</div>
+          {top5.map(({name,pct,color})=>(
+            <div key={name} style={{display:'flex',alignItems:'center',gap:8,fontSize:13,color:'#4a5568',marginBottom:10}}>
+<span style={{
+  width:12,
+  height:12,
+  borderRadius:4,
+  background:color,
+  display:'inline-block'
+}} />              <span style={{flex:1}}>{name}</span>
+              <span style={{fontWeight:600,color:'#1a1a2e'}}>{pct}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{...card,padding:0,overflow:'hidden'}}>
+        <div style={{padding:'14px 16px',borderBottom:'1px solid #e8ecf0',fontSize:14,fontWeight:600}}>
+          Recent User Activity
+        </div>
+        <table style={{width:'100%',borderCollapse:'collapse'}}>
+          <thead><tr>{['User ID','Username','Action'].map(h=><th key={h} style={thStyle}>{h}</th>)}</tr></thead>
+          <tbody>
+            {[
+              ['USR-001','Alice Johnson','Logged in'],
+              ['USR-002','Bob Williams','Added new transaction'],
+              ['USR-001','Alice Johnson','Updated profile'],
+              ['USR-003','Charlie Davis','Viewed reports'],
+              ['USR-002','Bob Williams','Logged out'],
+            ].map(([id,u,a])=>(
+              <tr key={id+a}><td style={tdStyle}>{id}</td><td style={tdStyle}>{u}</td><td style={tdStyle}>{a}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+// settings board
+function Settings() {
+  const [saved,setSaved]=useState({
+    general:'', user:'', notif:'', security:''
+  })
+
+  const [error,setError]=useState({
+    general:'', user:'', notif:'', security:''
+  })
+
+  const [general,setGeneral]=useState(()=>{const s=localStorage.getItem('settings_general');return s?JSON.parse(s):{appName:'',currency:'SAR'}})
+  const [userSettings,setUserSettings]=useState(()=>{const s=localStorage.getItem('settings_user');return s?JSON.parse(s):{allowReg:true,defaultRole:'Standard User',requireEmail:false}})
+  const [notif,setNotif]=useState(()=>{const s=localStorage.getItem('settings_notif');return s?JSON.parse(s):{email:true,sms:false,digest:'Daily'}})
+  const [security,setSecurity]=useState(()=>{const s=localStorage.getItem('settings_security');return s?JSON.parse(s):{tfa:true,minPass:8,timeout:60}})
+
+  const showMsg=(section, ok, msg)=>{
+    if(ok){
+      setSaved(s=>({...s,[section]:msg}))
+      setError(e=>({...e,[section]:''}))
+      setTimeout(()=>setSaved(s=>({...s,[section]:''})),3000)
+    }else{
+      setError(e=>({...e,[section]:msg}))
+      setSaved(s=>({...s,[section]:''}))
+      setTimeout(()=>setError(e=>({...e,[section]:''})),3000)
+    }
+  }
+
+  const saveGeneral=()=>{
+    if(!general.appName.trim()){showMsg('general',false,'Application Name is required');return}
+    localStorage.setItem('settings_general',JSON.stringify(general))
+    showMsg('general',true,'General settings saved')
+  }
+
+  const saveUser=()=>{
+    localStorage.setItem('settings_user',JSON.stringify(userSettings))
+    showMsg('user',true,'User registration settings saved')
+  }
+
+  const saveNotif=()=>{
+    localStorage.setItem('settings_notif',JSON.stringify(notif))
+    showMsg('notif',true,'Notification settings saved')
+  }
+
+  const saveSecurity=()=>{
+    if(!security.minPass||security.minPass<1){showMsg('security',false,'Minimum Password Length is required');return}
+    if(!security.timeout||security.timeout<1){showMsg('security',false,'Session Timeout is required');return}
+    localStorage.setItem('settings_security',JSON.stringify(security))
+    showMsg('security',true,'Security settings saved')
+  }
+
+  const inp={width:'100%',padding:'8px 12px',border:'1px solid #e2e8f0',borderRadius:8,fontSize:13,outline:'none',marginBottom:14,boxSizing:'border-box'}
+  const btn={background:'#3434e7',color:'#fff',border:'none',padding:'8px 16px',borderRadius:8,fontSize:13,cursor:'pointer',fontWeight:500,marginTop:6}
+  const row={display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 0',borderBottom:'1px solid #f7fafc'}
+  const sectionTitle={fontSize:14,fontWeight:600,marginBottom:14,paddingBottom:10,borderBottom:'1px solid #e8ecf0'}
+  const card={background:'#fff',borderRadius:12,padding:20,border:'1px solid #e8ecf0',marginBottom:16}
+
+  const successStyle = {
+    background:'#f0fff4',
+    border:'1px solid #9ae6b4',
+    color:'#276749',
+    padding:'10px 16px',
+    borderRadius:8,
+    marginTop:10,
+    fontSize:13
+  }
+
+  const errorStyle = {
+    background:'#fff5f5',
+    border:'1px solid #feb2b2',
+    color:'#c53030',
+    padding:'10px 16px',
+    borderRadius:8,
+    marginTop:10,
+    fontSize:13
+  }
+
+  return (
+    <div>
+
+      <div style={card}>
+        <div style={sectionTitle}>General Settings</div>
+        <label style={{fontSize:12,color:'#718096',display:'block',marginBottom:6}}>
+          Application Name <span style={{color:'#e53e3e'}}>*</span>
+        </label>
+        <input
+          style={{...inp,border:!general.appName.trim()?'1px solid #fed7d7':inp.border}}
+          placeholder="e.g. MoneyPlan"
+          value={general.appName}
+          onChange={e=>setGeneral({...general,appName:e.target.value})}
+        />
+        {!general.appName.trim()&&<div style={{color:'#e53e3e',fontSize:11,marginTop:-10,marginBottom:10}}>Required</div>}
+
+        <label style={{fontSize:12,color:'#718096',display:'block',marginBottom:6}}>Default Currency</label>
+        <select style={inp} value={general.currency} onChange={e=>setGeneral({...general,currency:e.target.value})}>
+          <option value="SAR">SAR (ريال)</option>
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+        </select>
+
+        <button style={btn} onClick={saveGeneral}>Save General Settings</button>
+
+        {saved.general && <div style={successStyle}>✓ {saved.general}</div>}
+        {error.general && <div style={errorStyle}>✕ {error.general}</div>}
+      </div>
+
+      {/* User Settings */}
+      <div style={card}>
+        <div style={sectionTitle}>User Management Settings</div>
+        <div style={row}>
+          <span style={{fontSize:13}}>Allow New User Registration</span>
+          <Toggle on={userSettings.allowReg} onToggle={()=>setUserSettings({...userSettings,allowReg:!userSettings.allowReg})} />
+        </div>
+
+        <label style={{fontSize:12,color:'#718096',display:'block',margin:'12px 0 6px'}}>Default User Role</label>
+        <select style={inp} value={userSettings.defaultRole} onChange={e=>setUserSettings({...userSettings,defaultRole:e.target.value})}>
+          <option>Standard User</option>
+          <option>Admin</option>
+        </select>
+
+        <div style={row}>
+          <span style={{fontSize:13}}>Require Email Verification</span>
+          <Toggle on={userSettings.requireEmail} onToggle={()=>setUserSettings({...userSettings,requireEmail:!userSettings.requireEmail})} />
+        </div>
+
+        <button style={btn} onClick={saveUser}>Save User Settings</button>
+
+        {saved.user && <div style={successStyle}>✓ {saved.user}</div>}
+        {error.user && <div style={errorStyle}>✕ {error.user}</div>}
+      </div>
+
+      {/* Notification Settings */}
+      <div style={card}>
+        <div style={sectionTitle}>Notification Settings</div>
+        <div style={row}>
+          <span style={{fontSize:13}}>Enable Email Notifications</span>
+          <Toggle on={notif.email} onToggle={()=>setNotif({...notif,email:!notif.email})} />
+        </div>
+
+        <div style={row}>
+          <span style={{fontSize:13}}>Enable SMS Notifications</span>
+          <Toggle on={notif.sms} onToggle={()=>setNotif({...notif,sms:!notif.sms})} />
+        </div>
+
+        <label style={{fontSize:12,color:'#718096',display:'block',margin:'12px 0 6px'}}>Daily Digest Email</label>
+        <select style={inp} value={notif.digest} onChange={e=>setNotif({...notif,digest:e.target.value})}>
+          <option>Daily</option>
+          <option>Weekly</option>
+          <option>Never</option>
+        </select>
+
+        <button style={btn} onClick={saveNotif}>Save Notification Settings</button>
+
+        {saved.notif && <div style={successStyle}>✓ {saved.notif}</div>}
+        {error.notif && <div style={errorStyle}>✕ {error.notif}</div>}
+      </div>
+
+      {/* Security Settings */}
+      <div style={card}>
+        <div style={sectionTitle}>Security Settings</div>
+        <div style={row}>
+          <span style={{fontSize:13}}>Enable Two-Factor Auth (2FA)</span>
+          <Toggle on={security.tfa} onToggle={()=>setSecurity({...security,tfa:!security.tfa})} />
+        </div>
+
+        <label style={{fontSize:12,color:'#718096',display:'block',margin:'12px 0 6px'}}>
+          Minimum Password Length <span style={{color:'#e53e3e'}}>*</span>
+        </label>
+        <input
+          type="number"
+          min={1}
+          max={32}
+          style={{...inp,border:(!security.minPass||security.minPass<1)?'1px solid #fed7d7':inp.border}}
+          value={security.minPass}
+          onChange={e=>setSecurity({...security,minPass:Number(e.target.value)})}
+        />
+        {(!security.minPass||security.minPass<1)&&<div style={{color:'#e53e3e',fontSize:11,marginTop:-10,marginBottom:10}}>Required</div>}
+
+        <label style={{fontSize:12,color:'#718096',display:'block',marginBottom:6}}>
+          Session Timeout (minutes) <span style={{color:'#e53e3e'}}>*</span>
+        </label>
+        <input
+          type="number"
+          min={1}
+          style={{...inp,border:(!security.timeout||security.timeout<1)?'1px solid #fed7d7':inp.border}}
+          value={security.timeout}
+          onChange={e=>setSecurity({...security,timeout:Number(e.target.value)})}
+        />
+        {(!security.timeout||security.timeout<1)&&<div style={{color:'#e53e3e',fontSize:11,marginTop:-10,marginBottom:10}}>Required</div>}
+
+        <button style={btn} onClick={saveSecurity}>Save Security Settings</button>
+
+        {saved.security && <div style={successStyle}>✓ {saved.security}</div>}
+        {error.security && <div style={errorStyle}>✕ {error.security}</div>}
+      </div>
+
+    </div>
+  )
+}
 const PAGES = { dashboard:<Dashboard/>, users:<Users/>, transactions:<Transactions/>, categories:<Categories/>, reports:<Reports/>, settings:<Settings/> }
 
 export default function App() {
