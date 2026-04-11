@@ -1,0 +1,464 @@
+.settings-page {
+  padding: 20px 28px 28px;
+}
+
+.settings-page .settings-small-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #5b5b5b;
+  margin: 0 0 18px;
+  text-transform: lowercase;
+}
+
+.settings-page .settings-wireframe {
+  background: #ededed;
+  border: 1px solid #d9d9d9;
+  min-height: calc(100vh - 120px);
+  padding: 26px 18px 32px;
+}
+
+.settings-page .settings-header {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.settings-page .settings-header h2 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.settings-page .settings-header p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #5b6472;
+}
+
+.settings-page .settings-grid {
+  display: grid;
+  grid-template-columns: 480px 320px;
+  gap: 24px;
+  align-items: start;
+  justify-content: center;
+}
+
+.settings-page .settings-left-column,
+.settings-page .settings-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.settings-page .card {
+  background: #ffffff;
+  border: 1px solid #ececec;
+  border-radius: 8px;
+  box-shadow: none;
+  padding: 18px 20px;
+}
+
+.settings-page .profile-card {
+  height: 170px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-page .profile-avatar-icon {
+  font-size: 112px;
+  color: #323232;
+}
+
+.settings-page .profile-name {
+  margin: 6px 0 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.settings-page .contact-card h3,
+.settings-page .personal-card h3,
+.settings-page .security-card h3,
+.settings-page .notification-card h3 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.settings-page .settings-field {
+  margin-bottom: 14px;
+}
+
+.settings-page .settings-field:last-child {
+  margin-bottom: 0;
+}
+
+.settings-page .settings-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.settings-page input,
+.settings-page textarea,
+.settings-page select {
+  width: 100%;
+  height: 36px;
+  border: 1px solid #cfd4dc;
+  border-radius: 5px;
+  background: #f8f9fb;
+  padding: 0 10px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #303846;
+  outline: none;
+}
+
+.settings-page textarea {
+  height: 78px;
+  resize: none;
+  padding: 10px;
+}
+
+.settings-page input:focus,
+.settings-page textarea:focus,
+.settings-page select:focus {
+  border-color: #94a3b8;
+}
+
+.settings-page .settings-read-field {
+  background: #f8f9fb;
+}
+
+.settings-page .locked-white,
+.settings-page .editable-white {
+  background: #ffffff !important;
+}
+
+.settings-page .locked-white {
+  cursor: default;
+}
+
+.settings-page .editable-white {
+  cursor: text;
+}
+
+.settings-page .settings-inline-field {
+  display: grid;
+  grid-template-columns: 1fr 54px;
+  gap: 10px;
+  align-items: start;
+}
+
+.settings-page .settings-edit-btn {
+  height: 36px;
+  border: none;
+  border-radius: 5px;
+  background: #d9dde3;
+  color: #2f3746;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.settings-page .settings-edit-btn-tall {
+  height: 78px;
+}
+
+.settings-page .settings-input-icon-wrap,
+.settings-page .settings-select-wrap {
+  position: relative;
+}
+
+.settings-page .settings-input-icon-wrap input,
+.settings-page .settings-select-wrap select {
+  padding-right: 42px;
+}
+
+.settings-page .settings-select-wrap select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.settings-page .settings-input-icon {
+  font-size: 16px;
+  color: #3f4756;
+}
+
+.settings-page .settings-icon-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-page .settings-select-wrap .settings-input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.settings-page .hidden-native-date {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  left: 0;
+  top: 0;
+}
+
+.settings-page .security-card {
+  min-height: 168px;
+}
+
+.settings-page .security-password-btn {
+  width: 100%;
+  height: 34px;
+  border: none;
+  border-radius: 5px;
+  background: #d9dde3;
+  color: #2f3746;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.settings-page .security-last-login {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333b48;
+  line-height: 1.35;
+}
+
+.settings-page .security-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #2f3746;
+}
+
+.settings-page .toggle-switch {
+  width: 42px;
+  height: 24px;
+  border: 2px solid #1f1f1f;
+  border-radius: 999px;
+  background: #ffffff;
+  position: relative;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.settings-page .toggle-knob {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  position: absolute;
+  left: 2px;
+  top: 1px;
+  transition: all 0.2s ease;
+}
+
+.settings-page .toggle-switch.active {
+  background: #22c55e;
+  border-color: #15803d;
+}
+
+.settings-page .toggle-switch.active .toggle-knob {
+  left: 20px;
+  background: #ffffff;
+}
+
+.settings-page .notification-card {
+  min-height: 130px;
+}
+
+.settings-page .custom-check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2f3746;
+  cursor: pointer;
+}
+
+.settings-page .custom-check-row:last-child {
+  margin-bottom: 0;
+}
+
+.settings-page .custom-check-row input {
+  display: none;
+}
+
+.settings-page .custom-box {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #7a7a7a;
+  border-radius: 3px;
+  background: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.settings-page .custom-tick {
+  font-size: 14px;
+  line-height: 1;
+  color: #1f2937;
+  font-weight: 800;
+}
+
+.settings-page .settings-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.settings-page .settings-save-btn,
+.settings-page .settings-cancel-btn {
+  min-width: 132px;
+  height: 44px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.settings-page .settings-save-btn {
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.settings-page .settings-cancel-btn {
+  border: 1px solid #cfd4dc;
+  background: #f3f4f6;
+  color: #2f3746;
+}
+
+/* password modal */
+.settings-page .password-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.settings-page .password-modal-card {
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  background: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 18px 18px 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.settings-page .password-modal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.settings-page .password-modal-top h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1f2937;
+}
+
+.settings-page .password-modal-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: #374151;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-page .password-modal-field {
+  margin-bottom: 14px;
+}
+
+.settings-page .password-modal-field label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4b5563;
+}
+
+.settings-page .password-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+@media (max-width: 1100px) {
+  .settings-page .settings-grid {
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+
+  .settings-page .settings-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 700px) {
+  .settings-page .settings-inline-field {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-page .settings-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .settings-page .settings-save-btn,
+  .settings-page .settings-cancel-btn {
+    width: 100%;
+  }
+
+  .settings-page .password-modal-actions {
+    flex-direction: column;
+  }
+}
