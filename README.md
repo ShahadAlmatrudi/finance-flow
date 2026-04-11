@@ -52,10 +52,6 @@ The system aims to improve financial awareness and support better decision-makin
 * Manages users and system settings
 * Monitors transactions and categories
 
-### 4. Financial Advisor
-
-* Reviews user financial data
-* Provides recommendations and insights
 
 ---
 
@@ -118,15 +114,6 @@ The system aims to improve financial awareness and support better decision-makin
 * System configuration
 * Reports and analytics export
 
----
-
-## 📊 Advisor Features
-
-* View user financial profiles
-* Analyze spending patterns
-* Detect overspending
-* Suggest budget and saving plans
-* Generate financial reports
 
 ---
 
