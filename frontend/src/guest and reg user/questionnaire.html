@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Questionnaire - FinanceFlow</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="flowPage">
+
+    <main class="flowWrapper">
+        <section class="wideCard questionnaireCard">
+            <div class="stepHeader centerHeader">
+                <span class="stepTag">Step 1 of 5</span>
+                <h1 class="pageTitle">Help Us Personalize Your Experience</h1>
+                <p class="pageSubtitle">
+                    Answer a few quick questions so FinanceFlow can build a smarter plan for you.
+                </p>
+            </div>
+
+            <form class="twoColumnForm questionnaireForm" id="questionnaireForm">
+                <div class="questionBlock questionCard">
+                    <h3>What is your main financial goal right now?</h3>
+                    <label class="optionLabel"><input type="radio" name="goal" value="Save more money"> Save more money</label>
+                    <label class="optionLabel"><input type="radio" name="goal" value="Control my spending"> Control my spending</label>
+                    <label class="optionLabel"><input type="radio" name="goal" value="Pay off debt"> Pay off debt</label>
+                    <label class="optionLabel"><input type="radio" name="goal" value="Build an emergency fund"> Build an emergency fund</label>
+                    <label class="optionLabel"><input type="radio" name="goal" value="Plan for a big purchase"> Plan for a big purchase</label>
+                    <small class="errorMsg" id="goalError"></small>
+                </div>
+
+                <div class="questionBlock questionCard">
+                    <h3>How often do you track your expenses?</h3>
+                    <label class="optionLabel"><input type="radio" name="tracking" value="Every day"> Every day</label>
+                    <label class="optionLabel"><input type="radio" name="tracking" value="A few times a week"> A few times a week</label>
+                    <label class="optionLabel"><input type="radio" name="tracking" value="Once a month"> Once a month</label>
+                    <label class="optionLabel"><input type="radio" name="tracking" value="Rarely"> Rarely</label>
+                    <small class="errorMsg" id="trackingError"></small>
+                </div>
+
+                <div class="questionBlock questionCard">
+                    <h3>What usually makes budgeting difficult for you?</h3>
+                    <label class="optionLabel"><input type="radio" name="difficulty" value="I spend impulsively"> I spend impulsively</label>
+                    <label class="optionLabel"><input type="radio" name="difficulty" value="I forget to track expenses"> I forget to track expenses</label>
+                    <label class="optionLabel"><input type="radio" name="difficulty" value="My income changes often"> My income changes often</label>
+                    <label class="optionLabel"><input type="radio" name="difficulty" value="I do not follow a plan"> I do not follow a plan</label>
+                    <label class="optionLabel"><input type="radio" name="difficulty" value="I have too many expenses"> I have too many expenses</label>
+                    <small class="errorMsg" id="difficultyError"></small>
+                </div>
+
+                <div class="questionBlock questionCard">
+                    <h3>How would you like FinanceFlow to help you most?</h3>
+                    <label class="optionLabel"><input type="radio" name="help" value="Budget reminders"> Budget reminders</label>
+                    <label class="optionLabel"><input type="radio" name="help" value="Spending insights"> Spending insights</label>
+                    <label class="optionLabel"><input type="radio" name="help" value="Saving recommendations"> Saving recommendations</label>
+                    <label class="optionLabel"><input type="radio" name="help" value="Goal tracking"> Goal tracking</label>
+                    <label class="optionLabel"><input type="radio" name="help" value="Monthly summaries"> Monthly summaries</label>
+                    <small class="errorMsg" id="helpError"></small>
+                </div>
+
+                <div class="questionBlock questionCard fullWidth">
+                    <h3>Which spending categories affect your budget the most?</h3>
+                    <div class="checkboxGrid">
+                        <label class="optionLabel"><input type="checkbox" name="categories" value="Food & Dining"> Food & Dining</label>
+                        <label class="optionLabel"><input type="checkbox" name="categories" value="Shopping"> Shopping</label>
+                        <label class="optionLabel"><input type="checkbox" name="categories" value="Transportation"> Transportation</label>
+                        <label class="optionLabel"><input type="checkbox" name="categories" value="Entertainment"> Entertainment</label>
+                        <label class="optionLabel"><input type="checkbox" name="categories" value="Bills & Utilities"> Bills & Utilities</label>
+                        <label class="optionLabel"><input type="checkbox" name="categories" value="Subscriptions"> Subscriptions</label>
+                    </div>
+                    <small class="errorMsg" id="categoriesQuestionError"></small>
+                </div>
+
+                <div class="actionRow fullWidth questionnaireActions">
+                    <button type="submit" class="primaryBtn">Next</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="storage.js"></script>
+    <script src="questionnaire.js"></script>
+</body>
+</html>

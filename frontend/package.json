@@ -10,9 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "chart.js": "^4.5.1",
     "react": "^19.2.4",
+<<<<<<< HEAD
     "react-dom": "^19.2.4",
     "react-icons": "^5.6.0",
+=======
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.2.4",
+>>>>>>> 1bf2e26e0d79a13d3b396cd457f5feca06c7922c
     "react-router-dom": "^7.14.0"
   },
   "devDependencies": {

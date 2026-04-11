@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Notifications - FinanceFlow</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="appPageBody">
+
+    <div class="appLayout">
+        <aside class="sidebar">
+            <div class="sidebarBrand">
+                <a href="dashboard.html" class="sidebarLogo">💸 FinanceFlow</a>
+            </div>
+
+            <nav class="sidebarNav">
+                <a href="dashboard.html" class="navItem">Dashboard</a>
+                <a href="transactions.html" class="navItem">Transactions</a>
+                <a href="budget.html" class="navItem">Budget</a>
+                <a href="analytics.html" class="navItem">Analytics</a>
+                <a href="cards.html" class="navItem">Cards</a>
+                <a href="notifications.html" class="navItem active">Notifications</a>
+                <a href="profile-view.html" class="navItem">Account Settings</a>
+            </nav>
+
+            <div class="sidebarUser">
+                <div class="sidebarAvatar" id="sidebarAvatar">U</div>
+                <div class="sidebarUserText">
+                    <p class="sidebarUserName" id="sidebarUserName">User</p>
+                    <button class="sidebarLogoutBtn" id="logoutBtn" type="button">Logout</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="mainContent">
+            <header class="topBar notificationsTopBar">
+                <div>
+                    <h1 class="pageHeading">Notifications</h1>
+                    <p class="pageSubheading">Helpful updates and reminders based on your financial setup.</p>
+                </div>
+
+                <div class="notificationsActions">
+                    <button type="button" class="secondaryBtn" id="markAllReadBtn">Mark All as Read</button>
+                </div>
+            </header>
+
+            <section class="notificationsStats">
+                <div class="miniStatCard">
+                    <span class="miniStatLabel">Total</span>
+                    <strong class="miniStatValue" id="totalNotificationsCount">0</strong>
+                </div>
+
+                <div class="miniStatCard">
+                    <span class="miniStatLabel">Unread</span>
+                    <strong class="miniStatValue" id="unreadNotificationsCount">0</strong>
+                </div>
+
+                <div class="miniStatCard">
+                    <span class="miniStatLabel">Goal Alerts</span>
+                    <strong class="miniStatValue" id="goalNotificationsCount">0</strong>
+                </div>
+
+                <div class="miniStatCard">
+                    <span class="miniStatLabel">Budget Alerts</span>
+                    <strong class="miniStatValue" id="budgetNotificationsCount">0</strong>
+                </div>
+            </section>
+
+            <section class="dashboardPanel notificationsPanel">
+                <div class="panelHeader">
+                    <h2>Recent Alerts</h2>
+                </div>
+
+                <div class="notificationsList" id="notificationsList"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="notifications.js"></script>
+</body>
+</html>
