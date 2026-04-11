@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Transactions - FinanceFlow</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="appPageBody">
+
+    <div class="appLayout">
+        <aside class="sidebar">
+            <div class="sidebarBrand">
+                <a href="dashboard.html" class="sidebarLogo">💸 FinanceFlow</a>
+            </div>
+
+            <nav class="sidebarNav">
+                <a href="dashboard.html" class="navItem">Dashboard</a>
+                <a href="transactions.html" class="navItem active">Transactions</a>
+                <a href="budget.html" class="navItem">Budget</a>
+                <a href="analytics.html" class="navItem">Analytics</a>
+                <a href="cards.html" class="navItem">Cards</a>
+                <a href="notifications.html" class="navItem">Notifications</a>
+                <a href="profile-view.html" class="navItem">Account Settings</a>
+            </nav>
+
+            <div class="sidebarUser">
+                <div class="sidebarAvatar" id="sidebarAvatar">U</div>
+                <div class="sidebarUserText">
+                    <p class="sidebarUserName" id="sidebarUserName">User</p>
+                    <button class="sidebarLogoutBtn" id="logoutBtn" type="button">Logout</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="mainContent">
+            <header class="topBar">
+                <div>
+                    <h1 class="pageHeading">Transactions</h1>
+                    <p class="pageSubheading">Add income and expenses manually to track your finances.</p>
+                </div>
+            </header>
+
+            <section class="transactionsTopGrid">
+                <article class="dashboardPanel">
+                    <div class="panelHeader">
+                        <h2>Add New Transaction</h2>
+                    </div>
+
+                    <form id="transactionForm" class="settingsForm">
+                        <div class="settingsGrid">
+                            <div class="inputGroup">
+                                <label for="transactionTitle">Transaction Title</label>
+                                <input type="text" id="transactionTitle" placeholder="e.g. Grocery Shopping">
+                                <small class="errorMsg" id="transactionTitleError"></small>
+                            </div>
+
+                            <div class="inputGroup">
+                                <label for="transactionAmount">Amount</label>
+                                <input type="number" id="transactionAmount" placeholder="Enter amount">
+                                <small class="errorMsg" id="transactionAmountError"></small>
+                            </div>
+                        </div>
+
+                        <div class="settingsGrid">
+                            <div class="inputGroup">
+                                <label for="transactionType">Transaction Type</label>
+                                <select id="transactionType">
+                                    <option value="">Select type</option>
+                                    <option value="income">Income</option>
+                                    <option value="expense">Expense</option>
+                                </select>
+                                <small class="errorMsg" id="transactionTypeError"></small>
+                            </div>
+
+                            <div class="inputGroup">
+                                <label for="transactionCategory">Category</label>
+                                <select id="transactionCategory">
+                                    <option value="">Loading categories...</option>
+                                </select>
+                                <small class="errorMsg" id="transactionCategoryError"></small>
+                            </div>
+                        </div>
+
+                        <div class="settingsGrid">
+                            <div class="inputGroup">
+                                <label for="transactionPaymentMethod">Payment Method</label>
+                                <select id="transactionPaymentMethod">
+                                    <option value="">Loading payment methods...</option>
+                                </select>
+                                <small class="errorMsg" id="transactionPaymentMethodError"></small>
+                            </div>
+
+                            <div class="inputGroup">
+                                <label for="transactionDate">Date</label>
+                                <input type="date" id="transactionDate">
+                                <small class="errorMsg" id="transactionDateError"></small>
+                            </div>
+                        </div>
+
+                        <div class="inputGroup">
+                            <label for="transactionNotes">Notes</label>
+                            <textarea id="transactionNotes" rows="4" placeholder="Optional notes"></textarea>
+                        </div>
+
+                        <div class="settingsActionRow">
+                            <button type="submit" class="primaryBtn smallBtn">Save Transaction</button>
+                        </div>
+
+                        <p class="settingsSuccessMsg" id="transactionSuccessMsg"></p>
+                    </form>
+                </article>
+
+                <article class="dashboardPanel">
+                    <div class="panelHeader">
+                        <h2>Quick Summary</h2>
+                    </div>
+
+                    <div class="transactionsSummaryList">
+                        <div class="analyticsSnapshotItem">
+                            <span class="analyticsSnapshotLabel">Total Transactions</span>
+                            <strong class="analyticsSnapshotValue" id="totalTransactionsValue">0</strong>
+                        </div>
+
+                        <div class="analyticsSnapshotItem">
+                            <span class="analyticsSnapshotLabel">Total Income</span>
+                            <strong class="analyticsSnapshotValue" id="totalIncomeValue">$0</strong>
+                        </div>
+
+                        <div class="analyticsSnapshotItem">
+                            <span class="analyticsSnapshotLabel">Total Expenses</span>
+                            <strong class="analyticsSnapshotValue" id="totalExpensesValue">$0</strong>
+                        </div>
+
+                        <div class="analyticsSnapshotItem">
+                            <span class="analyticsSnapshotLabel">Current Cash</span>
+                            <strong class="analyticsSnapshotValue" id="currentCashValue">$0</strong>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="dashboardPanel">
+                <div class="panelHeader">
+                    <h2>Saved Transactions</h2>
+                </div>
+
+                <div class="transactionsToolbar">
+                    <input type="text" id="transactionSearch" class="searchInput" placeholder="Search transactions by title...">
+                    <select id="transactionFilter" class="transactionsFilter">
+                        <option value="all">All Transactions</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expenses</option>
+                    </select>
+                </div>
+
+                <div class="transactionsList" id="transactionsList"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="transactions.js"></script>
+</body>
+</html>
