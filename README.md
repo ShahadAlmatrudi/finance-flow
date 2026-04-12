@@ -1,6 +1,6 @@
 # 💰 FinanceFlow – Personal Finance Management System
 
-FinanceFlow is a web-based personal finance management system designed to help users track expenses, manage budgets, and achieve financial goals through clear insights and structured planning.
+FinanceFlow is a web-based personal finance management system that helps users track their spending, manage budgets, and achieve saving goals through an interactive and user-friendly interface.
 
 ---
 
@@ -21,152 +21,189 @@ FinanceFlow is a web-based personal finance management system designed to help u
 
 ---
 
-## 📖 Project Overview
+## 📖 Project Description
 
-Managing personal finances can be challenging, especially for students and young professionals who use multiple payment methods and make frequent transactions. FinanceFlow provides a simple and structured solution to:
+Managing personal finances can be overwhelming, especially for students and young professionals dealing with multiple payment methods and frequent transactions.
 
-* Track income and expenses
-* Manage budgets and categories
-* Monitor saving goals
-* View financial analytics and insights
+FinanceFlow provides a structured solution that allows users to:
 
-The system aims to improve financial awareness and support better decision-making.
+* Track daily expenses and income
+* Manage multiple accounts (cash & cards)
+* Set and monitor saving plans
+* Analyze spending behavior through visual insights
 
----
-
-## 🎯 Target Users
-
-### 1. Regular User
-
-* Manages personal finances
-* Tracks expenses and budgets
-* Sets saving goals and views analytics
-
-### 2. Guest User
-
-* Views public pages (landing, features)
-* Can register to access full system
-
-### 3. Admin
-
-* Manages users and system settings
-* Monitors transactions and categories
-
+The system focuses on **simplicity, clarity, and financial awareness**.
 
 ---
 
-## ⚙️ System Features
+## 🎯 User Roles
+
+### 👤 Regular User
+
+* Register and log in to the system
+* Manage personal finances
+* Add cards and cash balances
+* Track transactions and categories
+* Set and follow saving plans
+* View analytics and reports
+
+### 👀 Guest User
+
+* Access landing page and system overview
+* Navigate basic information
+* Register to become a user
+
+### 🛠️ Admin
+
+* Access admin dashboard
+* Manage users
+* Monitor transactions
+* Manage categories
+* View system reports
+
+---
+
+## ⚙️ Core Features
 
 ### 🔐 Authentication
 
-* User registration and login
-* Secure session handling
-* Password validation and security rules
-
-### 📊 Dashboard
-
-* Overview of:
-
-  * Cash and card balances
-  * Recent transactions
-  * Monthly summary
-  * Saving progress
-
-### 💸 Budget Management
-
-* Add/edit spending categories
-* Set category limits
-* Track spending vs budget
-* Reset and adjust balances
-
-### 📈 Analytics
-
-* Spending and income summaries
-* Category-based charts
-* Monthly comparison graphs
-* Transaction filtering and sorting
-
-### ⚙️ User Settings
-
-* Edit personal information
-* Change password
-* Enable 2FA
-* Manage notification preferences
-
-### 💳 Financial Management
-
-* Add cards and cash balances
-* Track accounts and transactions
-
-### 🔔 Notifications
-
-* Budget alerts (e.g., 80% limit reached)
-* Bill reminders
-* System notifications
+* User signup and login
+* Admin login (separate access)
+* Local storage-based session handling
 
 ---
 
-## 🛠️ Admin Features
+### 🏠 Landing Page
 
-* User management (add/edit/delete)
+* Entry point of the system
+* Overview of features
+* Navigation to login/signup
+
+---
+
+### 📊 Dashboard
+
+* Overview of financial status:
+
+  * Cash balance
+  * Card balances
+  * Saving goals
+* Quick access to key features
+
+---
+
+### 💳 Cards & Cash Management
+
+* Add and manage cards
+* Track balances
+* Manage available cash
+
+---
+
+### 📋 Transactions
+
+* Add, view, and manage transactions
+* Categorize expenses
+* Filter and track spending
+
+---
+
+### 💰 Budget Management
+
+* Set budget limits per category
+* Track usage against limits
+* Receive alerts when nearing limits
+
+---
+
+### 🎯 Saving Plans
+
+* Create saving plans based on goals
+* View monthly saving targets
+* Track progress toward goals
+
+---
+
+### 📈 Analytics
+
+* Visual representation of:
+
+  * Spending patterns
+  * Category distribution
+  * Monthly comparisons
+
+---
+
+### 🔔 Notifications
+
+* Budget alerts
+* System updates
+* Financial reminders
+
+---
+
+### ⚙️ Profile & Settings
+
+* View and edit profile
+* Manage account preferences
+
+---
+
+## 🛠️ Admin Panel
+
+The system includes a dedicated admin interface:
+
+* Dashboard overview
+* User management (view/delete users)
 * Transaction monitoring
 * Category management
-* System configuration
-* Reports and analytics export
-
+* Reports and system insights
 
 ---
 
 ## 🧩 Tech Stack
 
-* **Frontend:** React + Vite
+* **Frontend:** React (Vite)
+* **Routing:** React Router
+* **State Management:** useState / useEffect
+* **Storage:** LocalStorage
 
 ---
 
 ## 📁 Project Structure
 
-```bash
 finance-flow/
 │
-├── frontend/        
-├── backend/         
-├── admin/           
-├── docs/            
+├── frontend/        # React application
+│   └── src/
+│       ├── app/pages/     # User pages
+│       ├── admin/         # Admin panel
+│       ├── components/    # Shared components
+│       └── App.jsx        # Routing configuration
+│
+├── backend/         # Express server (if used)
+├── docs/            # Documentation
 └── README.md
-```
 
 ---
 
 ## 🚀 How to Run the Project
 
-### 1. Clone the repository
+### 1. Clone Repository
 
-```bash
 git clone <repo-url>
 cd finance-flow
-```
 
 ### 2. Run Frontend
 
-```bash
 cd frontend
 npm install
 npm run dev
-```
 
-### 3. Run Backend
-
-```bash
-cd backend
-npm install
-node server.js
-```
-
----
 
 ## 🔗 Wireframes
 
-* Regular User & Guest:
+* User & Guest:
   https://balsamiq.cloud/swxk4nn/p97z6se
 
 * Admin Panel:
@@ -176,14 +213,9 @@ node server.js
 
 ## 📌 Notes
 
-* The project is modular and divided among team members.
-* Each feature (Settings, Budget, Analytics, Admin, etc.) is implemented separately and merged via GitHub.
-* Integration between pages is done using React Router.
+* The system is modular and divided among team members
+* Each feature was developed separately and integrated using Git
+* Navigation is handled using React Router
+* The application uses local storage to simulate backend behavior
 
----
-
-## ✅ Status
-
-* Core features implemented
-* Frontend components integrated
 
