@@ -6,6 +6,7 @@ import Landing from "./app/pages/Landing";
 // User pages
 import Login from "./app/pages/Login";
 import Signup from "./app/pages/Signup";
+import Onboarding from "./pages/Onboarding";
 import Questionnaire from "./app/pages/Questionnaire";
 import Profile from "./app/pages/Profile";
 import PlanSetup from "./app/pages/PlanSetup";
@@ -40,6 +41,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/onboarding" element={<Onboarding />} />
 
         {/* Setup flow */}
         <Route path="/questionnaire" element={<Questionnaire />} />

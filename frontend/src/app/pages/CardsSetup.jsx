@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addCard, getAppData, setCash } from "../utils/storage";
+import { addCard, getAppData, setCash } from "../utils/storage";;
 
 export default function CardsSetup() {
   const navigate = useNavigate();

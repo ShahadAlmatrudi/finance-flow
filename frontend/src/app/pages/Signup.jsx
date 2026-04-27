@@ -70,7 +70,7 @@ export default function Signup() {
     };
     saveAppData(data);
 
-    navigate("/questionnaire");
+    navigate("/onboarding");
   };
 
   return (

@@ -9,25 +9,19 @@ export default function Cards() {
   const [sidebarAvatar, setSidebarAvatar] = useState("U");
 
   const [cards, setCards] = useState([]);
-  const [cashDisplayText, setCashDisplayText] = useState("No cash amount saved yet.");
+  const [cashDisplayText, setCashDisplayText] = useState(
+    "No cash amount saved yet."
+  );
 
   const [cardType, setCardType] = useState("");
   const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
   const [cardBalance, setCardBalance] = useState("");
-  const [expMonth, setExpMonth] = useState("");
-  const [expYear, setExpYear] = useState("");
-  const [cvv, setCvv] = useState("");
   const [primaryCard, setPrimaryCard] = useState(false);
   const [cashAmount, setCashAmount] = useState("");
 
   const [cardTypeError, setCardTypeError] = useState("");
   const [cardNumberError, setCardNumberError] = useState("");
-  const [cardNameError, setCardNameError] = useState("");
   const [cardBalanceError, setCardBalanceError] = useState("");
-  const [expMonthError, setExpMonthError] = useState("");
-  const [expYearError, setExpYearError] = useState("");
-  const [cvvError, setCvvError] = useState("");
   const [cashError, setCashError] = useState("");
 
   useEffect(() => {
@@ -73,11 +67,7 @@ export default function Cards() {
   const clearCardErrors = () => {
     setCardTypeError("");
     setCardNumberError("");
-    setCardNameError("");
     setCardBalanceError("");
-    setExpMonthError("");
-    setExpYearError("");
-    setCvvError("");
   };
 
   const renderCards = () => {
@@ -115,44 +105,11 @@ export default function Cards() {
       isValid = false;
     }
 
-    if (cardName.trim() === "") {
-      setCardNameError("Cardholder name is required.");
-      isValid = false;
-    }
-
     if (cardBalance.trim() === "") {
       setCardBalanceError("Card balance is required.");
       isValid = false;
     } else if (Number(cardBalance) < 0) {
       setCardBalanceError("Card balance cannot be negative.");
-      isValid = false;
-    }
-
-    if (expMonth.trim() === "") {
-      setExpMonthError("Expiry month is required.");
-      isValid = false;
-    } else if (
-      !/^\d{2}$/.test(expMonth) ||
-      Number(expMonth) < 1 ||
-      Number(expMonth) > 12
-    ) {
-      setExpMonthError("Enter a valid month between 01 and 12.");
-      isValid = false;
-    }
-
-    if (expYear.trim() === "") {
-      setExpYearError("Expiry year is required.");
-      isValid = false;
-    } else if (!/^\d{2}$/.test(expYear)) {
-      setExpYearError("Year must be 2 digits.");
-      isValid = false;
-    }
-
-    if (cvv.trim() === "") {
-      setCvvError("CVV is required.");
-      isValid = false;
-    } else if (!/^\d{3}$/.test(cvv)) {
-      setCvvError("CVV must be exactly 3 digits.");
       isValid = false;
     }
 
@@ -162,10 +119,8 @@ export default function Cards() {
       id: Date.now(),
       type: cardType,
       number: cleanNumber,
-      name: cardName.trim(),
+      last4: cleanNumber.slice(-4),
       balance: Number(cardBalance),
-      month: expMonth,
-      year: expYear,
       primary: primaryCard,
     };
 
@@ -174,11 +129,7 @@ export default function Cards() {
 
     setCardType("");
     setCardNumber("");
-    setCardName("");
     setCardBalance("");
-    setExpMonth("");
-    setExpYear("");
-    setCvv("");
     setPrimaryCard(false);
   };
 
@@ -237,6 +188,7 @@ export default function Cards() {
               Account Settings
             </Link>
           </nav>
+
           <div className="sidebarUser">
             <div className="sidebarAvatar">{sidebarAvatar}</div>
             <div className="sidebarUserText">
@@ -257,7 +209,8 @@ export default function Cards() {
             <div>
               <h1 className="pageHeading">Cards & Cash</h1>
               <p className="pageSubheading">
-                Manage your saved cards and available cash balance.
+                Add your card number and current balance so FinanceFlow can
+                update your balance after imported transactions.
               </p>
             </div>
           </header>
@@ -265,7 +218,7 @@ export default function Cards() {
           <section className="transactionsTopGrid">
             <article className="dashboardPanel">
               <div className="panelHeader">
-                <h2>Add New Card</h2>
+                <h2>Add Card Balance Source</h2>
               </div>
 
               <form onSubmit={handleCardSubmit} className="settingsForm">
@@ -308,22 +261,6 @@ export default function Cards() {
 
                 <div className="settingsGrid">
                   <div className="inputGroup">
-                    <label htmlFor="card-name">Cardholder Name</label>
-                    <input
-                      type="text"
-                      id="card-name"
-                      placeholder="Enter cardholder name"
-                      value={cardName}
-                      onChange={(e) => {
-                        setCardName(e.target.value);
-                        setCardNameError("");
-                      }}
-                      className={cardNameError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{cardNameError}</small>
-                  </div>
-
-                  <div className="inputGroup">
                     <label htmlFor="card-balance">Current Card Balance</label>
                     <input
                       type="number"
@@ -337,58 +274,6 @@ export default function Cards() {
                       className={cardBalanceError ? "inputError" : ""}
                     />
                     <small className="errorMsg">{cardBalanceError}</small>
-                  </div>
-                </div>
-
-                <div className="settingsGrid">
-                  <div className="inputGroup">
-                    <label htmlFor="exp-month">Exp. Month</label>
-                    <input
-                      type="text"
-                      id="exp-month"
-                      placeholder="MM"
-                      value={expMonth}
-                      onChange={(e) => {
-                        setExpMonth(e.target.value);
-                        setExpMonthError("");
-                      }}
-                      className={expMonthError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{expMonthError}</small>
-                  </div>
-
-                  <div className="inputGroup">
-                    <label htmlFor="exp-year">Exp. Year</label>
-                    <input
-                      type="text"
-                      id="exp-year"
-                      placeholder="YY"
-                      value={expYear}
-                      onChange={(e) => {
-                        setExpYear(e.target.value);
-                        setExpYearError("");
-                      }}
-                      className={expYearError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{expYearError}</small>
-                  </div>
-                </div>
-
-                <div className="settingsGrid">
-                  <div className="inputGroup">
-                    <label htmlFor="cvv">CVV / CVC</label>
-                    <input
-                      type="text"
-                      id="cvv"
-                      placeholder="3 digits"
-                      value={cvv}
-                      onChange={(e) => {
-                        setCvv(e.target.value);
-                        setCvvError("");
-                      }}
-                      className={cvvError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{cvvError}</small>
                   </div>
 
                   <div className="inputGroup inlineCheckGroup">
@@ -474,16 +359,21 @@ export default function Cards() {
                         <span className="primaryBadge">Primary</span>
                       )}
                     </div>
+
                     <div className="savedCardNumber">
                       {formatCardNumber(card.number)}
                     </div>
+
                     <div className="savedCardBottom">
                       <div>
-                        <div className="savedCardName">{card.name}</div>
+                        <div className="savedCardName">
+                          Card ending in {card.last4 || String(card.number).slice(-4)}
+                        </div>
                         <div className="savedCardExpiry">
-                          Exp: {card.month}/{card.year}
+                          Used for transaction matching
                         </div>
                       </div>
+
                       <div className="savedCardExpiry">
                         Balance: {formatMoney(card.balance || 0)}
                       </div>
