@@ -1,16 +1,30 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const app = express();
 
-// Middleware to read JSON
+app.use(cors());
 app.use(express.json());
 
-// Test route
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("MongoDB connected successfully");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection failed:", error.message);
+  });
+
 app.get("/", (req, res) => {
   res.send("FinanceFlow API is running");
 });
 
-// Start server
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
