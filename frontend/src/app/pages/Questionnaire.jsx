@@ -454,7 +454,15 @@ export default function Questionnaire() {
               <small className="errorMsg">{categoriesError}</small>
             </div>
 
-            <div className="actionRow fullWidth questionnaireActions">
+            <div className="actionRow dualButtons fullWidth questionnaireActions">
+              <button
+                type="button"
+                className="secondaryBtn"
+                onClick={() => navigate("/onboarding")}
+              >
+                ← Back
+              </button>
+
               <button type="submit" className="primaryBtn">
                 Next
               </button>

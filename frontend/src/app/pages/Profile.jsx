@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { setProfile } from "../utils/storage";
 
 export default function Profile() {
+  const navigate = useNavigate();
+
   const [age, setAge] = useState("");
   const [country, setCountry] = useState("");
   const [occupation, setOccupation] = useState("");
@@ -96,7 +99,7 @@ export default function Profile() {
       };
 
       setProfile(profileData);
-      window.location.href = "/plan-setup";
+      navigate("/plan-setup");
     }
   };
 
@@ -283,7 +286,15 @@ export default function Profile() {
               <small className="errorMsg">{obligationAmountError}</small>
             </div>
 
-            <div className="actionRow">
+            <div className="actionRow dualButtons">
+              <button
+                type="button"
+                className="secondaryBtn"
+                onClick={() => navigate("/questionnaire")}
+              >
+                ← Back
+              </button>
+
               <button type="submit" className="primaryBtn">
                 Next
               </button>

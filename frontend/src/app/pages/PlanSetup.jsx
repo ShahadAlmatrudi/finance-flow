@@ -510,11 +510,19 @@ export default function PlanSetup() {
               </div>
             </div>
 
-            <div className="actionRow">
-              <button type="submit" className="primaryBtn">
-                Next
-              </button>
-            </div>
+            <div className="actionRow dualButtons">
+                <button
+                  type="button"
+                  className="secondaryBtn"
+                  onClick={() => navigate("/profile")}
+                >
+                  ← Back
+                </button>
+
+                <button type="submit" className="primaryBtn">
+                  Next
+                </button>
+              </div>
           </form>
         </section>
       </main>

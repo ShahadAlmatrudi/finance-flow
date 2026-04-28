@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { getAppData, saveAppData } from "../utils/storage";
+import logo from "../assets/financeflow-logo.png";
 
 export default function Plans() {
   const navigate = useNavigate();
@@ -69,7 +70,8 @@ export default function Plans() {
         <aside className="sidebar">
           <div className="sidebarBrand">
             <Link to="/dashboard" className="sidebarLogo">
-              💸 FinanceFlow
+              <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
+              <span>FinanceFlow</span>
             </Link>
           </div>
 

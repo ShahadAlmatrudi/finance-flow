@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAppData, saveAppData } from "../utils/storage";
+import logo from "../assets/financeflow-logo.png";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -33,7 +34,10 @@ export default function Login() {
   return (
     <div className="loginPage">
       <header className="topbar">
-        <p className="logo">💸 FinanceFlow</p>
+        <p className="logo">
+          <img src={logo} alt="FinanceFlow Logo" className="brandLogoImg" />
+          <span>FinanceFlow</span>
+        </p>
       </header>
 
       <main className="loginContainer">

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { addCard, getAppData, setCash } from "../utils/storage";
+import logo from "../assets/financeflow-logo.png";
 
 export default function Cards() {
   const navigate = useNavigate();
@@ -158,7 +159,8 @@ export default function Cards() {
         <aside className="sidebar">
           <div className="sidebarBrand">
             <Link to="/dashboard" className="sidebarLogo">
-              💸 FinanceFlow
+              <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
+              <span>FinanceFlow</span>
             </Link>
           </div>
 
@@ -367,7 +369,8 @@ export default function Cards() {
                     <div className="savedCardBottom">
                       <div>
                         <div className="savedCardName">
-                          Card ending in {card.last4 || String(card.number).slice(-4)}
+                          Card ending in{" "}
+                          {card.last4 || String(card.number).slice(-4)}
                         </div>
                         <div className="savedCardExpiry">
                           Used for transaction matching
@@ -384,22 +387,6 @@ export default function Cards() {
             </div>
           </section>
 
-          <div className="actionRow dualButtons">
-            <button
-              type="button"
-              className="secondaryBtn"
-              onClick={() => navigate("/welcome")}
-            >
-              Skip
-            </button>
-            <button
-              type="button"
-              className="primaryBtn"
-              onClick={() => navigate("/welcome")}
-            >
-              Next
-            </button>
-          </div>
         </main>
       </div>
     </div>

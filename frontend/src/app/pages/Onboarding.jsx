@@ -23,7 +23,12 @@ export default function Onboarding() {
     <div className="welcomePageBody">
       <main className="welcomePage">
         <section className="welcomeCard">
-          <img src={logo} alt="FinanceFlow Logo" className="welcomeLogo" />
+
+          <img
+            src={logo}
+            alt="FinanceFlow Logo"
+            className="onboardingLogo"
+          />
 
           <h1 className="welcomeTitle">
             Welcome, <span>{userName}</span>
@@ -35,9 +40,10 @@ export default function Onboarding() {
           </p>
 
           <div className="welcomeActions">
+            {/* ✅ FIXED HERE */}
             <button
               className="primaryBtn fullBtn"
-              onClick={() => navigate("/cards")}
+              onClick={() => navigate("/questionnaire")}
             >
               Start Setup
             </button>
@@ -49,6 +55,7 @@ export default function Onboarding() {
               Set up later
             </button>
           </div>
+
         </section>
       </main>
     </div>

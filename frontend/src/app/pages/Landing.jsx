@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
+import logo from "../assets/financeflow-logo.png";
 
 export default function Landing() {
   return (
     <div>
       <header className="header">
-        <p className="logo">💸 FinanceFlow</p>
+        <p className="logo">
+          <img src={logo} alt="FinanceFlow Logo" className="brandLogoImg" />
+          <span>FinanceFlow</span>
+        </p>
 
         <div className="headerbtns">
           <a href="#about" className="headbtn">

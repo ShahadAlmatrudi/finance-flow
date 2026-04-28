@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAppData } from "../utils/storage";
 import { Link } from "react-router-dom";
+import logo from "../assets/financeflow-logo.png";
 
 export default function Dashboard() {
   const [fullName, setFullName] = useState("User");
@@ -99,9 +100,10 @@ export default function Dashboard() {
       <div className="appLayout">
         <aside className="sidebar">
           <div className="sidebarBrand">
-            <a href="/dashboard" className="sidebarLogo">
-              💸 FinanceFlow
-            </a>
+            <Link to="/dashboard" className="sidebarLogo">
+              <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
+              <span>FinanceFlow</span>
+            </Link>
           </div>
 
           <nav className="sidebarNav">
