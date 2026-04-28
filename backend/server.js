@@ -6,7 +6,7 @@ app.use(express.json());
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("Money Planner API is running");
+  res.send("FinanceFlow API is running");
 });
 
 // Start server
