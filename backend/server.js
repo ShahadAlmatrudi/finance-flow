@@ -13,6 +13,11 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/questionnaire", questionnaireRoutes);
+app.use("/api/plans", planRoutes);
+app.use("/api/budget", budgetRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI)
