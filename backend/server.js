@@ -4,6 +4,11 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const questionnaireRoutes = require("./routes/questionnaireRoutes");
+const planRoutes = require("./routes/planRoutes");
+const budgetRoutes = require("./routes/budgetRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 dotenv.config();
 
