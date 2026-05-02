@@ -1,5 +1,5 @@
-const BudgetCategory = require("../models/budgetcategory");
-const Plan = require("../models/plan");
+const BudgetCategory = require("../models/BudgetCategory");
+const Plan = require("../models/Plan");
 
 // GET /api/dashboard/summary
 exports.getDashboardSummary = async (req, res) => {

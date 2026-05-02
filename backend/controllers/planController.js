@@ -1,4 +1,4 @@
-const Plan = require("../models/plan");
+const Plan = require("../models/Plan");
 
 // POST /api/plans
 exports.createPlan = async (req, res) => {
