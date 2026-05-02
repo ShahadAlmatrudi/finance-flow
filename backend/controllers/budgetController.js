@@ -1,4 +1,4 @@
-const BudgetCategory = require("../models/BudgetCategory");
+const BudgetCategory = require("../models/budgetcategory");
 
 // GET /api/budget
 exports.getBudget = async (req, res) => {
