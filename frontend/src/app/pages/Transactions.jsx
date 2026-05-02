@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { getAppData, saveAppData } from "../utils/storage";
 import { Link, useNavigate } from "react-router-dom";
+=======
+import { getAppData } from "../utils/storage";
+import { Link } from "react-router-dom";
+>>>>>>> ola-student2-backend
 import logo from "../assets/financeflow-logo.png";
+
+const API_BASE = "http://localhost:3000/api";
 
 export default function Transactions() {
   const navigate = useNavigate();
@@ -22,6 +29,11 @@ export default function Transactions() {
   const [transactionSearch, setTransactionSearch] = useState("");
   const [transactionFilter, setTransactionFilter] = useState("all");
 
+  const getUserId = () => {
+    const data = getAppData() || {};
+    return data.user?.id || data.user?._id;
+  };
+
   useEffect(() => {
     const data = getAppData();
 
@@ -30,11 +42,11 @@ export default function Transactions() {
       return;
     }
 
-    normalizeData();
     fillSidebarUser();
     loadPageData();
   }, [navigate]);
 
+<<<<<<< HEAD
   useEffect(() => {
     renderTransactionsList();
   }, [transactionSearch, transactionFilter]);
@@ -76,6 +88,8 @@ export default function Transactions() {
     }
   };
 
+=======
+>>>>>>> ola-student2-backend
   const fillSidebarUser = () => {
     const appData = getAppData();
     const fullName = appData.user?.fullname || appData.user?.name || "User";
@@ -91,6 +105,50 @@ export default function Transactions() {
 
     setSidebarUserName(fullName);
     setSidebarAvatar(initials);
+  };
+
+  const loadPageData = async () => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    try {
+      const cardsResponse = await fetch(`${API_BASE}/cards?userId=${userId}`);
+      const cardsData = await cardsResponse.json();
+
+      if (!cardsResponse.ok) {
+        throw new Error(cardsData.message || "Failed to load cards");
+      }
+
+      setCards(cardsData);
+
+      if (cardsData.length > 0) {
+        setSelectedCardId(cardsData[0]._id);
+      }
+
+      const cashResponse = await fetch(`${API_BASE}/cash?userId=${userId}`);
+      const cashData = await cashResponse.json();
+
+      if (!cashResponse.ok) {
+        throw new Error(cashData.message || "Failed to load cash");
+      }
+
+      setCashBalance(Number(cashData.balance || 0));
+
+      const transactionsResponse = await fetch(
+        `${API_BASE}/transactions?userId=${userId}`
+      );
+      const transactionsData = await transactionsResponse.json();
+
+      if (!transactionsResponse.ok) {
+        throw new Error(
+          transactionsData.message || "Failed to load transactions"
+        );
+      }
+
+      setTransactions(transactionsData);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const formatMoney = (amount) => {
@@ -110,10 +168,14 @@ export default function Transactions() {
   };
 
   const getSelectedCard = () => {
+<<<<<<< HEAD
     return cards.find(
       (card) =>
         String(card.id || card._id) === String(selectedCardId)
     );
+=======
+    return cards.find((card) => String(card._id) === String(selectedCardId));
+>>>>>>> ola-student2-backend
   };
 
   const getPaymentLabel = () => {
@@ -122,6 +184,7 @@ export default function Transactions() {
     const card = getSelectedCard();
     if (!card) return "Card";
 
+<<<<<<< HEAD
     return `${card.type || "Card"} •••• ${
       card.number ? String(card.number).slice(-4) : "----"
     }`;
@@ -264,6 +327,9 @@ export default function Transactions() {
         }
       }
     }
+=======
+    return `${card.cardName} •••• ${String(card.cardNumber).slice(-4)}`;
+>>>>>>> ola-student2-backend
   };
 
   const handlePdfChange = (event) => {
@@ -295,81 +361,79 @@ export default function Transactions() {
       return;
     }
 
-    const paymentMethod =
-      selectedSource === "cash" ? "cash" : `card:${selectedCardId}`;
-
     const paymentLabel = getPaymentLabel();
 
     const extractedTransactions = [
       {
-        id: Date.now() + 1,
-        title: "Tamimi Market",
+        id: "preview-1",
+        title: "Simulated restaurant transaction",
+        amount: 35,
+        type: "expense",
+        category: "Food",
+        paymentLabel,
+        date: new Date().toISOString(),
+        notes: `Preview from ${pdfFileName}`,
+      },
+      {
+        id: "preview-2",
+        title: "Simulated shopping transaction",
         amount: 120,
         type: "expense",
-        category: "Food & Dining",
-        paymentMethod,
+        category: "Shopping",
         paymentLabel,
-        date: "2026-04-20",
-        notes: `Imported from ${pdfFileName}`,
+        date: new Date().toISOString(),
+        notes: `Preview from ${pdfFileName}`,
       },
       {
-        id: Date.now() + 2,
-        title: "Netflix Subscription",
-        amount: 49,
-        type: "expense",
-        category: "Entertainment",
-        paymentMethod,
-        paymentLabel,
-        date: "2026-04-22",
-        notes: `Imported from ${pdfFileName}`,
-      },
-      {
-        id: Date.now() + 3,
-        title: "Salary Deposit",
-        amount: 5000,
+        id: "preview-3",
+        title: "Simulated income transaction",
+        amount: 500,
         type: "income",
-        category: "Income",
-        paymentMethod,
+        category: "Allowance",
         paymentLabel,
-        date: "2026-04-25",
-        notes: `Imported from ${pdfFileName}`,
+        date: new Date().toISOString(),
+        notes: `Preview from ${pdfFileName}`,
       },
     ];
 
     setPreviewTransactions(extractedTransactions);
   };
 
-  const handleImportTransactions = () => {
+  const handleImportTransactions = async () => {
     if (previewTransactions.length === 0) {
       alert("No transactions to import.");
       return;
     }
 
-    const appData = getAppData();
+    const userId = getUserId();
 
-    if (!Array.isArray(appData.transactions)) {
-      appData.transactions = [];
-    }
+    try {
+      const response = await fetch(`${API_BASE}/transactions/import-pdf`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          source: selectedSource,
+          cardId: selectedSource === "card" ? selectedCardId : null,
+        }),
+      });
 
-    for (const transaction of previewTransactions) {
-      const result = applyTransactionEffect(appData, transaction);
+      const data = await response.json();
 
-      if (!result.success) {
-        alert(result.message);
-        return;
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to import transactions");
       }
+
+      setPreviewTransactions([]);
+      setPdfFileName("");
+      setSuccessMsg("Transactions imported successfully. Balance updated.");
+
+      loadPageData();
+    } catch (error) {
+      alert(error.message);
     }
-
-    appData.transactions = [...previewTransactions, ...appData.transactions];
-
-    saveAppData(appData);
-
-    setPreviewTransactions([]);
-    setPdfFileName("");
-    setSuccessMsg("Transactions imported successfully. Balance updated.");
-
-    loadPageData();
-    renderTransactionsList();
   };
 
   const handleClearPreview = () => {
@@ -378,6 +442,7 @@ export default function Transactions() {
     setSuccessMsg("");
   };
 
+<<<<<<< HEAD
   const renderTransactionsList = () => {
     const appData = getAppData();
     let txs = appData.transactions || [];
@@ -402,25 +467,36 @@ export default function Transactions() {
 
     const transactionToDelete = appData.transactions?.find(
       (item) => Number(item.id) === Number(id)
+=======
+  const handleDeleteTransaction = async (id) => {
+    const transactionToDelete = transactions.find(
+      (item) => String(item._id) === String(id)
+>>>>>>> ola-student2-backend
     );
 
     if (!transactionToDelete) return;
 
     const confirmed = window.confirm(
-      `Delete transaction "${transactionToDelete.title}"?`
+      `Delete transaction "${transactionToDelete.description}"?`
     );
 
     if (!confirmed) return;
 
-    reverseTransactionEffect(appData, transactionToDelete);
+    try {
+      const response = await fetch(`${API_BASE}/transactions/${id}`, {
+        method: "DELETE",
+      });
 
-    appData.transactions = appData.transactions.filter(
-      (item) => Number(item.id) !== Number(id)
-    );
+      const data = await response.json();
 
-    saveAppData(appData);
-    loadPageData();
-    renderTransactionsList();
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete transaction");
+      }
+
+      loadPageData();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const handleLogout = () => {
@@ -432,11 +508,28 @@ export default function Transactions() {
     }
   };
 
-  const totalIncome = transactions
+  const filteredTransactions = transactions.filter((item) => {
+    const searchValue = transactionSearch.trim().toLowerCase();
+
+    if (transactionFilter !== "all" && item.type !== transactionFilter) {
+      return false;
+    }
+
+    if (searchValue !== "") {
+      return (
+        item.description?.toLowerCase().includes(searchValue) ||
+        item.category?.toLowerCase().includes(searchValue)
+      );
+    }
+
+    return true;
+  });
+
+  const totalIncome = filteredTransactions
     .filter((item) => item.type === "income")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
-  const totalExpenses = transactions
+  const totalExpenses = filteredTransactions
     .filter((item) => item.type === "expense")
     .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
@@ -539,6 +632,7 @@ export default function Transactions() {
                         }}
                       >
                         <option value="">Select card</option>
+<<<<<<< HEAD
                         {cards.map((card, index) => (
                           <option
                             key={card.id || card._id || index}
@@ -547,6 +641,13 @@ export default function Transactions() {
                             {card.type || "Card"} ••••{" "}
                             {card.number ? String(card.number).slice(-4) : "----"}{" "}
                             ({formatMoney(card.balance)})
+=======
+                        {cards.map((card) => (
+                          <option key={card._id} value={card._id}>
+                            {card.cardName} ••••{" "}
+                            {String(card.cardNumber).slice(-4)} (
+                            {formatMoney(card.balance)})
+>>>>>>> ola-student2-backend
                           </option>
                         ))}
                       </select>
@@ -615,7 +716,7 @@ export default function Transactions() {
                     Total Transactions
                   </span>
                   <strong className="analyticsSnapshotValue">
-                    {transactions.length}
+                    {filteredTransactions.length}
                   </strong>
                 </div>
 
@@ -710,7 +811,7 @@ export default function Transactions() {
               <input
                 type="text"
                 className="searchInput"
-                placeholder="Search transactions by title..."
+                placeholder="Search transactions by title or category..."
                 value={transactionSearch}
                 onChange={(e) => setTransactionSearch(e.target.value)}
               />
@@ -727,14 +828,14 @@ export default function Transactions() {
             </div>
 
             <div className="transactionsList">
-              {transactions.length === 0 ? (
+              {filteredTransactions.length === 0 ? (
                 <div className="emptyPanelState">
                   No transactions found. Upload a PDF statement to import
                   transactions.
                 </div>
               ) : (
-                transactions.map((transaction) => (
-                  <div className="transactionCardItem" key={transaction.id}>
+                filteredTransactions.map((transaction) => (
+                  <div className="transactionCardItem" key={transaction._id}>
                     <div className="transactionCardLeft">
                       <div
                         className={`transactionTypeIcon ${
@@ -747,17 +848,19 @@ export default function Transactions() {
                       </div>
 
                       <div className="transactionCardContent">
-                        <h3>{transaction.title}</h3>
+                        <h3>{transaction.description}</h3>
                         <p>
+<<<<<<< HEAD
                           {transaction.category} •{" "}
                           {transaction.paymentLabel ||
                             transaction.paymentMethod ||
                             "Payment"}{" "}
                           • {formatDate(transaction.date)}
+=======
+                          {transaction.category} • {transaction.source} •{" "}
+                          {formatDate(transaction.date)}
+>>>>>>> ola-student2-backend
                         </p>
-                        {transaction.notes ? (
-                          <small>{transaction.notes}</small>
-                        ) : null}
                       </div>
                     </div>
 
@@ -776,7 +879,7 @@ export default function Transactions() {
                       <button
                         type="button"
                         className="dangerGhostBtn smallBtn deleteTransactionBtn"
-                        onClick={() => handleDeleteTransaction(transaction.id)}
+                        onClick={() => handleDeleteTransaction(transaction._id)}
                       >
                         Delete
                       </button>

@@ -10,7 +10,13 @@ const planRoutes = require("./routes/planRoutes");
 const budgetRoutes = require("./routes/budgetRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+
+const cardRoutes = require("./routes/cardRoutes");
+const cashRoutes = require("./routes/cashRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
+
 const adminRoutes = require("./routes/adminRoutes");
+
 
 dotenv.config();
 
@@ -33,6 +39,11 @@ app.use("/api/plans", planRoutes);
 app.use("/api/budget", budgetRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
+app.use("/api/cards", cardRoutes);
+app.use("/api/cash", cashRoutes);
+app.use("/api/transactions", transactionRoutes);
+
 app.use("/api/admin", adminRoutes);
 
 // Test route
@@ -41,6 +52,7 @@ app.get("/", (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
 
 mongoose
   .connect(process.env.MONGO_URI)

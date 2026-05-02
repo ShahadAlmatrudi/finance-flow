@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { getAppData, saveAppData } from "../utils/storage";
+<<<<<<< HEAD
+=======
 import { Link } from "react-router-dom";
 import logo from "../assets/financeflow-logo.png";
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
 
 export default function Notifications() {
   const [sidebarUserName, setSidebarUserName] = useState("User");
@@ -235,6 +238,35 @@ export default function Notifications() {
       <div className="appLayout">
         <aside className="sidebar">
           <div className="sidebarBrand">
+<<<<<<< HEAD
+            <a href="/dashboard" className="sidebarLogo">
+              💸 FinanceFlow
+            </a>
+          </div>
+
+          <nav className="sidebarNav">
+            <a href="/dashboard" className="navItem">
+              Dashboard
+            </a>
+            <a href="/transactions" className="navItem">
+              Transactions
+            </a>
+            <a href="/budget" className="navItem">
+              Budget
+            </a>
+            <a href="/analytics" className="navItem">
+              Analytics
+            </a>
+            <a href="/cards" className="navItem">
+              Cards
+            </a>
+            <a href="/notifications" className="navItem active">
+              Notifications
+            </a>
+            <a href="/profile-view" className="navItem">
+              Account Settings
+            </a>
+=======
             <Link to="/dashboard" className="sidebarLogo">
               <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
               <span>FinanceFlow</span>
@@ -266,6 +298,7 @@ export default function Notifications() {
             <Link to="/profile-view" className="navItem">
               Account Settings
             </Link>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </nav>
 
           <div className="sidebarUser">

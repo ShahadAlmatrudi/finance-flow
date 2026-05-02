@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { addCard, getAppData, setCash } from "../utils/storage";
+import { getAppData } from "../utils/storage";
 import logo from "../assets/financeflow-logo.png";
+
+const API_BASE = "http://localhost:3000/api";
 
 export default function Cards() {
   const navigate = useNavigate();
@@ -25,6 +27,11 @@ export default function Cards() {
   const [cardBalanceError, setCardBalanceError] = useState("");
   const [cashError, setCashError] = useState("");
 
+  const getUserId = () => {
+    const data = getAppData() || {};
+    return data.user?.id || data.user?._id;
+  };
+
   useEffect(() => {
     const appData = getAppData() || {};
 
@@ -44,9 +51,49 @@ export default function Cards() {
     setSidebarUserName(fullName);
     setSidebarAvatar(initials || "U");
 
-    renderCards();
-    renderCash();
+    loadCards();
+    loadCash();
   }, [navigate]);
+
+  const loadCards = async () => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    try {
+      const response = await fetch(`${API_BASE}/cards?userId=${userId}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to load cards");
+      }
+
+      setCards(data);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const loadCash = async () => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    try {
+      const response = await fetch(`${API_BASE}/cash?userId=${userId}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to load cash");
+      }
+
+      if (!data.balance) {
+        setCashDisplayText("No cash amount saved yet.");
+      } else {
+        setCashDisplayText(`Saved Cash Amount: ${formatMoney(data.balance)}`);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   const handleLogout = () => {
     const shouldLogout = window.confirm("Are you sure you want to log out?");
@@ -71,22 +118,7 @@ export default function Cards() {
     setCardBalanceError("");
   };
 
-  const renderCards = () => {
-    const data = getAppData() || {};
-    setCards(data.cards || []);
-  };
-
-  const renderCash = () => {
-    const data = getAppData() || {};
-
-    if (data.cash === 0 || data.cash === null || data.cash === undefined) {
-      setCashDisplayText("No cash amount saved yet.");
-    } else {
-      setCashDisplayText(`Saved Cash Amount: ${formatMoney(data.cash)}`);
-    }
-  };
-
-  const handleCardSubmit = (event) => {
+  const handleCardSubmit = async (event) => {
     event.preventDefault();
     clearCardErrors();
 
@@ -116,25 +148,41 @@ export default function Cards() {
 
     if (!isValid) return;
 
-    const newCard = {
-      id: Date.now(),
-      type: cardType,
-      number: cleanNumber,
-      last4: cleanNumber.slice(-4),
-      balance: Number(cardBalance),
-      primary: primaryCard,
-    };
+    const userId = getUserId();
 
-    addCard(newCard);
-    renderCards();
+    try {
+      const response = await fetch(`${API_BASE}/cards`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          cardNumber: cleanNumber,
+          cardName: cardType,
+          balance: Number(cardBalance),
+          primary: primaryCard,
+        }),
+      });
 
-    setCardType("");
-    setCardNumber("");
-    setCardBalance("");
-    setPrimaryCard(false);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save card");
+      }
+
+      setCardType("");
+      setCardNumber("");
+      setCardBalance("");
+      setPrimaryCard(false);
+
+      loadCards();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const handleCashSubmit = (event) => {
+  const handleCashSubmit = async (event) => {
     event.preventDefault();
     setCashError("");
 
@@ -148,9 +196,31 @@ export default function Cards() {
       return;
     }
 
-    setCash(Number(cashAmount));
-    renderCash();
-    setCashAmount("");
+    const userId = getUserId();
+
+    try {
+      const response = await fetch(`${API_BASE}/cash`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          balance: Number(cashAmount),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save cash");
+      }
+
+      setCashAmount("");
+      setCashDisplayText(`Saved Cash Amount: ${formatMoney(data.balance)}`);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -344,33 +414,29 @@ export default function Cards() {
               ) : (
                 cards.map((card) => (
                   <div
-                    key={card.id}
+                    key={card._id}
                     className={`savedCard ${
-                      card.type === "Visa"
+                      card.cardName === "Visa"
                         ? "savedVisa"
-                        : card.type === "Mastercard"
+                        : card.cardName === "Mastercard"
                         ? "savedMastercard"
-                        : card.type === "Mada"
+                        : card.cardName === "Mada"
                         ? "savedMada"
                         : ""
                     }`}
                   >
                     <div className="savedCardTop">
-                      <span className="savedCardBrand">{card.type}</span>
-                      {card.primary && (
-                        <span className="primaryBadge">Primary</span>
-                      )}
+                      <span className="savedCardBrand">{card.cardName}</span>
                     </div>
 
                     <div className="savedCardNumber">
-                      {formatCardNumber(card.number)}
+                      {formatCardNumber(card.cardNumber)}
                     </div>
 
                     <div className="savedCardBottom">
                       <div>
                         <div className="savedCardName">
-                          Card ending in{" "}
-                          {card.last4 || String(card.number).slice(-4)}
+                          Card ending in {String(card.cardNumber).slice(-4)}
                         </div>
                         <div className="savedCardExpiry">
                           Used for transaction matching
@@ -386,7 +452,6 @@ export default function Cards() {
               )}
             </div>
           </section>
-
         </main>
       </div>
     </div>

@@ -6,12 +6,28 @@ const questionnaireSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      unique: true,
     },
-    goal: String,
-    tracking: String,
-    difficulty: String,
-    help: String,
-    categories: [String],
+    goal: {
+      type: String,
+      required: true,
+    },
+    tracking: {
+      type: String,
+      required: true,
+    },
+    difficulty: {
+      type: String,
+      required: true,
+    },
+    help: {
+      type: String,
+      required: true,
+    },
+    categories: {
+      type: [String],
+      required: true,
+    },
   },
   { timestamps: true }
 );

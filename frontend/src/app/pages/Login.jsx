@@ -1,5 +1,14 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
+=======
+<<<<<<< HEAD
+import { getAppData, saveAppData } from "../utils/storage";
+
+export default function Login() {
+=======
+import { useNavigate } from "react-router-dom";
+>>>>>>> ola-student2-backend
 import { getAppData, saveAppData } from "../utils/storage";
 import logo from "../assets/financeflow-logo.png";
 
@@ -7,6 +16,7 @@ import logo from "../assets/financeflow-logo.png";
 export default function Login() {
   const navigate = useNavigate();
 
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -40,21 +50,41 @@ export default function Login() {
       appData.isLoggedIn = true;
       saveAppData(appData);
 
+<<<<<<< HEAD
       navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
+=======
+    if (email === savedUser.email && password === savedUser.password) {
+      setError("");
+      data.isLoggedIn = true;
+      saveAppData(data);
+<<<<<<< HEAD
+
+      // later we replace this with React Router
+      window.location.href = "/dashboard";
+=======
+      navigate("/dashboard");
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
+    } else {
+      setError("Incorrect email or password.");
+>>>>>>> ola-student2-backend
     }
   };
 
   return (
     <div className="loginPage">
       <header className="topbar">
+<<<<<<< HEAD
+        <p className="logo">💸 FinanceFlow</p>
+=======
         <p className="logo">
           <img src={logo} alt="FinanceFlow Logo" className="brandLogoImg" />
           <span>FinanceFlow</span>
         </p>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
       </header>
 
       <main className="loginContainer">
@@ -102,6 +132,8 @@ export default function Login() {
             <button type="submit" className="loginMainBtn" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>
+<<<<<<< HEAD
+=======
 
             <button
               type="button"
@@ -122,6 +154,7 @@ export default function Login() {
             >
               Login as Admin
             </button>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </form>
 
           <p className="signupText">

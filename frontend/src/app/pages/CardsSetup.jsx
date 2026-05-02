@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
+import { addCard, getAppData, setCash } from "../utils/storage";
+
+export default function CardsSetup() {
+=======
 import { useNavigate } from "react-router-dom";
 import { addCard, getAppData, setCash } from "../utils/storage";;
 
 export default function CardsSetup() {
   const navigate = useNavigate();
 
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   const [cards, setCards] = useState([]);
   const [cash, setCashState] = useState(null);
 
@@ -403,6 +409,14 @@ export default function CardsSetup() {
           </form>
 
           <div className="actionRow dualButtons">
+<<<<<<< HEAD
+            <a href="/welcome" className="secondaryBtn">
+              Skip
+            </a>
+            <a href="/welcome" className="primaryBtn">
+              Next
+            </a>
+=======
             <button
               type="button"
               className="secondaryBtn"
@@ -417,6 +431,7 @@ export default function CardsSetup() {
             >
               Next
             </button>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </div>
         </section>
       </main>
