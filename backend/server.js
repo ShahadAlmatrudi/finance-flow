@@ -11,6 +11,13 @@ const budgetRoutes = require("./routes/budgetRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: "*", // temporary (for demo)
+  })
+);
 
 dotenv.config();
 
