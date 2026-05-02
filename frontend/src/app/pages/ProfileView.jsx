@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
-import { getAppData, saveAppData } from "../utils/storage";
-<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
-=======
-<<<<<<< HEAD
-=======
-import { Link } from "react-router-dom";
->>>>>>> ola-student2-backend
+import { getAppData, saveAppData } from "../utils/storage";
 import logo from "../assets/financeflow-logo.png";
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
 
 export default function ProfileView() {
   const navigate = useNavigate();
@@ -61,24 +54,31 @@ export default function ProfileView() {
   const [financialSuccessMsg, setFinancialSuccessMsg] = useState("");
   const [preferencesSuccessMsg, setPreferencesSuccessMsg] = useState("");
 
-  useEffect(() => {
-    const appData = getAppData();
+  const refreshSummary = () => {
+    const data = getAppData();
+    const user = data.user || {};
+    const profile = data.profile || {};
+    const settings = data.settings || {};
 
-    if (!appData.user) {
-      navigate("/signup");
-      return;
-    }
+    const fullName = user.fullname || "User";
+    const initials = fullName
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
 
-    loadPageData();
-  }, [navigate]);
+    setSidebarUserName(fullName);
+    setSidebarAvatar(initials || "U");
 
-  const handleLogout = () => {
-    const shouldLogout = window.confirm("Are you sure you want to log out?");
+    setProfileSummaryAvatar(initials || "U");
+    setProfileSummaryName(fullName);
+    setProfileSummaryEmail(user.email || "No email saved");
 
-    if (shouldLogout) {
-      localStorage.removeItem("financeFlowData");
-      navigate("/signup");
-    }
+    setSummaryOccupation(profile.occupation || "Not set");
+    setSummaryIncomeRange(profile.salaryRange || "Not set");
+    setSummaryCountry(profile.country || "Not set");
+    setSummary2FA(settings.twoFactorAuth ? "Enabled" : "Disabled");
   };
 
   const loadPageData = () => {
@@ -114,31 +114,24 @@ export default function ProfileView() {
     refreshSummary();
   };
 
-  const refreshSummary = () => {
-    const data = getAppData();
-    const user = data.user || {};
-    const profile = data.profile || {};
-    const settings = data.settings || {};
+  useEffect(() => {
+    const appData = getAppData();
 
-    const fullName = user.fullname || "User";
-    const initials = fullName
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
+    if (!appData.user) {
+      navigate("/signup");
+      return;
+    }
 
-    setSidebarUserName(fullName);
-    setSidebarAvatar(initials || "U");
+    loadPageData();
+  }, [navigate]);
 
-    setProfileSummaryAvatar(initials || "U");
-    setProfileSummaryName(fullName);
-    setProfileSummaryEmail(user.email || "No email saved");
+  const handleLogout = () => {
+    const shouldLogout = window.confirm("Are you sure you want to log out?");
 
-    setSummaryOccupation(profile.occupation || "Not set");
-    setSummaryIncomeRange(profile.salaryRange || "Not set");
-    setSummaryCountry(profile.country || "Not set");
-    setSummary2FA(settings.twoFactorAuth ? "Enabled" : "Disabled");
+    if (shouldLogout) {
+      localStorage.removeItem("financeFlowData");
+      navigate("/signup");
+    }
   };
 
   const clearAccountErrors = () => {
@@ -312,32 +305,6 @@ export default function ProfileView() {
       <div className="appLayout">
         <aside className="sidebar">
           <div className="sidebarBrand">
-<<<<<<< HEAD
-            <a href="/dashboard" className="sidebarLogo">
-              💸 FinanceFlow
-            </a>
-          </div>
-
-          <nav className="sidebarNav">
-            <a href="/dashboard" className="navItem">
-              Dashboard
-            </a>
-            <a href="/transactions" className="navItem">
-              Transactions
-            </a>
-            <a href="/budget" className="navItem">
-              Budget
-            </a>
-            <a href="/analytics" className="navItem">
-              Analytics
-            </a>
-            <a href="/notifications" className="navItem">
-              Notifications
-            </a>
-            <a href="/profile-view" className="navItem active">
-              Account Settings
-            </a>
-=======
             <Link to="/dashboard" className="sidebarLogo">
               <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
               <span>FinanceFlow</span>
@@ -369,7 +336,6 @@ export default function ProfileView() {
             <Link to="/profile-view" className="navItem active">
               Account Settings
             </Link>
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </nav>
 
           <div className="sidebarUser">
@@ -400,7 +366,9 @@ export default function ProfileView() {
           <section className="settingsTopGrid">
             <article className="dashboardPanel profileSummaryPanel">
               <div className="profileSummaryHeader">
-                <div className="profileSummaryAvatar">{profileSummaryAvatar}</div>
+                <div className="profileSummaryAvatar">
+                  {profileSummaryAvatar}
+                </div>
                 <div>
                   <h2>{profileSummaryName}</h2>
                   <p>{profileSummaryEmail}</p>
@@ -454,7 +422,9 @@ export default function ProfileView() {
                 <div className="toggleSettingRow">
                   <div>
                     <h3>Budget Alerts</h3>
-                    <p>Get alerts when spending approaches your category limits.</p>
+                    <p>
+                      Get alerts when spending approaches your category limits.
+                    </p>
                   </div>
                   <label className="switch">
                     <input
@@ -469,7 +439,9 @@ export default function ProfileView() {
                 <div className="toggleSettingRow">
                   <div>
                     <h3>Monthly Summary</h3>
-                    <p>Receive a monthly overview of your financial performance.</p>
+                    <p>
+                      Receive a monthly overview of your financial performance.
+                    </p>
                   </div>
                   <label className="switch">
                     <input
@@ -566,7 +538,9 @@ export default function ProfileView() {
                   </div>
 
                   <div className="inputGroup">
-                    <label htmlFor="editConfirmPassword">Confirm Password</label>
+                    <label htmlFor="editConfirmPassword">
+                      Confirm Password
+                    </label>
                     <input
                       type="password"
                       id="editConfirmPassword"
@@ -665,7 +639,9 @@ export default function ProfileView() {
                   </div>
 
                   <div className="inputGroup">
-                    <label htmlFor="editSalaryRange">Monthly Income Range</label>
+                    <label htmlFor="editSalaryRange">
+                      Monthly Income Range
+                    </label>
                     <select
                       id="editSalaryRange"
                       value={editSalaryRange}
@@ -688,7 +664,9 @@ export default function ProfileView() {
 
                 <div className="settingsGrid">
                   <div className="inputGroup">
-                    <label htmlFor="editIncomeFrequency">Income Frequency</label>
+                    <label htmlFor="editIncomeFrequency">
+                      Income Frequency
+                    </label>
                     <select
                       id="editIncomeFrequency"
                       value={editIncomeFrequency}
@@ -709,7 +687,9 @@ export default function ProfileView() {
                   </div>
 
                   <div className="inputGroup">
-                    <label htmlFor="editIncomeSource">Primary Income Source</label>
+                    <label htmlFor="editIncomeSource">
+                      Primary Income Source
+                    </label>
                     <select
                       id="editIncomeSource"
                       value={editIncomeSource}

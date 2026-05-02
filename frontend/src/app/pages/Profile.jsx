@@ -1,16 +1,10 @@
 import { useState } from "react";
-<<<<<<< HEAD
-import { setProfile } from "../utils/storage";
-
-export default function Profile() {
-=======
 import { useNavigate } from "react-router-dom";
 import { setProfile } from "../utils/storage";
 
 export default function Profile() {
   const navigate = useNavigate();
 
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   const [age, setAge] = useState("");
   const [country, setCountry] = useState("");
   const [occupation, setOccupation] = useState("");
@@ -92,25 +86,21 @@ export default function Profile() {
       isValid = false;
     }
 
-    if (isValid) {
-      const profileData = {
-        age: Number(age),
-        country,
-        occupation,
-        salaryRange,
-        incomeFrequency,
-        incomeSource,
-        obligationType,
-        obligationAmount: Number(obligationAmount),
-      };
+    if (!isValid) return;
 
-      setProfile(profileData);
-<<<<<<< HEAD
-      window.location.href = "/plan-setup";
-=======
-      navigate("/plan-setup");
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
-    }
+    const profileData = {
+      age: Number(age),
+      country,
+      occupation,
+      salaryRange,
+      incomeFrequency,
+      incomeSource,
+      obligationType,
+      obligationAmount: Number(obligationAmount),
+    };
+
+    setProfile(profileData);
+    navigate("/plan-setup");
   };
 
   return (
@@ -296,9 +286,6 @@ export default function Profile() {
               <small className="errorMsg">{obligationAmountError}</small>
             </div>
 
-<<<<<<< HEAD
-            <div className="actionRow">
-=======
             <div className="actionRow dualButtons">
               <button
                 type="button"
@@ -308,7 +295,6 @@ export default function Profile() {
                 ← Back
               </button>
 
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
               <button type="submit" className="primaryBtn">
                 Next
               </button>

@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { getAppData, saveAppData } from "../utils/storage";
-<<<<<<< HEAD
-=======
-import { Link } from "react-router-dom";
 import logo from "../assets/financeflow-logo.png";
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
 
 export default function Notifications() {
+  const navigate = useNavigate();
+
   const [sidebarUserName, setSidebarUserName] = useState("User");
   const [sidebarAvatar, setSidebarAvatar] = useState("U");
   const [notifications, setNotifications] = useState([]);
@@ -15,7 +14,7 @@ export default function Notifications() {
     const appData = getAppData();
 
     if (!appData.user) {
-      window.location.href = "/signup";
+      navigate("/signup");
       return;
     }
 
@@ -32,14 +31,14 @@ export default function Notifications() {
 
     const storedNotifications = getStoredNotifications();
     setNotifications(storedNotifications);
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     const shouldLogout = window.confirm("Are you sure you want to log out?");
 
     if (shouldLogout) {
       localStorage.removeItem("financeFlowData");
-      window.location.href = "/signup";
+      navigate("/signup");
     }
   };
 
@@ -54,16 +53,11 @@ export default function Notifications() {
   };
 
   const handleToggleRead = (id) => {
-    const updated = notifications.map((notification) => {
-      if (notification.id === id) {
-        return {
-          ...notification,
-          read: !notification.read,
-        };
-      }
-
-      return notification;
-    });
+    const updated = notifications.map((notification) =>
+      notification.id === id
+        ? { ...notification, read: !notification.read }
+        : notification
+    );
 
     setNotifications(updated);
     saveNotifications(updated);
@@ -218,13 +212,9 @@ export default function Notifications() {
     return "badgeInfo";
   };
 
-  const formatMoney = (amount) => {
-    return `$${Number(amount).toLocaleString()}`;
-  };
+  const formatMoney = (amount) => `$${Number(amount).toLocaleString()}`;
 
-  const cryptoRandomId = () => {
-    return Math.random().toString(36).slice(2, 11);
-  };
+  const cryptoRandomId = () => Math.random().toString(36).slice(2, 11);
 
   const total = notifications.length;
   const unread = notifications.filter((item) => !item.read).length;
@@ -238,35 +228,6 @@ export default function Notifications() {
       <div className="appLayout">
         <aside className="sidebar">
           <div className="sidebarBrand">
-<<<<<<< HEAD
-            <a href="/dashboard" className="sidebarLogo">
-              💸 FinanceFlow
-            </a>
-          </div>
-
-          <nav className="sidebarNav">
-            <a href="/dashboard" className="navItem">
-              Dashboard
-            </a>
-            <a href="/transactions" className="navItem">
-              Transactions
-            </a>
-            <a href="/budget" className="navItem">
-              Budget
-            </a>
-            <a href="/analytics" className="navItem">
-              Analytics
-            </a>
-            <a href="/cards" className="navItem">
-              Cards
-            </a>
-            <a href="/notifications" className="navItem active">
-              Notifications
-            </a>
-            <a href="/profile-view" className="navItem">
-              Account Settings
-            </a>
-=======
             <Link to="/dashboard" className="sidebarLogo">
               <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
               <span>FinanceFlow</span>
@@ -298,7 +259,6 @@ export default function Notifications() {
             <Link to="/profile-view" className="navItem">
               Account Settings
             </Link>
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </nav>
 
           <div className="sidebarUser">
@@ -402,6 +362,7 @@ export default function Notifications() {
 
                       <button
                         className="notificationActionBtn"
+                        type="button"
                         onClick={() => handleToggleRead(notification.id)}
                       >
                         {notification.read ? "Mark Unread" : "Mark Read"}

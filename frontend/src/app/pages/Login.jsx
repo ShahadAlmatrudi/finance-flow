@@ -1,22 +1,11 @@
 import { useState } from "react";
-<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
-=======
-<<<<<<< HEAD
-import { getAppData, saveAppData } from "../utils/storage";
-
-export default function Login() {
-=======
-import { useNavigate } from "react-router-dom";
->>>>>>> ola-student2-backend
 import { getAppData, saveAppData } from "../utils/storage";
 import logo from "../assets/financeflow-logo.png";
-
 
 export default function Login() {
   const navigate = useNavigate();
 
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,11 +17,14 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://finance-flow-7fk1.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        "https://finance-flow-7fk1.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await res.json();
 
@@ -41,50 +33,31 @@ export default function Login() {
         return;
       }
 
-      // Save user + token to localStorage
       const appData = getAppData();
+
       appData.user = {
         ...data.user,
         token: data.token,
       };
+
       appData.isLoggedIn = true;
       saveAppData(appData);
 
-<<<<<<< HEAD
       navigate("/dashboard");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
-=======
-    if (email === savedUser.email && password === savedUser.password) {
-      setError("");
-      data.isLoggedIn = true;
-      saveAppData(data);
-<<<<<<< HEAD
-
-      // later we replace this with React Router
-      window.location.href = "/dashboard";
-=======
-      navigate("/dashboard");
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
-    } else {
-      setError("Incorrect email or password.");
->>>>>>> ola-student2-backend
     }
   };
 
   return (
     <div className="loginPage">
       <header className="topbar">
-<<<<<<< HEAD
-        <p className="logo">💸 FinanceFlow</p>
-=======
         <p className="logo">
           <img src={logo} alt="FinanceFlow Logo" className="brandLogoImg" />
           <span>FinanceFlow</span>
         </p>
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
       </header>
 
       <main className="loginContainer">
@@ -122,6 +95,7 @@ export default function Login() {
                 <input type="checkbox" />
                 Remember me
               </label>
+
               <a href="#" className="forgotPassword">
                 Forgot password?
               </a>
@@ -132,8 +106,6 @@ export default function Login() {
             <button type="submit" className="loginMainBtn" disabled={loading}>
               {loading ? "Logging in..." : "Login"}
             </button>
-<<<<<<< HEAD
-=======
 
             <button
               type="button"
@@ -149,23 +121,18 @@ export default function Login() {
                 fontSize: "15px",
                 fontWeight: "600",
                 cursor: "pointer",
-                textAlign: "center"
+                textAlign: "center",
               }}
             >
               Login as Admin
             </button>
->>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </form>
 
           <p className="signupText">
-            Don't have an account?{" "}
-            <button
-              type="button"
-              className="textLink"
-              onClick={() => navigate("/signup")}
-            >
+            Don&apos;t have an account?{" "}
+            <Link to="/signup" className="textLink">
               Sign Up
-            </button>
+            </Link>
           </p>
         </section>
       </main>

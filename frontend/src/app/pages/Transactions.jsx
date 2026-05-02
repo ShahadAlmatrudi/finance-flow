@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
-<<<<<<< HEAD
-import { getAppData, saveAppData } from "../utils/storage";
 import { Link, useNavigate } from "react-router-dom";
-=======
 import { getAppData } from "../utils/storage";
-import { Link } from "react-router-dom";
->>>>>>> ola-student2-backend
 import logo from "../assets/financeflow-logo.png";
 
-const API_BASE = "http://localhost:3000/api";
+const API_BASE = "https://finance-flow-7fk1.onrender.com/api";
 
 export default function Transactions() {
   const navigate = useNavigate();
@@ -46,50 +41,6 @@ export default function Transactions() {
     loadPageData();
   }, [navigate]);
 
-<<<<<<< HEAD
-  useEffect(() => {
-    renderTransactionsList();
-  }, [transactionSearch, transactionFilter]);
-
-  const normalizeData = () => {
-    const appData = getAppData();
-
-    if (!appData.plan) appData.plan = {};
-    if (!Array.isArray(appData.plan.categories)) appData.plan.categories = [];
-    if (!Array.isArray(appData.cards)) appData.cards = [];
-    if (!Array.isArray(appData.transactions)) appData.transactions = [];
-    if (typeof appData.cash !== "number") {
-      appData.cash = Number(appData.cash || 0);
-    }
-
-    appData.cards = appData.cards.map((card) => ({
-      ...card,
-      balance: Number(card.balance || 0),
-    }));
-
-    appData.plan.categories = appData.plan.categories.map((category) => ({
-      ...category,
-      limit: Number(category.limit || 0),
-      spent: Number(category.spent || 0),
-    }));
-
-    saveAppData(appData);
-  };
-
-  const loadPageData = () => {
-    const appData = getAppData();
-
-    setCards(appData.cards || []);
-    setCashBalance(Number(appData.cash || 0));
-    setTransactions(appData.transactions || []);
-
-    if (appData.cards?.length > 0) {
-      setSelectedCardId(String(appData.cards[0].id || appData.cards[0]._id));
-    }
-  };
-
-=======
->>>>>>> ola-student2-backend
   const fillSidebarUser = () => {
     const appData = getAppData();
     const fullName = appData.user?.fullname || appData.user?.name || "User";
@@ -109,45 +60,45 @@ export default function Transactions() {
 
   const loadPageData = async () => {
     const userId = getUserId();
+    const localData = getAppData();
+
+    setCards(localData.cards || []);
+    setCashBalance(Number(localData.cash || 0));
+    setTransactions(localData.transactions || []);
+
+    if (localData.cards?.length > 0) {
+      setSelectedCardId(String(localData.cards[0].id || localData.cards[0]._id));
+    }
+
     if (!userId) return;
 
     try {
       const cardsResponse = await fetch(`${API_BASE}/cards?userId=${userId}`);
-      const cardsData = await cardsResponse.json();
+      if (cardsResponse.ok) {
+        const cardsData = await cardsResponse.json();
+        setCards(cardsData || []);
 
-      if (!cardsResponse.ok) {
-        throw new Error(cardsData.message || "Failed to load cards");
-      }
-
-      setCards(cardsData);
-
-      if (cardsData.length > 0) {
-        setSelectedCardId(cardsData[0]._id);
+        if (cardsData?.length > 0) {
+          setSelectedCardId(String(cardsData[0]._id || cardsData[0].id));
+        }
       }
 
       const cashResponse = await fetch(`${API_BASE}/cash?userId=${userId}`);
-      const cashData = await cashResponse.json();
-
-      if (!cashResponse.ok) {
-        throw new Error(cashData.message || "Failed to load cash");
+      if (cashResponse.ok) {
+        const cashData = await cashResponse.json();
+        setCashBalance(Number(cashData.balance || 0));
       }
-
-      setCashBalance(Number(cashData.balance || 0));
 
       const transactionsResponse = await fetch(
         `${API_BASE}/transactions?userId=${userId}`
       );
-      const transactionsData = await transactionsResponse.json();
 
-      if (!transactionsResponse.ok) {
-        throw new Error(
-          transactionsData.message || "Failed to load transactions"
-        );
+      if (transactionsResponse.ok) {
+        const transactionsData = await transactionsResponse.json();
+        setTransactions(transactionsData || []);
       }
-
-      setTransactions(transactionsData);
     } catch (error) {
-      alert(error.message);
+      console.error("Could not load transactions from server:", error.message);
     }
   };
 
@@ -168,14 +119,9 @@ export default function Transactions() {
   };
 
   const getSelectedCard = () => {
-<<<<<<< HEAD
     return cards.find(
-      (card) =>
-        String(card.id || card._id) === String(selectedCardId)
+      (card) => String(card.id || card._id) === String(selectedCardId)
     );
-=======
-    return cards.find((card) => String(card._id) === String(selectedCardId));
->>>>>>> ola-student2-backend
   };
 
   const getPaymentLabel = () => {
@@ -184,152 +130,12 @@ export default function Transactions() {
     const card = getSelectedCard();
     if (!card) return "Card";
 
-<<<<<<< HEAD
-    return `${card.type || "Card"} •••• ${
-      card.number ? String(card.number).slice(-4) : "----"
+    const cardType = card.type || card.cardName || "Card";
+    const cardNumber = card.number || card.cardNumber || "";
+
+    return `${cardType} •••• ${
+      cardNumber ? String(cardNumber).slice(-4) : "----"
     }`;
-  };
-
-  const addCategoryIfMissing = (appData, categoryName) => {
-    if (!appData.plan) appData.plan = {};
-    if (!Array.isArray(appData.plan.categories)) appData.plan.categories = [];
-
-    let category = appData.plan.categories.find(
-      (item) => item.name === categoryName
-    );
-
-    if (!category && categoryName !== "Income") {
-      category = {
-        name: categoryName,
-        limit: 0,
-        spent: 0,
-      };
-
-      appData.plan.categories.push(category);
-    }
-
-    return category;
-  };
-
-  const applyTransactionEffect = (appData, transaction) => {
-    const amount = Number(transaction.amount || 0);
-
-    if (transaction.type === "expense") {
-      const category = addCategoryIfMissing(appData, transaction.category);
-
-      if (category) {
-        category.spent = Number(category.spent || 0) + amount;
-      }
-
-      if (transaction.paymentMethod === "cash") {
-        const currentCash = Number(appData.cash || 0);
-
-        if (currentCash < amount) {
-          return {
-            success: false,
-            message: `Not enough cash balance for ${transaction.title}.`,
-          };
-        }
-
-        appData.cash = currentCash - amount;
-      }
-
-      if (transaction.paymentMethod?.startsWith("card:")) {
-        const cardId = transaction.paymentMethod.split(":")[1];
-        const card = appData.cards.find(
-          (item) => String(item.id || item._id) === String(cardId)
-        );
-
-        if (!card) {
-          return {
-            success: false,
-            message: "Selected card was not found.",
-          };
-        }
-
-        if (Number(card.balance || 0) < amount) {
-          return {
-            success: false,
-            message: `Not enough balance in the selected card for ${transaction.title}.`,
-          };
-        }
-
-        card.balance = Number(card.balance || 0) - amount;
-      }
-    }
-
-    if (transaction.type === "income") {
-      if (transaction.paymentMethod === "cash") {
-        appData.cash = Number(appData.cash || 0) + amount;
-      }
-
-      if (transaction.paymentMethod?.startsWith("card:")) {
-        const cardId = transaction.paymentMethod.split(":")[1];
-        const card = appData.cards.find(
-          (item) => String(item.id || item._id) === String(cardId)
-        );
-
-        if (!card) {
-          return {
-            success: false,
-            message: "Selected card was not found.",
-          };
-        }
-
-        card.balance = Number(card.balance || 0) + amount;
-      }
-    }
-
-    return { success: true };
-  };
-
-  const reverseTransactionEffect = (appData, transaction) => {
-    const amount = Number(transaction.amount || 0);
-
-    if (transaction.type === "expense") {
-      const category = appData.plan?.categories?.find(
-        (item) => item.name === transaction.category
-      );
-
-      if (category) {
-        category.spent = Math.max(0, Number(category.spent || 0) - amount);
-      }
-
-      if (transaction.paymentMethod === "cash") {
-        appData.cash = Number(appData.cash || 0) + amount;
-      }
-
-      if (transaction.paymentMethod?.startsWith("card:")) {
-        const cardId = transaction.paymentMethod.split(":")[1];
-        const card = appData.cards.find(
-          (item) => String(item.id || item._id) === String(cardId)
-        );
-
-        if (card) {
-          card.balance = Number(card.balance || 0) + amount;
-        }
-      }
-    }
-
-    if (transaction.type === "income") {
-      if (transaction.paymentMethod === "cash") {
-        appData.cash = Math.max(0, Number(appData.cash || 0) - amount);
-      }
-
-      if (transaction.paymentMethod?.startsWith("card:")) {
-        const cardId = transaction.paymentMethod.split(":")[1];
-        const card = appData.cards.find(
-          (item) => String(item.id || item._id) === String(cardId)
-        );
-
-        if (card) {
-          card.balance = Math.max(0, Number(card.balance || 0) - amount);
-        }
-      }
-    }
-=======
-    return `${card.cardName} •••• ${String(card.cardNumber).slice(-4)}`;
->>>>>>> ola-student2-backend
   };
 
   const handlePdfChange = (event) => {
@@ -367,30 +173,36 @@ export default function Transactions() {
       {
         id: "preview-1",
         title: "Simulated restaurant transaction",
+        description: "Simulated restaurant transaction",
         amount: 35,
         type: "expense",
         category: "Food",
         paymentLabel,
+        source: selectedSource,
         date: new Date().toISOString(),
         notes: `Preview from ${pdfFileName}`,
       },
       {
         id: "preview-2",
         title: "Simulated shopping transaction",
+        description: "Simulated shopping transaction",
         amount: 120,
         type: "expense",
         category: "Shopping",
         paymentLabel,
+        source: selectedSource,
         date: new Date().toISOString(),
         notes: `Preview from ${pdfFileName}`,
       },
       {
         id: "preview-3",
         title: "Simulated income transaction",
+        description: "Simulated income transaction",
         amount: 500,
         type: "income",
         category: "Allowance",
         paymentLabel,
+        source: selectedSource,
         date: new Date().toISOString(),
         notes: `Preview from ${pdfFileName}`,
       },
@@ -442,43 +254,17 @@ export default function Transactions() {
     setSuccessMsg("");
   };
 
-<<<<<<< HEAD
-  const renderTransactionsList = () => {
-    const appData = getAppData();
-    let txs = appData.transactions || [];
-
-    const searchValue = transactionSearch.trim().toLowerCase();
-
-    if (transactionFilter !== "all") {
-      txs = txs.filter((item) => item.type === transactionFilter);
-    }
-
-    if (searchValue !== "") {
-      txs = txs.filter((item) =>
-        String(item.title || "").toLowerCase().includes(searchValue)
-      );
-    }
-
-    setTransactions(txs);
-  };
-
-  const handleDeleteTransaction = (id) => {
-    const appData = getAppData();
-
-    const transactionToDelete = appData.transactions?.find(
-      (item) => Number(item.id) === Number(id)
-=======
   const handleDeleteTransaction = async (id) => {
     const transactionToDelete = transactions.find(
-      (item) => String(item._id) === String(id)
->>>>>>> ola-student2-backend
+      (item) => String(item._id || item.id) === String(id)
     );
 
     if (!transactionToDelete) return;
 
-    const confirmed = window.confirm(
-      `Delete transaction "${transactionToDelete.description}"?`
-    );
+    const transactionName =
+      transactionToDelete.description || transactionToDelete.title || "transaction";
+
+    const confirmed = window.confirm(`Delete transaction "${transactionName}"?`);
 
     if (!confirmed) return;
 
@@ -517,8 +303,10 @@ export default function Transactions() {
 
     if (searchValue !== "") {
       return (
-        item.description?.toLowerCase().includes(searchValue) ||
-        item.category?.toLowerCase().includes(searchValue)
+        String(item.description || item.title || "")
+          .toLowerCase()
+          .includes(searchValue) ||
+        String(item.category || "").toLowerCase().includes(searchValue)
       );
     }
 
@@ -632,24 +420,19 @@ export default function Transactions() {
                         }}
                       >
                         <option value="">Select card</option>
-<<<<<<< HEAD
-                        {cards.map((card, index) => (
-                          <option
-                            key={card.id || card._id || index}
-                            value={card.id || card._id}
-                          >
-                            {card.type || "Card"} ••••{" "}
-                            {card.number ? String(card.number).slice(-4) : "----"}{" "}
-                            ({formatMoney(card.balance)})
-=======
-                        {cards.map((card) => (
-                          <option key={card._id} value={card._id}>
-                            {card.cardName} ••••{" "}
-                            {String(card.cardNumber).slice(-4)} (
-                            {formatMoney(card.balance)})
->>>>>>> ola-student2-backend
-                          </option>
-                        ))}
+                        {cards.map((card, index) => {
+                          const cardId = card.id || card._id || index;
+                          const cardType = card.type || card.cardName || "Card";
+                          const cardNumber = card.number || card.cardNumber || "";
+
+                          return (
+                            <option key={cardId} value={cardId}>
+                              {cardType} ••••{" "}
+                              {cardNumber ? String(cardNumber).slice(-4) : "----"} (
+                              {formatMoney(card.balance)})
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                   ) : (
@@ -835,7 +618,10 @@ export default function Transactions() {
                 </div>
               ) : (
                 filteredTransactions.map((transaction) => (
-                  <div className="transactionCardItem" key={transaction._id}>
+                  <div
+                    className="transactionCardItem"
+                    key={transaction._id || transaction.id}
+                  >
                     <div className="transactionCardLeft">
                       <div
                         className={`transactionTypeIcon ${
@@ -848,18 +634,14 @@ export default function Transactions() {
                       </div>
 
                       <div className="transactionCardContent">
-                        <h3>{transaction.description}</h3>
+                        <h3>{transaction.description || transaction.title}</h3>
                         <p>
-<<<<<<< HEAD
                           {transaction.category} •{" "}
                           {transaction.paymentLabel ||
                             transaction.paymentMethod ||
+                            transaction.source ||
                             "Payment"}{" "}
                           • {formatDate(transaction.date)}
-=======
-                          {transaction.category} • {transaction.source} •{" "}
-                          {formatDate(transaction.date)}
->>>>>>> ola-student2-backend
                         </p>
                       </div>
                     </div>
@@ -879,7 +661,9 @@ export default function Transactions() {
                       <button
                         type="button"
                         className="dangerGhostBtn smallBtn deleteTransactionBtn"
-                        onClick={() => handleDeleteTransaction(transaction._id)}
+                        onClick={() =>
+                          handleDeleteTransaction(transaction._id || transaction.id)
+                        }
                       >
                         Delete
                       </button>
