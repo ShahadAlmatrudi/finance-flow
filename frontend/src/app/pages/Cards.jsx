@@ -1,37 +1,42 @@
 import { useEffect, useState } from "react";
-import { addCard, getAppData, setCash } from "../utils/storage";
+import { useNavigate, Link } from "react-router-dom";
+import { getAppData } from "../utils/storage";
+import logo from "../assets/financeflow-logo.png";
+
+const API_BASE = "http://localhost:3000/api";
 
 export default function Cards() {
+  const navigate = useNavigate();
+
   const [sidebarUserName, setSidebarUserName] = useState("User");
   const [sidebarAvatar, setSidebarAvatar] = useState("U");
 
   const [cards, setCards] = useState([]);
-  const [cashDisplayText, setCashDisplayText] = useState("No cash amount saved yet.");
+  const [cashDisplayText, setCashDisplayText] = useState(
+    "No cash amount saved yet."
+  );
 
   const [cardType, setCardType] = useState("");
   const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
   const [cardBalance, setCardBalance] = useState("");
-  const [expMonth, setExpMonth] = useState("");
-  const [expYear, setExpYear] = useState("");
-  const [cvv, setCvv] = useState("");
   const [primaryCard, setPrimaryCard] = useState(false);
   const [cashAmount, setCashAmount] = useState("");
 
   const [cardTypeError, setCardTypeError] = useState("");
   const [cardNumberError, setCardNumberError] = useState("");
-  const [cardNameError, setCardNameError] = useState("");
   const [cardBalanceError, setCardBalanceError] = useState("");
-  const [expMonthError, setExpMonthError] = useState("");
-  const [expYearError, setExpYearError] = useState("");
-  const [cvvError, setCvvError] = useState("");
   const [cashError, setCashError] = useState("");
 
+  const getUserId = () => {
+    const data = getAppData() || {};
+    return data.user?.id || data.user?._id;
+  };
+
   useEffect(() => {
-    const appData = getAppData();
+    const appData = getAppData() || {};
 
     if (!appData.user) {
-      window.location.href = "/signup";
+      navigate("/signup");
       return;
     }
 
@@ -46,53 +51,74 @@ export default function Cards() {
     setSidebarUserName(fullName);
     setSidebarAvatar(initials || "U");
 
-    renderCards();
-    renderCash();
-  }, []);
+    loadCards();
+    loadCash();
+  }, [navigate]);
+
+  const loadCards = async () => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    try {
+      const response = await fetch(`${API_BASE}/cards?userId=${userId}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to load cards");
+      }
+
+      setCards(data);
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  const loadCash = async () => {
+    const userId = getUserId();
+    if (!userId) return;
+
+    try {
+      const response = await fetch(`${API_BASE}/cash?userId=${userId}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to load cash");
+      }
+
+      if (!data.balance) {
+        setCashDisplayText("No cash amount saved yet.");
+      } else {
+        setCashDisplayText(`Saved Cash Amount: ${formatMoney(data.balance)}`);
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
 
   const handleLogout = () => {
     const shouldLogout = window.confirm("Are you sure you want to log out?");
 
     if (shouldLogout) {
       localStorage.removeItem("financeFlowData");
-      window.location.href = "/signup";
+      navigate("/signup");
     }
   };
 
   const formatCardNumber = (number) => {
-    return `•••• •••• •••• ${number.slice(-4)}`;
+    return `•••• •••• •••• ${String(number).slice(-4)}`;
   };
 
   const formatMoney = (amount) => {
-    return `$${Number(amount).toLocaleString()}`;
+    return `$${Number(amount || 0).toLocaleString()}`;
   };
 
   const clearCardErrors = () => {
     setCardTypeError("");
     setCardNumberError("");
-    setCardNameError("");
     setCardBalanceError("");
-    setExpMonthError("");
-    setExpYearError("");
-    setCvvError("");
   };
 
-  const renderCards = () => {
-    const data = getAppData();
-    setCards(data.cards || []);
-  };
-
-  const renderCash = () => {
-    const data = getAppData();
-
-    if (data.cash === 0 || data.cash === null || data.cash === undefined) {
-      setCashDisplayText("No cash amount saved yet.");
-    } else {
-      setCashDisplayText(`Saved Cash Amount: ${formatMoney(data.cash)}`);
-    }
-  };
-
-  const handleCardSubmit = (event) => {
+  const handleCardSubmit = async (event) => {
     event.preventDefault();
     clearCardErrors();
 
@@ -112,11 +138,6 @@ export default function Cards() {
       isValid = false;
     }
 
-    if (cardName.trim() === "") {
-      setCardNameError("Cardholder name is required.");
-      isValid = false;
-    }
-
     if (cardBalance.trim() === "") {
       setCardBalanceError("Card balance is required.");
       isValid = false;
@@ -125,61 +146,43 @@ export default function Cards() {
       isValid = false;
     }
 
-    if (expMonth.trim() === "") {
-      setExpMonthError("Expiry month is required.");
-      isValid = false;
-    } else if (
-      !/^\d{2}$/.test(expMonth) ||
-      Number(expMonth) < 1 ||
-      Number(expMonth) > 12
-    ) {
-      setExpMonthError("Enter a valid month between 01 and 12.");
-      isValid = false;
-    }
-
-    if (expYear.trim() === "") {
-      setExpYearError("Expiry year is required.");
-      isValid = false;
-    } else if (!/^\d{2}$/.test(expYear)) {
-      setExpYearError("Year must be 2 digits.");
-      isValid = false;
-    }
-
-    if (cvv.trim() === "") {
-      setCvvError("CVV is required.");
-      isValid = false;
-    } else if (!/^\d{3}$/.test(cvv)) {
-      setCvvError("CVV must be exactly 3 digits.");
-      isValid = false;
-    }
-
     if (!isValid) return;
 
-    const newCard = {
-      id: Date.now(),
-      type: cardType,
-      number: cleanNumber,
-      name: cardName.trim(),
-      balance: Number(cardBalance),
-      month: expMonth,
-      year: expYear,
-      primary: primaryCard,
-    };
+    const userId = getUserId();
 
-    addCard(newCard);
-    renderCards();
+    try {
+      const response = await fetch(`${API_BASE}/cards`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          cardNumber: cleanNumber,
+          cardName: cardType,
+          balance: Number(cardBalance),
+          primary: primaryCard,
+        }),
+      });
 
-    setCardType("");
-    setCardNumber("");
-    setCardName("");
-    setCardBalance("");
-    setExpMonth("");
-    setExpYear("");
-    setCvv("");
-    setPrimaryCard(false);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save card");
+      }
+
+      setCardType("");
+      setCardNumber("");
+      setCardBalance("");
+      setPrimaryCard(false);
+
+      loadCards();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const handleCashSubmit = (event) => {
+  const handleCashSubmit = async (event) => {
     event.preventDefault();
     setCashError("");
 
@@ -193,9 +196,31 @@ export default function Cards() {
       return;
     }
 
-    setCash(Number(cashAmount));
-    renderCash();
-    setCashAmount("");
+    const userId = getUserId();
+
+    try {
+      const response = await fetch(`${API_BASE}/cash`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          balance: Number(cashAmount),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to save cash");
+      }
+
+      setCashAmount("");
+      setCashDisplayText(`Saved Cash Amount: ${formatMoney(data.balance)}`);
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -203,33 +228,37 @@ export default function Cards() {
       <div className="appLayout">
         <aside className="sidebar">
           <div className="sidebarBrand">
-            <a href="/dashboard" className="sidebarLogo">
-              💸 FinanceFlow
-            </a>
+            <Link to="/dashboard" className="sidebarLogo">
+              <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
+              <span>FinanceFlow</span>
+            </Link>
           </div>
 
           <nav className="sidebarNav">
-            <a href="/dashboard" className="navItem">
+            <Link to="/dashboard" className="navItem">
               Dashboard
-            </a>
-            <a href="/transactions" className="navItem">
+            </Link>
+            <Link to="/transactions" className="navItem">
               Transactions
-            </a>
-            <a href="/budget" className="navItem">
+            </Link>
+            <Link to="/budget" className="navItem">
               Budget
-            </a>
-            <a href="/analytics" className="navItem">
+            </Link>
+            <Link to="/analytics" className="navItem">
               Analytics
-            </a>
-            <a href="/cards" className="navItem active">
+            </Link>
+            <Link to="/cards" className="navItem active">
               Cards
-            </a>
-            <a href="/notifications" className="navItem">
+            </Link>
+            <Link to="/notifications" className="navItem">
               Notifications
-            </a>
-            <a href="/profile-view" className="navItem">
+            </Link>
+            <Link to="/plans" className="navItem">
+              Plans
+            </Link>
+            <Link to="/profile-view" className="navItem">
               Account Settings
-            </a>
+            </Link>
           </nav>
 
           <div className="sidebarUser">
@@ -252,7 +281,8 @@ export default function Cards() {
             <div>
               <h1 className="pageHeading">Cards & Cash</h1>
               <p className="pageSubheading">
-                Manage your saved cards and available cash balance.
+                Add your card number and current balance so FinanceFlow can
+                update your balance after imported transactions.
               </p>
             </div>
           </header>
@@ -260,7 +290,7 @@ export default function Cards() {
           <section className="transactionsTopGrid">
             <article className="dashboardPanel">
               <div className="panelHeader">
-                <h2>Add New Card</h2>
+                <h2>Add Card Balance Source</h2>
               </div>
 
               <form onSubmit={handleCardSubmit} className="settingsForm">
@@ -303,22 +333,6 @@ export default function Cards() {
 
                 <div className="settingsGrid">
                   <div className="inputGroup">
-                    <label htmlFor="card-name">Cardholder Name</label>
-                    <input
-                      type="text"
-                      id="card-name"
-                      placeholder="Enter cardholder name"
-                      value={cardName}
-                      onChange={(e) => {
-                        setCardName(e.target.value);
-                        setCardNameError("");
-                      }}
-                      className={cardNameError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{cardNameError}</small>
-                  </div>
-
-                  <div className="inputGroup">
                     <label htmlFor="card-balance">Current Card Balance</label>
                     <input
                       type="number"
@@ -332,58 +346,6 @@ export default function Cards() {
                       className={cardBalanceError ? "inputError" : ""}
                     />
                     <small className="errorMsg">{cardBalanceError}</small>
-                  </div>
-                </div>
-
-                <div className="settingsGrid">
-                  <div className="inputGroup">
-                    <label htmlFor="exp-month">Exp. Month</label>
-                    <input
-                      type="text"
-                      id="exp-month"
-                      placeholder="MM"
-                      value={expMonth}
-                      onChange={(e) => {
-                        setExpMonth(e.target.value);
-                        setExpMonthError("");
-                      }}
-                      className={expMonthError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{expMonthError}</small>
-                  </div>
-
-                  <div className="inputGroup">
-                    <label htmlFor="exp-year">Exp. Year</label>
-                    <input
-                      type="text"
-                      id="exp-year"
-                      placeholder="YY"
-                      value={expYear}
-                      onChange={(e) => {
-                        setExpYear(e.target.value);
-                        setExpYearError("");
-                      }}
-                      className={expYearError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{expYearError}</small>
-                  </div>
-                </div>
-
-                <div className="settingsGrid">
-                  <div className="inputGroup">
-                    <label htmlFor="cvv">CVV / CVC</label>
-                    <input
-                      type="text"
-                      id="cvv"
-                      placeholder="3 digits"
-                      value={cvv}
-                      onChange={(e) => {
-                        setCvv(e.target.value);
-                        setCvvError("");
-                      }}
-                      className={cvvError ? "inputError" : ""}
-                    />
-                    <small className="errorMsg">{cvvError}</small>
                   </div>
 
                   <div className="inputGroup inlineCheckGroup">
@@ -452,33 +414,35 @@ export default function Cards() {
               ) : (
                 cards.map((card) => (
                   <div
-                    key={card.id}
+                    key={card._id}
                     className={`savedCard ${
-                      card.type === "Visa"
+                      card.cardName === "Visa"
                         ? "savedVisa"
-                        : card.type === "Mastercard"
+                        : card.cardName === "Mastercard"
                         ? "savedMastercard"
-                        : card.type === "Mada"
+                        : card.cardName === "Mada"
                         ? "savedMada"
                         : ""
                     }`}
                   >
                     <div className="savedCardTop">
-                      <span className="savedCardBrand">{card.type}</span>
-                      {card.primary && (
-                        <span className="primaryBadge">Primary</span>
-                      )}
+                      <span className="savedCardBrand">{card.cardName}</span>
                     </div>
+
                     <div className="savedCardNumber">
-                      {formatCardNumber(card.number)}
+                      {formatCardNumber(card.cardNumber)}
                     </div>
+
                     <div className="savedCardBottom">
                       <div>
-                        <div className="savedCardName">{card.name}</div>
+                        <div className="savedCardName">
+                          Card ending in {String(card.cardNumber).slice(-4)}
+                        </div>
                         <div className="savedCardExpiry">
-                          Exp: {card.month}/{card.year}
+                          Used for transaction matching
                         </div>
                       </div>
+
                       <div className="savedCardExpiry">
                         Balance: {formatMoney(card.balance || 0)}
                       </div>

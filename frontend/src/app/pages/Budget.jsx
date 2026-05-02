@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
 import { getAppData, saveAppData, setCash } from "../utils/storage";
+<<<<<<< HEAD
+=======
+import { apiFetch } from "../utils/api";
+import { Link } from "react-router-dom";
+import logo from "../assets/financeflow-logo.png";
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
 
 export default function Budget() {
   const [sidebarUserName, setSidebarUserName] = useState("User");
@@ -17,6 +23,21 @@ export default function Budget() {
   const [updatedCashAmount, setUpdatedCashAmount] = useState("");
   const [cashUpdateError, setCashUpdateError] = useState("");
 
+<<<<<<< HEAD
+=======
+  const loadFromAPI = async () => {
+    try {
+      const data = await apiFetch("/api/budget");
+      setCategories(data.categories || []);
+    } catch (err) {
+      console.error("Could not load budget from server:", err.message);
+      // Fallback to localStorage
+      const local = getAppData();
+      setCategories(local.plan?.categories || []);
+    }
+  };
+
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   useEffect(() => {
     const appData = getAppData();
 
@@ -25,6 +46,7 @@ export default function Budget() {
       return;
     }
 
+<<<<<<< HEAD
     fillSidebarUser();
     initializeBudgetData();
     renderBudgetPage();
@@ -83,12 +105,28 @@ export default function Budget() {
   };
 
   const handleAddCategory = (event) => {
+=======
+    const fullName = appData.user?.fullname || "User";
+    const initials = fullName.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+    setSidebarUserName(fullName);
+    setSidebarAvatar(initials || "U");
+
+    setPlan(appData.plan || {});
+    setCards(appData.cards || []);
+    setCashState(Number(appData.cash || 0));
+
+    loadFromAPI();
+  }, []);
+
+  const handleAddCategory = async (event) => {
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
     event.preventDefault();
     setAddCategoryError("");
 
     const name = newCategoryName.trim();
     const limit = Number(newCategoryLimit);
 
+<<<<<<< HEAD
     if (name === "") {
       setAddCategoryError("Category name is required.");
       return;
@@ -128,6 +166,22 @@ export default function Budget() {
     setNewCategoryName("");
     setNewCategoryLimit("");
     renderBudgetPage();
+=======
+    if (!name) { setAddCategoryError("Category name is required."); return; }
+    if (!newCategoryLimit || limit <= 0) { setAddCategoryError("Enter a valid category limit."); return; }
+
+    try {
+      await apiFetch("/api/budget/categories", {
+        method: "POST",
+        body: JSON.stringify({ name, limit }),
+      });
+      setNewCategoryName("");
+      setNewCategoryLimit("");
+      await loadFromAPI();
+    } catch (err) {
+      setAddCategoryError(err.message || "Failed to add category.");
+    }
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   };
 
   const handleCashUpdate = (event) => {
@@ -135,7 +189,10 @@ export default function Budget() {
     setCashUpdateError("");
 
     const newCash = Number(updatedCashAmount);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
     if (updatedCashAmount === "" || newCash < 0) {
       setCashUpdateError("Enter a valid cash amount.");
       return;
@@ -143,6 +200,7 @@ export default function Budget() {
 
     setCash(newCash);
     setUpdatedCashAmount("");
+<<<<<<< HEAD
     renderBudgetPage();
   };
 
@@ -173,11 +231,22 @@ export default function Budget() {
 
     const numericLimit = Number(newLimit);
 
+=======
+    setCashState(newCash);
+  };
+
+  const handleEditCategory = async (category) => {
+    const newLimit = window.prompt(`Enter new limit for ${category.name}:`, category.limit);
+    if (newLimit === null) return;
+
+    const numericLimit = Number(newLimit);
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
     if (!newLimit || numericLimit <= 0) {
       window.alert("Please enter a valid limit greater than 0.");
       return;
     }
 
+<<<<<<< HEAD
     data.plan.categories[index].limit = numericLimit;
 
     if (data.plan.categories[index].spent > numericLimit) {
@@ -205,11 +274,38 @@ export default function Budget() {
     const shouldLogout = window.confirm("Are you sure you want to log out?");
 
     if (shouldLogout) {
+=======
+    try {
+      await apiFetch(`/api/budget/categories/${category._id}`, {
+        method: "PUT",
+        body: JSON.stringify({ limit: numericLimit }),
+      });
+      await loadFromAPI();
+    } catch (err) {
+      window.alert("Failed to update category: " + err.message);
+    }
+  };
+
+  const handleDeleteCategory = async (category) => {
+    if (!window.confirm(`Delete category "${category.name}"?`)) return;
+
+    try {
+      await apiFetch(`/api/budget/categories/${category._id}`, { method: "DELETE" });
+      await loadFromAPI();
+    } catch (err) {
+      window.alert("Failed to delete category: " + err.message);
+    }
+  };
+
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to log out?")) {
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
       localStorage.removeItem("financeFlowData");
       window.location.href = "/signup";
     }
   };
 
+<<<<<<< HEAD
   const formatMoney = (amount) => {
     return `$${Number(amount).toLocaleString()}`;
   };
@@ -226,10 +322,18 @@ export default function Budget() {
       month: "short",
       day: "numeric",
     });
+=======
+  const formatMoney = (amount) => `$${Number(amount).toLocaleString()}`;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return dateString;
+    return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   };
 
   const savingAmount = Number(plan.monthlySaving || 0);
   const targetAmount = Number(plan.targetAmount || 0);
+<<<<<<< HEAD
 
   const savingWidth =
     targetAmount > 0
@@ -238,6 +342,9 @@ export default function Budget() {
       ? 100
       : 0;
 
+=======
+  const savingWidth = targetAmount > 0 ? Math.min((savingAmount / targetAmount) * 100, 100) : savingAmount > 0 ? 100 : 0;
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   const cashWidth = Math.min((cash / 5000) * 100, 100);
   const cardsWidth = Math.min(cards.length * 25, 100);
   const categoriesWidth = Math.min(categories.length * 18, 100);
@@ -247,6 +354,7 @@ export default function Budget() {
       <div className="appLayout">
         <aside className="sidebar">
           <div className="sidebarBrand">
+<<<<<<< HEAD
             <a href="/dashboard" className="sidebarLogo">
               💸 FinanceFlow
             </a>
@@ -276,10 +384,28 @@ export default function Budget() {
             </a>
           </nav>
 
+=======
+            <Link to="/dashboard" className="sidebarLogo">
+              <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
+              <span>FinanceFlow</span>
+            </Link>
+          </div>
+          <nav className="sidebarNav">
+            <Link to="/dashboard" className="navItem">Dashboard</Link>
+            <Link to="/transactions" className="navItem">Transactions</Link>
+            <Link to="/budget" className="navItem active">Budget</Link>
+            <Link to="/analytics" className="navItem">Analytics</Link>
+            <Link to="/cards" className="navItem">Cards</Link>
+            <Link to="/notifications" className="navItem">Notifications</Link>
+            <Link to="/plans" className="navItem">Plans</Link>
+            <Link to="/profile-view" className="navItem">Account Settings</Link>
+          </nav>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           <div className="sidebarUser">
             <div className="sidebarAvatar">{sidebarAvatar}</div>
             <div className="sidebarUserText">
               <p className="sidebarUserName">{sidebarUserName}</p>
+<<<<<<< HEAD
               <button
                 className="sidebarLogoutBtn"
                 type="button"
@@ -287,6 +413,9 @@ export default function Budget() {
               >
                 Logout
               </button>
+=======
+              <button className="sidebarLogoutBtn" type="button" onClick={handleLogout}>Logout</button>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
             </div>
           </div>
         </aside>
@@ -295,9 +424,13 @@ export default function Budget() {
           <header className="topBar">
             <div>
               <h1 className="pageHeading">Budget Overview</h1>
+<<<<<<< HEAD
               <p className="pageSubheading">
                 Manage your categories, limits, cash, and saved cards.
               </p>
+=======
+              <p className="pageSubheading">Manage your categories, limits, cash, and saved cards.</p>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
             </div>
           </header>
 
@@ -305,6 +438,7 @@ export default function Budget() {
             <article className="dashboardPanel budgetStatusPanel">
               <div className="panelHeader">
                 <h2>Budget Status Overview</h2>
+<<<<<<< HEAD
                 <button
                   type="button"
                   className="secondaryBtn smallBtn"
@@ -370,11 +504,31 @@ export default function Budget() {
                       style={{ width: `${categoriesWidth}%` }}
                     ></div>
                   </div>
+=======
+              </div>
+              <div className="budgetStatusList">
+                <div className="statusRow">
+                  <div className="statusLabelRow"><span>Saving Target</span><span>{formatMoney(savingAmount)}</span></div>
+                  <div className="progressTrack"><div className="progressFill progressBlue" style={{ width: `${savingWidth}%` }}></div></div>
+                </div>
+                <div className="statusRow">
+                  <div className="statusLabelRow"><span>Cash Balance</span><span>{formatMoney(cash)}</span></div>
+                  <div className="progressTrack"><div className="progressFill progressGreen" style={{ width: `${cashWidth}%` }}></div></div>
+                </div>
+                <div className="statusRow">
+                  <div className="statusLabelRow"><span>Cards Added</span><span>{cards.length} card{cards.length !== 1 ? "s" : ""}</span></div>
+                  <div className="progressTrack"><div className="progressFill progressPurple" style={{ width: `${cardsWidth}%` }}></div></div>
+                </div>
+                <div className="statusRow">
+                  <div className="statusLabelRow"><span>Budget Categories</span><span>{categories.length} categor{categories.length === 1 ? "y" : "ies"}</span></div>
+                  <div className="progressTrack"><div className="progressFill progressOrange" style={{ width: `${categoriesWidth}%` }}></div></div>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
                 </div>
               </div>
             </article>
 
             <article className="dashboardPanel categoryManagePanel">
+<<<<<<< HEAD
               <div className="panelHeader">
                 <h2>Category-wise Spending</h2>
               </div>
@@ -426,6 +580,32 @@ export default function Budget() {
                           ></div>
                         </div>
 
+=======
+              <div className="panelHeader"><h2>Category-wise Spending</h2></div>
+              <div className="categoryManagerList">
+                {!categories.length ? (
+                  <div className="emptyPanelState">No categories added yet. Add your first category below.</div>
+                ) : (
+                  categories.map((category) => {
+                    const spent = Number(category.spent || 0);
+                    const limit = Number(category.limit || 0);
+                    const percent = limit > 0 ? Math.min((spent / limit) * 100, 100) : 0;
+                    return (
+                      <div className="categoryManagerItem" key={category._id || category.name}>
+                        <div className="categoryManagerTop">
+                          <div>
+                            <h3>{category.name}</h3>
+                            <p>{formatMoney(spent)} spent of {formatMoney(limit)}</p>
+                          </div>
+                          <div className="categoryManagerActions">
+                            <button type="button" className="secondaryBtn smallBtn" onClick={() => handleEditCategory(category)}>Edit</button>
+                            <button type="button" className="dangerGhostBtn smallBtn" onClick={() => handleDeleteCategory(category)}>Delete</button>
+                          </div>
+                        </div>
+                        <div className="categoryBar">
+                          <div className="categoryBarFill" style={{ width: `${percent}%` }}></div>
+                        </div>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
                         <div className="categoryManagerBottom">
                           <span>{Math.round(percent)}% used</span>
                           <span>{formatMoney(limit - spent)} left</span>
@@ -438,6 +618,7 @@ export default function Budget() {
 
               <form onSubmit={handleAddCategory} className="addCategoryForm">
                 <div className="addCategoryGrid">
+<<<<<<< HEAD
                   <input
                     type="text"
                     placeholder="New category name"
@@ -461,6 +642,17 @@ export default function Budget() {
                   <button type="submit" className="primaryBtn smallBtn">
                     Add New Category
                   </button>
+=======
+                  <input type="text" placeholder="New category name"
+                    value={newCategoryName}
+                    onChange={(e) => { setNewCategoryName(e.target.value); setAddCategoryError(""); }}
+                    className={addCategoryError ? "inputError" : ""} />
+                  <input type="number" placeholder="Monthly limit"
+                    value={newCategoryLimit}
+                    onChange={(e) => { setNewCategoryLimit(e.target.value); setAddCategoryError(""); }}
+                    className={addCategoryError ? "inputError" : ""} />
+                  <button type="submit" className="primaryBtn smallBtn">Add New Category</button>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
                 </div>
                 <small className="errorMsg">{addCategoryError}</small>
               </form>
@@ -469,6 +661,7 @@ export default function Budget() {
 
           <section className="budgetBottomGrid">
             <article className="dashboardPanel accountBalancePanel">
+<<<<<<< HEAD
               <div className="panelHeader">
                 <h2>Accounts & Balances</h2>
               </div>
@@ -478,6 +671,12 @@ export default function Budget() {
                   <div className="emptyPanelState">
                     No cash or cards saved yet.
                   </div>
+=======
+              <div className="panelHeader"><h2>Accounts & Balances</h2></div>
+              <div className="accountBalanceList">
+                {!cards.length && cash === 0 ? (
+                  <div className="emptyPanelState">No cash or cards saved yet.</div>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
                 ) : (
                   <>
                     {cards.map((card) => (
@@ -486,6 +685,7 @@ export default function Budget() {
                           <div className="accountIcon">💳</div>
                           <div>
                             <h4>{card.name}</h4>
+<<<<<<< HEAD
                             <p>
                               {card.type} •••• {card.number.slice(-4)}{" "}
                               {card.primary ? "• Primary" : ""}
@@ -505,12 +705,25 @@ export default function Budget() {
                           <h4>Cash</h4>
                           <p>Available balance</p>
                         </div>
+=======
+                            <p>{card.type} •••• {card.number.slice(-4)} {card.primary ? "• Primary" : ""}</p>
+                          </div>
+                        </div>
+                        <div className="accountAmount">{formatMoney(card.balance || 0)}</div>
+                      </div>
+                    ))}
+                    <div className="accountRow">
+                      <div className="accountLeft">
+                        <div className="accountIcon">💵</div>
+                        <div><h4>Cash</h4><p>Available balance</p></div>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
                       </div>
                       <div className="accountAmount">{formatMoney(cash)}</div>
                     </div>
                   </>
                 )}
               </div>
+<<<<<<< HEAD
 
               <form onSubmit={handleCashUpdate} className="cashUpdateForm">
                 <div className="cashUpdateRow">
@@ -527,12 +740,22 @@ export default function Budget() {
                   <button type="submit" className="primaryBtn smallBtn">
                     Update Cash
                   </button>
+=======
+              <form onSubmit={handleCashUpdate} className="cashUpdateForm">
+                <div className="cashUpdateRow">
+                  <input type="number" placeholder="Enter new cash amount"
+                    value={updatedCashAmount}
+                    onChange={(e) => { setUpdatedCashAmount(e.target.value); setCashUpdateError(""); }}
+                    className={cashUpdateError ? "inputError" : ""} />
+                  <button type="submit" className="primaryBtn smallBtn">Update Cash</button>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
                 </div>
                 <small className="errorMsg">{cashUpdateError}</small>
               </form>
             </article>
 
             <article className="dashboardPanel budgetGoalPanel">
+<<<<<<< HEAD
               <div className="panelHeader">
                 <h2>Current Goal</h2>
               </div>
@@ -555,6 +778,18 @@ export default function Budget() {
                 <a href="/plan-setup" className="primaryBtn smallBtn">
                   Edit Goal
                 </a>
+=======
+              <div className="panelHeader"><h2>Current Goal</h2></div>
+              <div className="goalBox">
+                <p className="goalType">{plan.goalType || "No goal type"}</p>
+                <h3 className="goalName">{plan.goalName || "No goal set yet"}</h3>
+                <p className="goalMeta">Target amount: {formatMoney(plan.targetAmount || 0)}</p>
+                <p className="goalMeta">Target date: {plan.targetDate ? formatDate(plan.targetDate) : "--"}</p>
+                <p className="goalMeta">Monthly saving: {formatMoney(plan.monthlySaving || 0)}</p>
+              </div>
+              <div className="budgetGoalActions">
+                <a href="/plan-setup" className="primaryBtn smallBtn">Edit Goal</a>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
               </div>
             </article>
           </section>
@@ -562,4 +797,8 @@ export default function Budget() {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67

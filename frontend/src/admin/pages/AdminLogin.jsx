@@ -60,7 +60,7 @@ function AdminLogin() {
     ) {
       localStorage.setItem("isAdminLoggedIn", "true");
       localStorage.setItem("currentAdminEmail", adminEmail);
-      navigate("/admin/dashboard");
+      navigate("/admin");
     } else {
       setErrors({
         general: "Invalid admin credentials",

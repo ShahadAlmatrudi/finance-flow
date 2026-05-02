@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { getAppData, saveAppData } from "../utils/storage";
+<<<<<<< HEAD
+=======
+import { Link } from "react-router-dom";
+import logo from "../assets/financeflow-logo.png";
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
 
 export default function Notifications() {
   const [sidebarUserName, setSidebarUserName] = useState("User");
@@ -233,6 +238,7 @@ export default function Notifications() {
       <div className="appLayout">
         <aside className="sidebar">
           <div className="sidebarBrand">
+<<<<<<< HEAD
             <a href="/dashboard" className="sidebarLogo">
               💸 FinanceFlow
             </a>
@@ -260,6 +266,39 @@ export default function Notifications() {
             <a href="/profile-view" className="navItem">
               Account Settings
             </a>
+=======
+            <Link to="/dashboard" className="sidebarLogo">
+              <img src={logo} alt="FinanceFlow" className="sidebarLogoImg" />
+              <span>FinanceFlow</span>
+            </Link>
+          </div>
+
+          <nav className="sidebarNav">
+            <Link to="/dashboard" className="navItem">
+              Dashboard
+            </Link>
+            <Link to="/transactions" className="navItem">
+              Transactions
+            </Link>
+            <Link to="/budget" className="navItem">
+              Budget
+            </Link>
+            <Link to="/analytics" className="navItem">
+              Analytics
+            </Link>
+            <Link to="/cards" className="navItem">
+              Cards
+            </Link>
+            <Link to="/notifications" className="navItem active">
+              Notifications
+            </Link>
+            <Link to="/plans" className="navItem">
+              Plans
+            </Link>
+            <Link to="/profile-view" className="navItem">
+              Account Settings
+            </Link>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </nav>
 
           <div className="sidebarUser">

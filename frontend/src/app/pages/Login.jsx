@@ -1,7 +1,17 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import { getAppData, saveAppData } from "../utils/storage";
 
 export default function Login() {
+=======
+import { useNavigate } from "react-router-dom";
+import { getAppData, saveAppData } from "../utils/storage";
+import logo from "../assets/financeflow-logo.png";
+
+export default function Login() {
+  const navigate = useNavigate();
+
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -21,9 +31,13 @@ export default function Login() {
       setError("");
       data.isLoggedIn = true;
       saveAppData(data);
+<<<<<<< HEAD
 
       // later we replace this with React Router
       window.location.href = "/dashboard";
+=======
+      navigate("/dashboard");
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
     } else {
       setError("Incorrect email or password.");
     }
@@ -32,7 +46,14 @@ export default function Login() {
   return (
     <div className="loginPage">
       <header className="topbar">
+<<<<<<< HEAD
         <p className="logo">💸 FinanceFlow</p>
+=======
+        <p className="logo">
+          <img src={logo} alt="FinanceFlow Logo" className="brandLogoImg" />
+          <span>FinanceFlow</span>
+        </p>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
       </header>
 
       <main className="loginContainer">
@@ -80,6 +101,29 @@ export default function Login() {
             <button type="submit" className="loginMainBtn">
               Login
             </button>
+<<<<<<< HEAD
+=======
+
+            <button
+              type="button"
+              onClick={() => navigate("/admin/login")}
+              style={{
+                width: "100%",
+                marginTop: "12px",
+                padding: "14px",
+                borderRadius: "25px",
+                border: "none",
+                background: "transparent",
+                color: "#3b5bdb",
+                fontSize: "15px",
+                fontWeight: "600",
+                cursor: "pointer",
+                textAlign: "center"
+              }}
+            >
+              Login as Admin
+            </button>
+>>>>>>> 92a676f6264e54ecb3852a022cfed519409f8c67
           </form>
 
           <p className="signupText">
