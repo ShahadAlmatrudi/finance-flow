@@ -1,29 +1,60 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { setPlan } from "../utils/storage";
 import { apiFetch } from "../utils/api";
 
 export default function PlanSetup() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [goalType, setGoalType] = useState("");
-  const [goalName, setGoalName] = useState("");
-  const [targetAmount, setTargetAmount] = useState("");
-  const [targetDate, setTargetDate] = useState("");
-  const [monthlySaving, setMonthlySaving] = useState("");
-  const [savingAccount, setSavingAccount] = useState("");
-  const [autoTransfer, setAutoTransfer] = useState(false);
-  const [emergencyFund, setEmergencyFund] = useState(false);
+  // Read editing data from sessionStorage (more reliable than React Router state)
+  const editingPlan = location.state?.plan ||
+    (sessionStorage.getItem("editingPlan")
+      ? JSON.parse(sessionStorage.getItem("editingPlan"))
+      : null);
+  const editingPlanId = location.state?.planId ||
+    sessionStorage.getItem("editingPlanId") ||
+    null;
+
+  const categoryMap = [
+    { key: "foodLimit", name: "Food & Dining" },
+    { key: "shoppingLimit", name: "Shopping" },
+    { key: "transportLimit", name: "Transportation" },
+    { key: "entertainmentLimit", name: "Entertainment" },
+    { key: "billsLimit", name: "Bills & Utilities" },
+    { key: "subscriptionsLimit", name: "Subscriptions" },
+  ];
+
+  const existingCategories = editingPlan?.categories || [];
+
+  const [goalType, setGoalType] = useState(editingPlan?.goalType || "");
+  const [goalName, setGoalName] = useState(editingPlan?.goalName || "");
+  const [targetAmount, setTargetAmount] = useState(editingPlan?.targetAmount || "");
+  const [targetDate, setTargetDate] = useState(
+    editingPlan?.targetDate ? editingPlan.targetDate.split("T")[0] : ""
+  );
+  const [monthlySaving, setMonthlySaving] = useState(editingPlan?.monthlySaving || "");
+  const [savingAccount, setSavingAccount] = useState(editingPlan?.savingAccount || "");
+  const [autoTransfer, setAutoTransfer] = useState(editingPlan?.autoTransfer || false);
+  const [emergencyFund, setEmergencyFund] = useState(editingPlan?.emergencyFund || false);
   const [loading, setLoading] = useState(false);
 
   const [selectedCategories, setSelectedCategories] = useState({
-    foodLimit: false, shoppingLimit: false, transportLimit: false,
-    entertainmentLimit: false, billsLimit: false, subscriptionsLimit: false,
+    foodLimit: existingCategories.some((c) => c.name === "Food & Dining"),
+    shoppingLimit: existingCategories.some((c) => c.name === "Shopping"),
+    transportLimit: existingCategories.some((c) => c.name === "Transportation"),
+    entertainmentLimit: existingCategories.some((c) => c.name === "Entertainment"),
+    billsLimit: existingCategories.some((c) => c.name === "Bills & Utilities"),
+    subscriptionsLimit: existingCategories.some((c) => c.name === "Subscriptions"),
   });
 
   const [categoryLimits, setCategoryLimits] = useState({
-    foodLimit: "", shoppingLimit: "", transportLimit: "",
-    entertainmentLimit: "", billsLimit: "", subscriptionsLimit: "",
+    foodLimit: existingCategories.find((c) => c.name === "Food & Dining")?.limit || "",
+    shoppingLimit: existingCategories.find((c) => c.name === "Shopping")?.limit || "",
+    transportLimit: existingCategories.find((c) => c.name === "Transportation")?.limit || "",
+    entertainmentLimit: existingCategories.find((c) => c.name === "Entertainment")?.limit || "",
+    billsLimit: existingCategories.find((c) => c.name === "Bills & Utilities")?.limit || "",
+    subscriptionsLimit: existingCategories.find((c) => c.name === "Subscriptions")?.limit || "",
   });
 
   const [goalTypeError, setGoalTypeError] = useState("");
@@ -56,7 +87,7 @@ export default function PlanSetup() {
   const getInputErrorClass = (target) => {
     if (!selectedCategories[target]) return "";
     const value = categoryLimits[target];
-    if (categoriesError && (value.trim() === "" || Number(value) <= 0)) return "inputError";
+    if (categoriesError && (String(value).trim() === "" || Number(value) <= 0)) return "inputError";
     return "";
   };
 
@@ -68,21 +99,12 @@ export default function PlanSetup() {
 
     if (!goalType) { setGoalTypeError("Please select a goal type."); isValid = false; }
     if (!goalName.trim()) { setGoalNameError("Goal name is required."); isValid = false; }
-    if (!targetAmount.trim()) { setTargetAmountError("Target amount is required."); isValid = false; }
+    if (!String(targetAmount).trim()) { setTargetAmountError("Target amount is required."); isValid = false; }
     else if (Number(targetAmount) <= 0) { setTargetAmountError("Target amount must be greater than 0."); isValid = false; }
     if (!targetDate) { setTargetDateError("Please choose a target date."); isValid = false; }
-    if (!monthlySaving.trim()) { setMonthlySavingError("Monthly saving amount is required."); isValid = false; }
+    if (!String(monthlySaving).trim()) { setMonthlySavingError("Monthly saving amount is required."); isValid = false; }
     else if (Number(monthlySaving) <= 0) { setMonthlySavingError("Monthly saving must be greater than 0."); isValid = false; }
     if (!savingAccount) { setSavingAccountError("Please select a saving account."); isValid = false; }
-
-    const categoryMap = [
-      { key: "foodLimit", name: "Food & Dining" },
-      { key: "shoppingLimit", name: "Shopping" },
-      { key: "transportLimit", name: "Transportation" },
-      { key: "entertainmentLimit", name: "Entertainment" },
-      { key: "billsLimit", name: "Bills & Utilities" },
-      { key: "subscriptionsLimit", name: "Subscriptions" },
-    ];
 
     const chosenCategories = categoryMap.filter((cat) => selectedCategories[cat.key]);
     const categoriesData = [];
@@ -93,7 +115,7 @@ export default function PlanSetup() {
     } else {
       chosenCategories.forEach((cat) => {
         const limitValue = categoryLimits[cat.key];
-        if (!limitValue.trim() || Number(limitValue) <= 0) {
+        if (!String(limitValue).trim() || Number(limitValue) <= 0) {
           isValid = false;
         } else {
           categoriesData.push({ name: cat.name, limit: Number(limitValue) });
@@ -111,23 +133,34 @@ export default function PlanSetup() {
       autoTransfer, emergencyFund, categories: categoriesData,
     };
 
-    // Save to localStorage
     setPlan(planData);
 
-    // Save to backend
     try {
       setLoading(true);
-      await apiFetch("/api/plans", {
-        method: "POST",
-        body: JSON.stringify(planData),
-      });
+      if (editingPlanId) {
+        await apiFetch(`/api/plans/${editingPlanId}`, {
+          method: "PUT",
+          body: JSON.stringify(planData),
+        });
+        // Clear sessionStorage after successful save
+        sessionStorage.removeItem("editingPlan");
+        sessionStorage.removeItem("editingPlanId");
+        navigate("/plans");
+      } else {
+        await apiFetch("/api/plans", {
+          method: "POST",
+          body: JSON.stringify(planData),
+        });
+        navigate("/cards");
+      }
     } catch (err) {
       console.error("Could not save plan to server:", err.message);
+      sessionStorage.removeItem("editingPlan");
+      sessionStorage.removeItem("editingPlanId");
+      navigate(editingPlanId ? "/plans" : "/cards");
     } finally {
       setLoading(false);
     }
-
-    navigate("/cards");
   };
 
   return (
@@ -135,10 +168,12 @@ export default function PlanSetup() {
       <main className="flowWrapper">
         <section className="formCard extraLargeCard planCard">
           <div className="stepHeader centerHeader">
-            <span className="stepTag">Step 3 of 5</span>
-            <h1 className="pageTitle">Build Your Financial Plan</h1>
+            <span className="stepTag">{editingPlan ? "Edit Plan" : "Step 3 of 5"}</span>
+            <h1 className="pageTitle">
+              {editingPlan ? "Edit Your Financial Plan" : "Build Your Financial Plan"}
+            </h1>
             <p className="pageSubtitle">
-              Set your first goal, create a saving habit, and define your spending limits.
+              Set your goal, create a saving habit, and define your spending limits.
             </p>
           </div>
 
@@ -227,7 +262,7 @@ export default function PlanSetup() {
             <div className="cardSection">
               <h2 className="subSectionTitle">3. Monthly Budget Categories</h2>
               <p className="sectionHelper">
-                Select the categories you want FinanceFlow to track first, then set a monthly limit for each one.
+                Select the categories you want FinanceFlow to track, then set a monthly limit for each one.
               </p>
 
               <div className="categoryGrid">
@@ -273,11 +308,16 @@ export default function PlanSetup() {
             </div>
 
             <div className="actionRow dualButtons">
-              <button type="button" className="secondaryBtn" onClick={() => navigate("/profile")}>
+              <button type="button" className="secondaryBtn"
+                onClick={() => {
+                  sessionStorage.removeItem("editingPlan");
+                  sessionStorage.removeItem("editingPlanId");
+                  navigate(editingPlan ? "/plans" : "/profile");
+                }}>
                 ← Back
               </button>
               <button type="submit" className="primaryBtn" disabled={loading}>
-                {loading ? "Saving..." : "Next"}
+                {loading ? "Saving..." : editingPlan ? "Save Changes" : "Next"}
               </button>
             </div>
           </form>

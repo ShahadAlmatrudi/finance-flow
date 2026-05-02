@@ -9,25 +9,41 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const data = getAppData();
-    const savedUser = data.user;
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (!savedUser) {
-      setError("No account found. Please sign up first.");
-      return;
-    }
+      const data = await res.json();
 
-    if (email === savedUser.email && password === savedUser.password) {
-      setError("");
-      data.isLoggedIn = true;
-      saveAppData(data);
+      if (!res.ok) {
+        setError(data.message || "Incorrect email or password.");
+        return;
+      }
+
+      // Save user + token to localStorage
+      const appData = getAppData();
+      appData.user = {
+        ...data.user,
+        token: data.token,
+      };
+      appData.isLoggedIn = true;
+      saveAppData(appData);
+
       navigate("/dashboard");
-    } else {
-      setError("Incorrect email or password.");
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,8 +98,8 @@ export default function Login() {
 
             <p className="errorMsg">{error}</p>
 
-            <button type="submit" className="loginMainBtn">
-              Login
+            <button type="submit" className="loginMainBtn" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
             </button>
 
             <button
@@ -108,7 +124,7 @@ export default function Login() {
           </form>
 
           <p className="signupText">
-            Don’t have an account? <a href="/signup">Sign Up</a>
+            Don't have an account? <a href="/signup">Sign Up</a>
           </p>
         </section>
       </main>

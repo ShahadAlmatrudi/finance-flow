@@ -9,7 +9,7 @@ exports.getDashboardSummary = async (req, res) => {
     const latestPlan = plans[0] || null;
 
     const totalSpending = categories.reduce((sum, cat) => sum + Number(cat.spent || 0), 0);
-    const totalIncome = Number(req.user.profile?.salaryRange?.split("-")[0]?.replace(/\D/g, "") || 0);
+    const totalIncome = Number(req.user.profile?.monthlyIncome || 0);
 
     const topCategory = categories.length
       ? [...categories].sort((a, b) => b.spent - a.spent)[0]

@@ -48,7 +48,11 @@ sidebarAvatar.textContent = initials || "U";
 
 const cashAmount = Number(appData.cash || 0);
 const cards = appData.cards || [];
-const plan = appData.plan || {};
+
+// Read from plans array, use the latest plan
+const plans = appData.plans || [];
+const plan = plans.length ? plans[plans.length - 1] : {};
+
 const profile = appData.profile || {};
 const transactions = appData.transactions || [];
 

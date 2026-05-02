@@ -57,6 +57,8 @@ exports.updatePlan = async (req, res) => {
       }
     });
 
+    plan.markModified("categories");
+
     await plan.save();
     res.status(200).json({ message: "Plan updated.", plan });
   } catch (error) {
