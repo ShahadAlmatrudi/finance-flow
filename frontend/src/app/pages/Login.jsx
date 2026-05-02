@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAppData, saveAppData } from "../utils/storage";
 import logo from "../assets/financeflow-logo.png";
+
 
 export default function Login() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
+      const res = await fetch("https://finance-flow-7fk1.onrender.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -124,7 +125,14 @@ export default function Login() {
           </form>
 
           <p className="signupText">
-            Don't have an account? <a href="/signup">Sign Up</a>
+            Don't have an account?{" "}
+            <button
+              type="button"
+              className="textLink"
+              onClick={() => navigate("/signup")}
+            >
+              Sign Up
+            </button>
           </p>
         </section>
       </main>

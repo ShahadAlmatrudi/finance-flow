@@ -11,20 +11,18 @@ const budgetRoutes = require("./routes/budgetRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const cors = require("cors");
-
-app.use(
-  cors({
-    origin: "https://finance-flow-five-wine.vercel.app/", 
-    credentials: true,
-  })
-);
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://finance-flow-five-wine.vercel.app",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // Routes
@@ -50,7 +48,7 @@ mongoose
     console.log("MongoDB connected successfully");
 
     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
