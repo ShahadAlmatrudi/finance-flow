@@ -15,7 +15,8 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "*", // temporary (for demo)
+    origin: "https://finance-flow-five-wine.vercel.app/", 
+    credentials: true,
   })
 );
 
