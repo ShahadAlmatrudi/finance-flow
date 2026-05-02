@@ -175,3 +175,49 @@ This project was developed to:
 ## 📎 Notes
 - All data is currently stored using localStorage  
 - This project focuses on frontend functionality and user experience
+
+## Admin Module
+
+The admin module provides backend APIs for managing and monitoring the FinanceFlow system.
+
+### Features
+- Admin login authentication
+- View all users
+- View all transactions
+- View budget categories
+- Generate basic admin reports
+
+### Admin API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /api/admin/login | Admin login |
+| GET | /api/admin/users | View all users |
+| GET | /api/admin/transactions | View all transactions |
+| GET | /api/admin/categories | View all categories |
+| GET | /api/admin/reports | View report summary |
+
+### Environment Variables
+
+Create a `.env` file inside the backend folder:
+
+```env
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+## Testing Screenshots
+
+### Admin Login
+![Login](backend/screenshots/admin-login.png)
+
+### Users
+![Users](backend/screenshots/admin-users.png)
+
+### Transactions
+![Transactions](backend/screenshots/admin-transactions.png)
+
+### Categories
+![Categories](backend/screenshots/admin-categories.png)
+
+### Reports
+![Reports](backend/screenshots/admin-reports.png)
