@@ -18,7 +18,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://finance-flow-five-wine.vercel.app",
+    origin: true,
     credentials: true,
   })
 );
