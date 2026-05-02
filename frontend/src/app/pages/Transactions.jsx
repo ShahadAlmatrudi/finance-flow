@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { getAppData, saveAppData } from "../utils/storage";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/financeflow-logo.png";
 
 export default function Transactions() {
+  const navigate = useNavigate();
+
   const [sidebarUserName, setSidebarUserName] = useState("User");
   const [sidebarAvatar, setSidebarAvatar] = useState("U");
 
@@ -24,14 +26,14 @@ export default function Transactions() {
     const data = getAppData();
 
     if (!data.user) {
-      window.location.href = "/signup";
+      navigate("/signup");
       return;
     }
 
     normalizeData();
     fillSidebarUser();
     loadPageData();
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     renderTransactionsList();
@@ -70,7 +72,7 @@ export default function Transactions() {
     setTransactions(appData.transactions || []);
 
     if (appData.cards?.length > 0) {
-      setSelectedCardId(String(appData.cards[0].id));
+      setSelectedCardId(String(appData.cards[0].id || appData.cards[0]._id));
     }
   };
 
@@ -98,7 +100,7 @@ export default function Transactions() {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
 
-    if (Number.isNaN(date.getTime())) return dateString;
+    if (Number.isNaN(date.getTime())) return dateString || "--";
 
     return date.toLocaleDateString("en-US", {
       year: "numeric",
@@ -108,7 +110,10 @@ export default function Transactions() {
   };
 
   const getSelectedCard = () => {
-    return cards.find((card) => String(card.id) === String(selectedCardId));
+    return cards.find(
+      (card) =>
+        String(card.id || card._id) === String(selectedCardId)
+    );
   };
 
   const getPaymentLabel = () => {
@@ -117,7 +122,9 @@ export default function Transactions() {
     const card = getSelectedCard();
     if (!card) return "Card";
 
-    return `${card.type} •••• ${String(card.number).slice(-4)}`;
+    return `${card.type || "Card"} •••• ${
+      card.number ? String(card.number).slice(-4) : "----"
+    }`;
   };
 
   const addCategoryIfMissing = (appData, categoryName) => {
@@ -142,7 +149,7 @@ export default function Transactions() {
   };
 
   const applyTransactionEffect = (appData, transaction) => {
-    const amount = Number(transaction.amount);
+    const amount = Number(transaction.amount || 0);
 
     if (transaction.type === "expense") {
       const category = addCategoryIfMissing(appData, transaction.category);
@@ -164,9 +171,11 @@ export default function Transactions() {
         appData.cash = currentCash - amount;
       }
 
-      if (transaction.paymentMethod.startsWith("card:")) {
-        const cardId = Number(transaction.paymentMethod.split(":")[1]);
-        const card = appData.cards.find((item) => Number(item.id) === cardId);
+      if (transaction.paymentMethod?.startsWith("card:")) {
+        const cardId = transaction.paymentMethod.split(":")[1];
+        const card = appData.cards.find(
+          (item) => String(item.id || item._id) === String(cardId)
+        );
 
         if (!card) {
           return {
@@ -191,9 +200,11 @@ export default function Transactions() {
         appData.cash = Number(appData.cash || 0) + amount;
       }
 
-      if (transaction.paymentMethod.startsWith("card:")) {
-        const cardId = Number(transaction.paymentMethod.split(":")[1]);
-        const card = appData.cards.find((item) => Number(item.id) === cardId);
+      if (transaction.paymentMethod?.startsWith("card:")) {
+        const cardId = transaction.paymentMethod.split(":")[1];
+        const card = appData.cards.find(
+          (item) => String(item.id || item._id) === String(cardId)
+        );
 
         if (!card) {
           return {
@@ -210,7 +221,7 @@ export default function Transactions() {
   };
 
   const reverseTransactionEffect = (appData, transaction) => {
-    const amount = Number(transaction.amount);
+    const amount = Number(transaction.amount || 0);
 
     if (transaction.type === "expense") {
       const category = appData.plan?.categories?.find(
@@ -226,8 +237,10 @@ export default function Transactions() {
       }
 
       if (transaction.paymentMethod?.startsWith("card:")) {
-        const cardId = Number(transaction.paymentMethod.split(":")[1]);
-        const card = appData.cards.find((item) => Number(item.id) === cardId);
+        const cardId = transaction.paymentMethod.split(":")[1];
+        const card = appData.cards.find(
+          (item) => String(item.id || item._id) === String(cardId)
+        );
 
         if (card) {
           card.balance = Number(card.balance || 0) + amount;
@@ -241,8 +254,10 @@ export default function Transactions() {
       }
 
       if (transaction.paymentMethod?.startsWith("card:")) {
-        const cardId = Number(transaction.paymentMethod.split(":")[1]);
-        const card = appData.cards.find((item) => Number(item.id) === cardId);
+        const cardId = transaction.paymentMethod.split(":")[1];
+        const card = appData.cards.find(
+          (item) => String(item.id || item._id) === String(cardId)
+        );
 
         if (card) {
           card.balance = Math.max(0, Number(card.balance || 0) - amount);
@@ -258,11 +273,13 @@ export default function Transactions() {
 
     if (file.type !== "application/pdf") {
       alert("Please upload a PDF file only.");
+      event.target.value = "";
       return;
     }
 
     setPdfFileName(file.name);
     setSuccessMsg("");
+    setPreviewTransactions([]);
   };
 
   const handleExtractFromPdf = () => {
@@ -373,7 +390,7 @@ export default function Transactions() {
 
     if (searchValue !== "") {
       txs = txs.filter((item) =>
-        item.title.toLowerCase().includes(searchValue)
+        String(item.title || "").toLowerCase().includes(searchValue)
       );
     }
 
@@ -383,7 +400,7 @@ export default function Transactions() {
   const handleDeleteTransaction = (id) => {
     const appData = getAppData();
 
-    const transactionToDelete = appData.transactions.find(
+    const transactionToDelete = appData.transactions?.find(
       (item) => Number(item.id) === Number(id)
     );
 
@@ -411,17 +428,17 @@ export default function Transactions() {
 
     if (shouldLogout) {
       localStorage.removeItem("financeFlowData");
-      window.location.href = "/signup";
+      navigate("/signup");
     }
   };
 
   const totalIncome = transactions
     .filter((item) => item.type === "income")
-    .reduce((sum, item) => sum + Number(item.amount), 0);
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
   const totalExpenses = transactions
     .filter((item) => item.type === "expense")
-    .reduce((sum, item) => sum + Number(item.amount), 0);
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0);
 
   return (
     <div className="appPageBody">
@@ -522,10 +539,14 @@ export default function Transactions() {
                         }}
                       >
                         <option value="">Select card</option>
-                        {cards.map((card) => (
-                          <option key={card.id} value={card.id}>
-                            {card.type} •••• {String(card.number).slice(-4)} (
-                            {formatMoney(card.balance)})
+                        {cards.map((card, index) => (
+                          <option
+                            key={card.id || card._id || index}
+                            value={card.id || card._id}
+                          >
+                            {card.type || "Card"} ••••{" "}
+                            {card.number ? String(card.number).slice(-4) : "----"}{" "}
+                            ({formatMoney(card.balance)})
                           </option>
                         ))}
                       </select>
@@ -730,7 +751,8 @@ export default function Transactions() {
                         <p>
                           {transaction.category} •{" "}
                           {transaction.paymentLabel ||
-                            transaction.paymentMethod}{" "}
+                            transaction.paymentMethod ||
+                            "Payment"}{" "}
                           • {formatDate(transaction.date)}
                         </p>
                         {transaction.notes ? (

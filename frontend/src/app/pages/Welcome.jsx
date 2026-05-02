@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { getAppData } from "../utils/storage";
 
 export default function Welcome() {
+  const navigate = useNavigate();
+
   const [userName, setUserName] = useState("User");
   const [goal, setGoal] = useState("Not set");
   const [monthlySaving, setMonthlySaving] = useState("$0");
   const [savedCards, setSavedCards] = useState("0");
   const [cash, setCash] = useState("$0");
 
+  const formatMoney = (amount) => {
+    return `$${Number(amount || 0).toLocaleString()}`;
+  };
+
   useEffect(() => {
     const appData = getAppData();
 
     if (!appData.user) {
-      window.location.href = "/signup";
+      navigate("/signup");
       return;
     }
 
@@ -35,19 +42,15 @@ export default function Welcome() {
     if (typeof appData.cash === "number") {
       setCash(formatMoney(appData.cash));
     }
-  }, []);
+  }, [navigate]);
 
   const handleSignOut = () => {
     const shouldSignOut = window.confirm("Are you sure you want to sign out?");
 
     if (shouldSignOut) {
       localStorage.removeItem("financeFlowData");
-      window.location.href = "/signup";
+      navigate("/signup");
     }
-  };
-
-  const formatMoney = (amount) => {
-    return `$${Number(amount).toLocaleString()}`;
   };
 
   return (
@@ -90,9 +93,9 @@ export default function Welcome() {
           </div>
 
           <div className="welcomeActions">
-            <a href="/dashboard" className="primaryBtn fullBtn welcomeMainBtn">
+            <Link to="/dashboard" className="primaryBtn fullBtn welcomeMainBtn">
               Go to Dashboard →
-            </a>
+            </Link>
 
             <button
               type="button"
@@ -105,9 +108,9 @@ export default function Welcome() {
 
           <p className="welcomeHelpText">
             Need help?{" "}
-            <a href="#" className="textLink">
+            <Link to="/notifications" className="textLink">
               Contact Support
-            </a>
+            </Link>
           </p>
         </section>
       </main>
