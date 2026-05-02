@@ -6,8 +6,7 @@ import logo from "../assets/financeflow-logo.png";
 
 export default function Plans() {
   const navigate = useNavigate();
-  const [plan, setPlanState] = useState(null);
-  const [planId, setPlanId] = useState(null);
+  const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const appData = getAppData();
@@ -28,18 +27,15 @@ export default function Plans() {
       try {
         const data = await apiFetch("/api/plans");
         if (data.plans && data.plans.length > 0) {
-          const latest = data.plans[0];
-          setPlanState(latest);
-          setPlanId(latest._id);
+          setPlans(data.plans);
         } else {
-          // Fall back to localStorage
           const local = getAppData().plan;
-          setPlanState(local || null);
+          setPlans(local ? [local] : []);
         }
       } catch (err) {
         console.error("Could not load plans from server:", err.message);
         const local = getAppData().plan;
-        setPlanState(local || null);
+        setPlans(local ? [local] : []);
       } finally {
         setLoading(false);
       }
@@ -55,8 +51,8 @@ export default function Plans() {
     }
   };
 
-  const handleDeletePlan = async () => {
-    if (!window.confirm("Are you sure you want to delete your current plan?")) return;
+  const handleDeletePlan = async (planId) => {
+    if (!window.confirm("Are you sure you want to delete this plan?")) return;
 
     try {
       if (planId) {
@@ -66,12 +62,19 @@ export default function Plans() {
       console.error("Could not delete plan from server:", err.message);
     }
 
-    // Also clear localStorage
-    const data = getAppData();
-    data.plan = null;
-    saveAppData(data);
+    setPlans((prev) => prev.filter((p) => p._id !== planId));
 
-    navigate("/dashboard");
+    if (plans.length <= 1) {
+      const data = getAppData();
+      data.plan = null;
+      saveAppData(data);
+    }
+  };
+
+  const handleEditPlan = (plan) => {
+    sessionStorage.setItem("editingPlan", JSON.stringify(plan));
+    sessionStorage.setItem("editingPlanId", plan._id);
+    navigate("/plan-setup");
   };
 
   const formatMoney = (amount) => `$${Number(amount || 0).toLocaleString()}`;
@@ -117,67 +120,91 @@ export default function Plans() {
         <main className="mainContent">
           <header className="topBar">
             <div>
-              <h1 className="pageHeading">My Plan</h1>
-              <p className="pageSubheading">View and manage your current financial plan.</p>
+              <h1 className="pageHeading">My Plans</h1>
+              <p className="pageSubheading">View and manage your financial plans.</p>
             </div>
+            <button
+              type="button"
+              className="primaryBtn"
+              onClick={() => {
+                sessionStorage.removeItem("editingPlan");
+                sessionStorage.removeItem("editingPlanId");
+                navigate("/plan-setup");
+              }}
+            >
+              + Add New Plan
+            </button>
           </header>
 
           {loading ? (
             <section className="dashboardPanel">
-              <div className="emptyPanelState">Loading your plan...</div>
+              <div className="emptyPanelState">Loading your plans...</div>
             </section>
-          ) : !plan || Object.keys(plan).length === 0 ? (
+          ) : plans.length === 0 ? (
             <section className="dashboardPanel">
               <div className="emptyPanelState">
-                No plan created yet.
+                No plans created yet.
                 <div style={{ marginTop: "16px" }}>
                   <Link to="/plan-setup" className="primaryBtn">Create Plan</Link>
                 </div>
               </div>
             </section>
           ) : (
-            <section className="dashboardPanel">
-              <div className="panelHeader">
-                <h2>Current Plan</h2>
-              </div>
+            plans.map((plan) => (
+              <section className="dashboardPanel" key={plan._id} style={{ marginBottom: "24px" }}>
+                <div className="panelHeader">
+                  <h2>{plan.goalName || "Unnamed Plan"}</h2>
+                  <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>{plan.goalType}</span>
+                </div>
 
-              <div className="goalBox" style={{ marginBottom: "24px" }}>
-                <p className="goalType">{plan.goalType || "No goal type"}</p>
-                <h3 className="goalName">{plan.goalName || "No goal name"}</h3>
-                <p className="goalMeta">Target amount: {formatMoney(plan.targetAmount)}</p>
-                <p className="goalMeta">Target date: {formatDate(plan.targetDate)}</p>
-                <p className="goalMeta">Monthly saving: {formatMoney(plan.monthlySaving)}</p>
-                <p className="goalMeta">Saving account: {plan.savingAccount || "Not set"}</p>
-                <p className="goalMeta">Auto transfer: {plan.autoTransfer ? "Enabled" : "Disabled"}</p>
-                <p className="goalMeta">Emergency fund priority: {plan.emergencyFund ? "Enabled" : "Disabled"}</p>
-              </div>
+                <div className="goalBox" style={{ marginBottom: "24px" }}>
+                  <p className="goalMeta">Target amount: {formatMoney(plan.targetAmount)}</p>
+                  <p className="goalMeta">Target date: {formatDate(plan.targetDate)}</p>
+                  <p className="goalMeta">Monthly saving: {formatMoney(plan.monthlySaving)}</p>
+                  <p className="goalMeta">Saving account: {plan.savingAccount || "Not set"}</p>
+                  <p className="goalMeta">Auto transfer: {plan.autoTransfer ? "Enabled" : "Disabled"}</p>
+                  <p className="goalMeta">Emergency fund priority: {plan.emergencyFund ? "Enabled" : "Disabled"}</p>
+                </div>
 
-              <div className="panelHeader">
-                <h2>Budget Categories</h2>
-              </div>
+                <div className="panelHeader">
+                  <h2>Budget Categories</h2>
+                </div>
 
-              <div className="categoryList" style={{ marginBottom: "24px" }}>
-                {!plan.categories || plan.categories.length === 0 ? (
-                  <div className="emptyPanelState">No categories in this plan.</div>
-                ) : (
-                  plan.categories.map((category, index) => (
-                    <div className="categoryItem" key={category._id || category.name || index}>
-                      <div className="categoryTopRow">
-                        <span className="categoryName">{category.name}</span>
-                        <span className="categoryAmounts">
-                          {formatMoney(category.spent || 0)} / {formatMoney(category.limit || 0)}
-                        </span>
+                <div className="categoryList" style={{ marginBottom: "24px" }}>
+                  {!plan.categories || plan.categories.length === 0 ? (
+                    <div className="emptyPanelState">No categories in this plan.</div>
+                  ) : (
+                    plan.categories.map((category, index) => (
+                      <div className="categoryItem" key={category._id || category.name || index}>
+                        <div className="categoryTopRow">
+                          <span className="categoryName">{category.name}</span>
+                          <span className="categoryAmounts">
+                            {formatMoney(category.spent || 0)} / {formatMoney(category.limit || 0)}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                )}
-              </div>
+                    ))
+                  )}
+                </div>
 
-              <div className="actionRow" style={{ justifyContent: "flex-start", gap: "12px" }}>
-                <Link to="/plan-setup" className="primaryBtn">Edit Plan</Link>
-                <button type="button" className="secondaryBtn" onClick={handleDeletePlan}>Delete Plan</button>
-              </div>
-            </section>
+                <div className="actionRow" style={{ justifyContent: "flex-start", gap: "12px" }}>
+                  <button
+                    type="button"
+                    className="primaryBtn"
+                    onClick={() => handleEditPlan(plan)}
+                  >
+                    Edit Plan
+                  </button>
+                  <button
+                    type="button"
+                    className="secondaryBtn"
+                    onClick={() => handleDeletePlan(plan._id)}
+                  >
+                    Delete Plan
+                  </button>
+                </div>
+              </section>
+            ))
           )}
         </main>
       </div>

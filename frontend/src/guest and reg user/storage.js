@@ -4,14 +4,23 @@ function getAppData() {
     const savedData = localStorage.getItem(STORAGE_KEY);
 
     if (savedData) {
-        return JSON.parse(savedData);
+        const parsed = JSON.parse(savedData);
+
+        // Migrate old single plan to plans array
+        if (parsed.plan !== undefined && !Array.isArray(parsed.plans)) {
+            parsed.plans = parsed.plan ? [parsed.plan] : [];
+            delete parsed.plan;
+            saveAppData(parsed);
+        }
+
+        return parsed;
     }
 
     return {
         user: null,
         questionnaire: null,
         profile: null,
-        plan: null,
+        plans: [],
         cards: [],
         cash: 0,
         notifications: [],
@@ -49,8 +58,35 @@ function setProfile(profileData) {
 
 function setPlan(planData) {
     const data = getAppData();
-    data.plan = planData;
+    if (!Array.isArray(data.plans)) {
+        data.plans = [];
+    }
+    data.plans.push(planData);
     saveAppData(data);
+}
+
+function updatePlan(planId, updatedPlanData) {
+    const data = getAppData();
+    if (!Array.isArray(data.plans)) {
+        data.plans = [];
+    }
+    const index = data.plans.findIndex(p => p._id === planId);
+    if (index !== -1) {
+        data.plans[index] = { ...data.plans[index], ...updatedPlanData };
+    }
+    saveAppData(data);
+}
+
+function deletePlan(planId) {
+    const data = getAppData();
+    data.plans = (data.plans || []).filter(p => p._id !== planId);
+    saveAppData(data);
+}
+
+function getLatestPlan() {
+    const data = getAppData();
+    const plans = data.plans || [];
+    return plans.length ? plans[plans.length - 1] : null;
 }
 
 function addCard(cardData) {

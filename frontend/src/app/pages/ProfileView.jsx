@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { getAppData, saveAppData } from "../utils/storage";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/financeflow-logo.png";
 
 export default function ProfileView() {
+  const navigate = useNavigate();
+
   const [sidebarUserName, setSidebarUserName] = useState("User");
   const [sidebarAvatar, setSidebarAvatar] = useState("U");
 
@@ -56,19 +58,19 @@ export default function ProfileView() {
     const appData = getAppData();
 
     if (!appData.user) {
-      window.location.href = "/signup";
+      navigate("/signup");
       return;
     }
 
     loadPageData();
-  }, []);
+  }, [navigate]);
 
   const handleLogout = () => {
     const shouldLogout = window.confirm("Are you sure you want to log out?");
 
     if (shouldLogout) {
       localStorage.removeItem("financeFlowData");
-      window.location.href = "/signup";
+      navigate("/signup");
     }
   };
 
@@ -97,10 +99,10 @@ export default function ProfileView() {
     setEditObligationType(profile.obligationType || "");
     setEditObligationAmount(profile.obligationAmount ?? "");
 
-    setEmailNotifications(!!settings.emailNotifications);
-    setBudgetAlerts(!!settings.budgetAlerts);
-    setMonthlySummary(!!settings.monthlySummary);
-    setTwoFactorAuth(!!settings.twoFactorAuth);
+    setEmailNotifications(settings.emailNotifications ?? true);
+    setBudgetAlerts(settings.budgetAlerts ?? true);
+    setMonthlySummary(settings.monthlySummary ?? false);
+    setTwoFactorAuth(settings.twoFactorAuth ?? false);
 
     refreshSummary();
   };
@@ -192,7 +194,9 @@ export default function ProfileView() {
     if (!isValid) return;
 
     const data = getAppData();
+
     data.user = {
+      ...data.user,
       fullname: editFullname.trim(),
       email: editEmail.trim(),
       password: editPassword.trim(),
@@ -259,7 +263,9 @@ export default function ProfileView() {
     if (!isValid) return;
 
     const data = getAppData();
+
     data.profile = {
+      ...data.profile,
       age: Number(editAge),
       country: editCountry,
       occupation: editOccupation,
@@ -280,7 +286,9 @@ export default function ProfileView() {
     setPreferencesSuccessMsg("");
 
     const data = getAppData();
+
     data.settings = {
+      ...data.settings,
       emailNotifications,
       budgetAlerts,
       monthlySummary,
@@ -334,7 +342,11 @@ export default function ProfileView() {
             <div className="sidebarAvatar">{sidebarAvatar}</div>
             <div className="sidebarUserText">
               <p className="sidebarUserName">{sidebarUserName}</p>
-              <button className="sidebarLogoutBtn" type="button" onClick={handleLogout}>
+              <button
+                className="sidebarLogoutBtn"
+                type="button"
+                onClick={handleLogout}
+              >
                 Logout
               </button>
             </div>
@@ -532,7 +544,9 @@ export default function ProfileView() {
                       }}
                       className={editConfirmPasswordError ? "inputError" : ""}
                     />
-                    <small className="errorMsg">{editConfirmPasswordError}</small>
+                    <small className="errorMsg">
+                      {editConfirmPasswordError}
+                    </small>
                   </div>
                 </div>
 
@@ -655,7 +669,9 @@ export default function ProfileView() {
                       <option>Weekly</option>
                       <option>Irregular</option>
                     </select>
-                    <small className="errorMsg">{editIncomeFrequencyError}</small>
+                    <small className="errorMsg">
+                      {editIncomeFrequencyError}
+                    </small>
                   </div>
 
                   <div className="inputGroup">
@@ -683,7 +699,9 @@ export default function ProfileView() {
 
                 <div className="settingsGrid">
                   <div className="inputGroup">
-                    <label htmlFor="editObligationType">Main Financial Obligation</label>
+                    <label htmlFor="editObligationType">
+                      Main Financial Obligation
+                    </label>
                     <select
                       id="editObligationType"
                       value={editObligationType}
@@ -701,11 +719,15 @@ export default function ProfileView() {
                       <option>Utilities</option>
                       <option>Other</option>
                     </select>
-                    <small className="errorMsg">{editObligationTypeError}</small>
+                    <small className="errorMsg">
+                      {editObligationTypeError}
+                    </small>
                   </div>
 
                   <div className="inputGroup">
-                    <label htmlFor="editObligationAmount">Obligation Amount</label>
+                    <label htmlFor="editObligationAmount">
+                      Obligation Amount
+                    </label>
                     <input
                       type="number"
                       id="editObligationAmount"
@@ -717,7 +739,9 @@ export default function ProfileView() {
                       }}
                       className={editObligationAmountError ? "inputError" : ""}
                     />
-                    <small className="errorMsg">{editObligationAmountError}</small>
+                    <small className="errorMsg">
+                      {editObligationAmountError}
+                    </small>
                   </div>
                 </div>
 

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://finance-flow-7fk1.onrender.com";
 
 function getToken() {
   const data = localStorage.getItem("financeFlowData");

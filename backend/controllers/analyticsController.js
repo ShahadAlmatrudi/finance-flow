@@ -1,5 +1,5 @@
-const BudgetCategory = require("../models/budgetcategory");
-const Plan = require("../models/plan");
+const BudgetCategory = require("../models/BudgetCategory");
+const Plan = require("../models/Plan");
 
 // GET /api/analytics/summary
 exports.getAnalyticsSummary = async (req, res) => {
@@ -19,12 +19,20 @@ exports.getAnalyticsSummary = async (req, res) => {
     // Goal progress
     let goalProgress = 0;
     if (latestPlan) {
-      const target = Number(latestPlan.targetAmount || 0);
-      const saving = Number(latestPlan.monthlySaving || 0);
-      if (target > 0 && saving > 0) {
-        goalProgress = Math.min(Math.round((saving / target) * 100), 100);
-      }
-    }
+        const target = Number(latestPlan.targetAmount || 0);
+        const saving = Number(latestPlan.monthlySaving || 0);
+        if (target > 0 && saving > 0) {
+            const createdAt = new Date(latestPlan.createdAt);
+            const now = new Date();
+            const monthsElapsed = Math.max(
+            1,
+             (now.getFullYear() - createdAt.getFullYear()) * 12 +
+                (now.getMonth() - createdAt.getMonth())
+    );
+            const amountSaved = saving * monthsElapsed;
+            goalProgress = Math.min(Math.round((amountSaved / target) * 100), 100);
+  }
+}
 
     // Insights
     const insights = [];

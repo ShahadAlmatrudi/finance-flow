@@ -45,11 +45,13 @@ logoutBtn.addEventListener("click", function () {
 
 function initializeAnalyticsData() {
     const data = getAppData();
+    const plans = data.plans || [];
+    const latestPlan = plans.length ? plans[plans.length - 1] : null;
 
-    if (data.plan?.categories?.length) {
+    if (latestPlan?.categories?.length) {
         let changed = false;
 
-        data.plan.categories = data.plan.categories.map(category => {
+        latestPlan.categories = latestPlan.categories.map(category => {
             if (typeof category.spent !== "number") {
                 changed = true;
                 return {
@@ -62,6 +64,8 @@ function initializeAnalyticsData() {
         });
 
         if (changed) {
+            // Update the plan inside the plans array
+            data.plans[data.plans.length - 1] = latestPlan;
             saveAppData(data);
         }
     }
@@ -69,7 +73,8 @@ function initializeAnalyticsData() {
 
 function renderAnalyticsPage() {
     const data = getAppData();
-    const plan = data.plan || {};
+    const plans = data.plans || [];
+    const plan = plans.length ? plans[plans.length - 1] : {};
     const profile = data.profile || {};
     const cards = data.cards || [];
     const cash = Number(data.cash || 0);

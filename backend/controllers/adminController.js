@@ -71,7 +71,7 @@ exports.getAllTransactions = async (req, res) => {
   // GET /api/admin/categories
 exports.getCategories = async (req, res) => {
     try {
-      const Category = require("../models/budgetcategory");
+      const Category = require("../models/BudgetCategory");
   
       const categories = await Category.find();
   
@@ -83,7 +83,7 @@ exports.getCategories = async (req, res) => {
   // POST /api/admin/categories
 exports.createCategory = async (req, res) => {
     try {
-      const Category = require("../models/budgetcategory");
+      const Category = require("../models/BudgetCategory");
   
       const category = await Category.create(req.body);
   

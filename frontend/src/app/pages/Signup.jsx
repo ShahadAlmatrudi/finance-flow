@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAppData, saveAppData } from "../utils/storage";
 import logo from "../assets/financeflow-logo.png";
 
@@ -23,7 +23,7 @@ export default function Signup() {
     setConfirmPasswordError("");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     clearErrors();
 
@@ -63,15 +63,45 @@ export default function Signup() {
 
     if (!isValid) return;
 
-    const data = getAppData();
-    data.user = {
-      fullname: fullname.trim(),
-      email: email.trim(),
-      password: password.trim(),
-    };
-    saveAppData(data);
+    try {
+      const res = await fetch(
+        "https://finance-flow-7fk1.onrender.com/api/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fullname: fullname.trim(),
+            email: email.trim(),
+            password: password.trim(),
+          }),
+        }
+      );
 
-    navigate("/onboarding");
+      const result = await res.json();
+
+      if (!res.ok) {
+        setEmailError(result.message || "Signup failed. Please try again.");
+        return;
+      }
+
+      const data = getAppData();
+
+      data.user = {
+        fullname: result.user?.fullname || fullname.trim(),
+        email: result.user?.email || email.trim(),
+        token: result.token,
+      };
+
+      data.isLoggedIn = true;
+
+      saveAppData(data);
+
+      navigate("/onboarding");
+    } catch (error) {
+      setEmailError("Cannot connect to the server. Please try again.");
+    }
   };
 
   return (
@@ -141,8 +171,7 @@ export default function Signup() {
           </form>
 
           <p className="signupText">
-            Already have an account?{" "}
-            <a href="/login">Log In</a>
+            Already have an account? <Link to="/login">Log In</Link>
           </p>
         </section>
       </main>

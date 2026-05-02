@@ -7,9 +7,18 @@ const budgetCategorySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    name: { type: String, required: true },
-    limit: { type: Number, required: true },
-    spent: { type: Number, default: 0 },
+    name: {
+      type: String,
+      required: true,
+    },
+    limit: {
+      type: Number,
+      default: 0,
+    },
+    spent: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true }
 );

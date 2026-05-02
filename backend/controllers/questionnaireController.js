@@ -1,4 +1,4 @@
-const Questionnaire = require("../models/questionnaire");
+const Questionnaire = require("../models/Questionnaire");
 
 // POST /api/questionnaire
 exports.saveQuestionnaire = async (req, res) => {

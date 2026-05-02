@@ -1,4 +1,4 @@
-const Plan = require("../models/plan");
+const Plan = require("../models/Plan");
 
 // POST /api/plans
 exports.createPlan = async (req, res) => {
@@ -56,6 +56,8 @@ exports.updatePlan = async (req, res) => {
         plan[field] = req.body[field];
       }
     });
+
+    plan.markModified("categories");
 
     await plan.save();
     res.status(200).json({ message: "Plan updated.", plan });
