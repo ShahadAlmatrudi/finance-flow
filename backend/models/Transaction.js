@@ -2,42 +2,23 @@ const mongoose = require("mongoose");
 
 const transactionSchema = new mongoose.Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
-    },
-    cardId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Card",
-      default: null,
-    },
-    source: {
-      type: String,
-      enum: ["card", "cash"],
-      required: true,
-    },
-    type: {
-      type: String,
-      enum: ["income", "expense"],
-      required: true,
     },
     amount: {
       type: Number,
       required: true,
-      min: 0,
+    },
+    type: {
+      type: String, // income or expense
+      required: true,
     },
     category: {
       type: String,
-      required: true,
     },
-    description: {
+    note: {
       type: String,
-      default: "",
-    },
-    date: {
-      type: Date,
-      default: Date.now,
     },
   },
   { timestamps: true }
