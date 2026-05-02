@@ -1,3 +1,4 @@
+const adminRoutes = require("./routes/adminRoutes");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -23,7 +24,7 @@ app.use("/api/plans", planRoutes);
 app.use("/api/budget", budgetRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-
+app.use("/api/admin", adminRoutes);
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
